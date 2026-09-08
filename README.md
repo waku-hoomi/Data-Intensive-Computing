@@ -1,6 +1,7 @@
 # ID2221 Week 1 — Urban Data Integration Platform
 
-A PySpark + Delta Lake platform that ingests NYC taxi trips, weather, air quality,
+A PySpark + Delta Lake platform for the KTH ID2221 course project that ingests
+NYC taxi trips, weather, air quality,
 and taxi zone lookup data through a single generic, config-driven ingestion
 framework, then produces an integrated analytical Delta table
 (`integrated_taxi_trips`). See `docs/DESIGN_REPORT.md`, `docs/DATA_CATALOG.md`,
