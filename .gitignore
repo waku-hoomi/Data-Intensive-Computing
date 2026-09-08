@@ -1,0 +1,11 @@
+hadoop/
+dataset/
+data/bronze/
+data/gold/
+data/_metadata/
+data/raw/
+data/silver/
+__pycache__/
+*.pyc
+*.log
+Assignment*.docx

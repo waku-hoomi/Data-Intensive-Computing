@@ -1,0 +1,74 @@
+# Central, declarative configuration for the ingestion framework (Task 2 & 3).
+#
+# Adding a new dataset to the platform means adding one entry here plus,
+# only if the source needs non-trivial reshaping, one small function in
+# src/urban_platform/transform/transforms.py. Everything else (loading,
+# renaming, type casting, quality checks, partitioned Delta write,
+# metadata logging) is handled by the generic pipeline.
+
+platform:
+  raw_data_dir: dataset          # where the municipality drops raw files (untouched, read-only)
+  bronze_dir: data/bronze        # one Delta table per source dataset, standardized schema
+  gold_dir: data/gold            # integrated / derived analytical Delta tables
+  metadata_dir: data/_metadata   # ingestion run log + benchmark results
+  schema_version: 1
+
+datasets:
+  - name: taxi_zone_lookup
+    dataset_type: lookup
+    input_format: csv
+    input_path: taxi_zone_lookup.csv
+    csv_options: {}
+    expected_raw_columns: [LocationID, Borough, Zone, service_zone]
+    transform_fn: urban_platform.transform.transforms.transform_taxi_zone_lookup
+    primary_key: [location_id]
+    timestamp_cols: []
+    numeric_rules: []
+    partition_by: []
+    derive_partition_cols_from: null
+
+  - name: weather
+    dataset_type: fact
+    input_format: csv
+    input_path: weather.csv
+    csv_options: {}
+    expected_raw_columns: [year, month, day, hour, temp, rhum, prcp, wdir, wspd, pres, cldc, coco]
+    transform_fn: urban_platform.transform.transforms.transform_weather
+    primary_key: [observation_ts]
+    timestamp_cols: [observation_ts]
+    numeric_rules:
+      - {column: relative_humidity_pct, min: 0, max: 100}
+      - {column: wind_direction_deg, min: 0, max: 360}
+      - {column: precipitation_mm, min: 0, max: 1000}
+    partition_by: [obs_year, obs_month]
+    derive_partition_cols_from: observation_ts
+
+  - name: air_quality
+    dataset_type: fact
+    input_format: csv
+    input_path: air_quality/hourly_88101_2024.csv
+    csv_options: {}
+    expected_raw_columns: [State Code, County Code, Site Num, Parameter Code, POC, Latitude, Longitude, Date Local, Time Local, Sample Measurement, State Name, County Name]
+    transform_fn: urban_platform.transform.transforms.transform_air_quality
+    primary_key: [station_id, parameter_code, poc, observation_ts]
+    timestamp_cols: [observation_ts]
+    numeric_rules:
+      - {column: pm25_ug_m3, min: 0, max: 1000}
+    partition_by: [obs_year, obs_month]
+    derive_partition_cols_from: observation_ts
+
+  - name: taxi_trips
+    dataset_type: fact
+    input_format: parquet
+    input_path: "yellow_tripdata_2024-*.parquet"
+    csv_options: {}
+    expected_raw_columns: [VendorID, tpep_pickup_datetime, tpep_dropoff_datetime, passenger_count, trip_distance, RatecodeID, PULocationID, DOLocationID, payment_type, fare_amount, total_amount]
+    transform_fn: urban_platform.transform.transforms.transform_taxi_trips
+    primary_key: [trip_id]
+    timestamp_cols: [pickup_ts, dropoff_ts]
+    numeric_rules:
+      - {column: trip_distance, min: 0, max: 500}
+      - {column: fare_amount, min: 0, max: 2000}
+      - {column: passenger_count, min: 0, max: 9}
+    partition_by: [pickup_year, pickup_month]
+    derive_partition_cols_from: pickup_ts
