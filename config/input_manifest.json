@@ -1,0 +1,38 @@
+[
+  {
+    "file": "air_quality.zip",
+    "drive_id": "1NGT8RR-NtBf-4xxII4pfwBanE_BgBvoW",
+    "bytes": 66347589,
+    "sha256": "d5cae2dc878c6b97c2d80e7583bc6c930562012ff129df9db604262fda465c38"
+  },
+  {
+    "file": "taxi_zone_lookup.csv",
+    "drive_id": "1-gO-MhXTIPbHRkyJQo8nTxly72gT3r9t",
+    "bytes": 12331,
+    "sha256": "1a99e105092230f8620f301edcca7f80d3080642ff404d28ed957d3fa222c8ed"
+  },
+  {
+    "file": "weather.csv",
+    "drive_id": "1q-Lw24XFqJ42XSJRuUV_ced3aJ6kKQ2M",
+    "bytes": 1073711,
+    "sha256": "85bf03ba78d2ca18532fd5f226acfc6b10e082fee8fcb39879bf7663e4448282"
+  },
+  {
+    "file": "yellow_tripdata_2024-01.parquet",
+    "drive_id": "17v0eFEontYEKtGoqyB0v9rj_BEDc7snA",
+    "bytes": 49961641,
+    "sha256": "c4d59da7bbc8abaeeeb1727947ee93d9891a71acb42854bd80db1571b2030510"
+  },
+  {
+    "file": "yellow_tripdata_2024-02.parquet",
+    "drive_id": "1N-dRuGdd_lOYGAbdbgJJWMyIsV_lz057",
+    "bytes": 50349284,
+    "sha256": "c76c43c18c6c6664080dd920baab4928988d5786a6b65980792ca7cd796f9f20"
+  },
+  {
+    "file": "yellow_tripdata_2024-03.parquet",
+    "drive_id": "1oUxC0cLWqOatddyT8aB06VvFFZY0-lu2",
+    "bytes": 60078280,
+    "sha256": "2d4cdc8fb96726cdd3803b13b02d2e61e71d45720aff0ebc693a8bdd1f249823"
+  }
+]

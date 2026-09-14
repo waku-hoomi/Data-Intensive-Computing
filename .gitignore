@@ -1,4 +1,13 @@
 hadoop/
+.venv/
+.runtime/
+.pytest_cache/
+.DS_Store
+artifacts/
+data/products/
+data/lab2_metadata/
+spark-warehouse/
+derby.log
 dataset/
 data/bronze/
 data/gold/

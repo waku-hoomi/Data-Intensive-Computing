@@ -14,13 +14,10 @@ Design decisions (see docs/DESIGN_REPORT.md for full justification):
     the observation itself is defined (an hourly reading, valid for the
     hour it timestamps).
 
-  - Air quality (PM2.5) is per-borough, not citywide -- the raw stations
-    only cover Bronx, Brooklyn (Kings) and Queens. Multiple stations can
-    exist in one borough for the same hour, so we first aggregate to
-    (borough, hour) by averaging PM2.5 across stations, then join taxi
-    trips on (pickup_borough, pickup_hour). Manhattan, Staten Island and
-    EWR pickups get a NULL air-quality reading -- a real coverage gap in
-    the source data, not a bug in the join.
+  - Air quality is filtered by NY state and NYC county codes. Multiple
+    instruments are first averaged within station-hour; distinct stations
+    are then weighted equally within borough-hour. Unmatched observations
+    remain NULL and coverage is measured after integration.
 
   - Both weather and air-quality joins use the PICKUP time/location only
     (not dropoff) since Task 5 asks specifically for "weather conditions
@@ -41,6 +38,27 @@ from urban_platform.utils.config import PlatformConfig
 
 def _read_bronze(spark: SparkSession, platform_cfg: PlatformConfig, name: str) -> DataFrame:
     return spark.read.format("delta").load(os.path.join(platform_cfg.bronze_dir, name))
+
+
+def aggregate_nyc_air_quality(air_quality: DataFrame) -> DataFrame:
+    """NY state/county codes prevent cross-state names from contaminating NYC.
+
+    Average multiple instruments (POCs) within a station-hour first, then
+    give each distinct station equal weight within its borough-hour.
+    """
+    county_to_borough = F.create_map(*[
+        F.lit(v) for pair in [("005", "Bronx"), ("047", "Brooklyn"),
+                             ("061", "Manhattan"), ("081", "Queens"),
+                             ("085", "Staten Island")] for v in pair
+    ])
+    nyc = (air_quality.filter(F.col("station_id").startswith("36-"))
+           .withColumn("pickup_borough", county_to_borough[F.substring("station_id", 4, 3)])
+           .filter(F.col("pickup_borough").isNotNull() & F.col("pm25_ug_m3").isNotNull()))
+    stations = nyc.groupBy("pickup_borough", "observation_ts", "station_id").agg(
+        F.avg("pm25_ug_m3").alias("station_pm25"))
+    return (stations.groupBy("pickup_borough", "observation_ts")
+            .agg(F.avg("station_pm25").alias("pm25_ug_m3"), F.count("*").alias("aq_station_count"))
+            .withColumnRenamed("observation_ts", "pickup_hour"))
 
 
 def build_integrated_taxi_trips(spark: SparkSession, platform_cfg: PlatformConfig) -> DataFrame:
@@ -77,18 +95,7 @@ def build_integrated_taxi_trips(spark: SparkSession, platform_cfg: PlatformConfi
     )
     enriched = enriched.join(weather_hourly, on="pickup_hour", how="left")
 
-    aq_by_borough_hour = (
-        air_quality.groupBy(
-            F.col("county_name").alias("pickup_borough"),
-            F.col("observation_ts").alias("pickup_hour"),
-        )
-        .agg(F.avg("pm25_ug_m3").alias("pm25_ug_m3"), F.count("*").alias("aq_station_count"))
-    )
-    # EPA county_name "Kings" corresponds to the taxi-zone borough "Brooklyn".
-    aq_by_borough_hour = aq_by_borough_hour.withColumn(
-        "pickup_borough",
-        F.when(F.col("pickup_borough") == "Kings", F.lit("Brooklyn")).otherwise(F.col("pickup_borough")),
-    )
+    aq_by_borough_hour = aggregate_nyc_air_quality(air_quality)
 
     enriched = enriched.join(aq_by_borough_hour, on=["pickup_borough", "pickup_hour"], how="left")
 

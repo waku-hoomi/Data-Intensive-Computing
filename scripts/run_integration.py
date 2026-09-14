@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from urban_platform.integration.integrate import write_integrated_taxi_trips
+from urban_platform.analytics.context import require_weather_confirmation
 from urban_platform.utils.config import load_config
 from urban_platform.utils.spark_session import get_spark
 
@@ -12,6 +13,7 @@ CONFIG_PATH = str(Path(__file__).resolve().parent.parent / "config" / "datasets.
 
 
 def main() -> None:
+    require_weather_confirmation()
     platform_cfg = load_config(CONFIG_PATH)
     spark = get_spark(app_name="urban-platform-integration")
 

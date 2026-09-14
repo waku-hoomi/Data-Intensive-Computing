@@ -61,12 +61,20 @@ def apply_quality_checks(df: DataFrame, cfg: DatasetConfig) -> "tuple[DataFrame,
 
     df_flagged = df.withColumn("_reject_reason", reject_reason)
 
+    if {"pickup_ts", "dropoff_ts"}.issubset(df.columns):
+        reject_reason = F.when(F.col("dropoff_ts") < F.col("pickup_ts"),
+                               F.lit("negative_trip_duration")).otherwise(reject_reason)
+        df_flagged = df.withColumn("_reject_reason", reject_reason)
+
     # 4) Duplicate records -> exact duplicate primary key (kept as a
     #    separate flag since it requires a window, not a row-local check).
-    #    The first occurrence (by insertion order) is kept; the rest are
-    #    rejected -- consistent with "reject", never silently pick one.
+    #    Prefer valid rows, then a deterministic serialization order.
+    #    Fully identical duplicates are indistinguishable by design.
     if cfg.primary_key:
-        pk_window = Window.partitionBy(*cfg.primary_key).orderBy(F.lit(1))
+        stable_row = F.to_json(F.struct(*[F.col(c) for c in sorted(df.columns)]),
+                              {"ignoreNullFields": "false"})
+        pk_window = Window.partitionBy(*cfg.primary_key).orderBy(
+            F.col("_reject_reason").isNotNull().asc(), stable_row.asc())
         df_flagged = df_flagged.withColumn("_row_num_in_pk", F.row_number().over(pk_window))
         df_flagged = df_flagged.withColumn(
             "_reject_reason",
@@ -75,8 +83,6 @@ def apply_quality_checks(df: DataFrame, cfg: DatasetConfig) -> "tuple[DataFrame,
                 F.lit("duplicate_primary_key"),
             ).otherwise(F.col("_reject_reason")),
         ).drop("_row_num_in_pk")
-
-    df_flagged = df_flagged.cache()
 
     rejected_counts = (
         df_flagged.filter(F.col("_reject_reason").isNotNull())

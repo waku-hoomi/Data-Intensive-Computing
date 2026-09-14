@@ -11,7 +11,7 @@ platform:
   bronze_dir: data/bronze        # one Delta table per source dataset, standardized schema
   gold_dir: data/gold            # integrated / derived analytical Delta tables
   metadata_dir: data/_metadata   # ingestion run log + benchmark results
-  schema_version: 1
+  schema_version: 2
 
 datasets:
   - name: taxi_zone_lookup
@@ -32,7 +32,7 @@ datasets:
     input_format: csv
     input_path: weather.csv
     csv_options: {}
-    expected_raw_columns: [year, month, day, hour, temp, rhum, prcp, wdir, wspd, pres, cldc, coco]
+    expected_raw_columns: [year, month, day, hour, temp, rhum, prcp, snwd, wdir, wspd, wpgt, pres, cldc, coco]
     transform_fn: urban_platform.transform.transforms.transform_weather
     primary_key: [observation_ts]
     timestamp_cols: [observation_ts]
@@ -40,7 +40,7 @@ datasets:
       - {column: relative_humidity_pct, min: 0, max: 100}
       - {column: wind_direction_deg, min: 0, max: 360}
       - {column: precipitation_mm, min: 0, max: 1000}
-    partition_by: [obs_year, obs_month]
+    partition_by: []
     derive_partition_cols_from: observation_ts
 
   - name: air_quality
@@ -48,7 +48,7 @@ datasets:
     input_format: csv
     input_path: air_quality/hourly_88101_2024.csv
     csv_options: {}
-    expected_raw_columns: [State Code, County Code, Site Num, Parameter Code, POC, Latitude, Longitude, Date Local, Time Local, Sample Measurement, State Name, County Name]
+    expected_raw_columns: [State Code, County Code, Site Num, Parameter Code, POC, Latitude, Longitude, Date GMT, Time GMT, Sample Measurement, Units of Measure, Parameter Name, State Name, County Name]
     transform_fn: urban_platform.transform.transforms.transform_air_quality
     primary_key: [station_id, parameter_code, poc, observation_ts]
     timestamp_cols: [observation_ts]
@@ -62,7 +62,7 @@ datasets:
     input_format: parquet
     input_path: "yellow_tripdata_2024-*.parquet"
     csv_options: {}
-    expected_raw_columns: [VendorID, tpep_pickup_datetime, tpep_dropoff_datetime, passenger_count, trip_distance, RatecodeID, PULocationID, DOLocationID, payment_type, fare_amount, total_amount]
+    expected_raw_columns: [VendorID, tpep_pickup_datetime, tpep_dropoff_datetime, passenger_count, trip_distance, RatecodeID, store_and_fwd_flag, PULocationID, DOLocationID, payment_type, fare_amount, extra, mta_tax, tip_amount, tolls_amount, improvement_surcharge, total_amount, congestion_surcharge, Airport_fee]
     transform_fn: urban_platform.transform.transforms.transform_taxi_trips
     primary_key: [trip_id]
     timestamp_cols: [pickup_ts, dropoff_ts]

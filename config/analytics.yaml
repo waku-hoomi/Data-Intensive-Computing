@@ -1,0 +1,15 @@
+analysis:
+  timezone: America/New_York
+  start_date: '2024-01-01'
+  end_date_exclusive: '2024-04-01'
+  min_weather_hours: 24
+  schema_version: 1
+  weather_interpretation_approved: false
+  weather_provenance_status: unverified
+  weather_source_note: Pending course source confirmation
+benchmark:
+  warmup_runs: 1
+  measured_runs: 3
+  shuffle_partitions: 8
+  relative_tolerance: 1.0e-9
+  absolute_tolerance: 1.0e-8

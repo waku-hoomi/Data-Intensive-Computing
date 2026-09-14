@@ -5,6 +5,7 @@ start Spark the same way (same Delta config, same local Hadoop shim on
 Windows), instead of copy-pasting builder boilerplate everywhere.
 """
 import os
+import sys
 
 from delta import configure_spark_with_delta_pip
 from pyspark.sql import SparkSession
@@ -38,15 +39,22 @@ def get_spark(app_name: str = "urban-data-platform", shuffle_partitions: int = 8
     this size, hurting both write and read performance.
     """
     _ensure_windows_hadoop_home()
+    local_java = os.path.join(PROJECT_ROOT, ".runtime", "java_home")
+    if "JAVA_HOME" not in os.environ and os.path.isdir(local_java):
+        os.environ["JAVA_HOME"] = local_java
+    os.environ.setdefault("SPARK_LOCAL_IP", "127.0.0.1")
+    os.environ.setdefault("PYSPARK_PYTHON", sys.executable)
 
     builder = (
         SparkSession.builder.appName(app_name)
-        .master("local[*]")
+        .master(os.environ.get("LAB2_SPARK_MASTER", "local[4]"))
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
         .config("spark.sql.shuffle.partitions", str(shuffle_partitions))
         .config("spark.sql.session.timeZone", "UTC")
-        .config("spark.driver.memory", "4g")
+        .config("spark.driver.memory", os.environ.get("LAB2_DRIVER_MEMORY", "4g"))
+        .config("spark.jars.ivy", os.path.join(PROJECT_ROOT, ".runtime", "ivy"))
+        .config("spark.ui.enabled", "false")
     )
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
     spark.sparkContext.setLogLevel("ERROR")
