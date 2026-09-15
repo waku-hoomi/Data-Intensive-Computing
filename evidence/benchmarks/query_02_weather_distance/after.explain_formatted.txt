@@ -1,0 +1,55 @@
+== Physical Plan ==
+* HashAggregate (9)
++- Exchange (8)
+   +- * HashAggregate (7)
+      +- Scan In-memory table analysis_trips (1)
+            +- InMemoryRelation (2)
+                  +- * Project (6)
+                     +- * Filter (5)
+                        +- * ColumnarToRow (4)
+                           +- Scan parquet  (3)
+
+
+(1) Scan In-memory table analysis_trips
+Output [2]: [trip_distance#23971, weather_condition_code#23986]
+Arguments: [trip_distance#23971, weather_condition_code#23986]
+
+(2) InMemoryRelation
+Arguments: [trip_id#23966, vendor_id#23967, pickup_ts#23968, dropoff_ts#23969, passenger_count#23970, trip_distance#23971, rate_code_id#23972, pu_location_id#23973, pickup_zone#23974, pickup_borough#23975, do_location_id#23976, dropoff_zone#23977, dropoff_borough#23978, payment_type#23979, fare_amount#23980, total_amount#23981, temp_c#23982, relative_humidity_pct#23983, precipitation_mm#23984, wind_speed_kmh#23985, weather_condition_code#23986, pm25_ug_m3#23987, aq_station_count#23988L, pickup_year#23989, pickup_month#23990, ... 5 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(3) Scan parquet 
+Output [25]: [trip_id#0, vendor_id#1, pickup_ts#2, dropoff_ts#3, passenger_count#4, trip_distance#5, rate_code_id#6, pu_location_id#7, pickup_zone#8, pickup_borough#9, do_location_id#10, dropoff_zone#11, dropoff_borough#12, payment_type#13, fare_amount#14, total_amount#15, temp_c#16, relative_humidity_pct#17, precipitation_mm#18, wind_speed_kmh#19, weather_condition_code#20, pm25_ug_m3#21, aq_station_count#22L, pickup_year#23, pickup_month#24]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0)]
+ReadSchema: struct<trip_id:string,vendor_id:int,pickup_ts:timestamp,dropoff_ts:timestamp,passenger_count:int,trip_distance:double,rate_code_id:int,pu_location_id:int,pickup_zone:string,pickup_borough:string,do_location_id:int,dropoff_zone:string,dropoff_borough:string,payment_type:int,fare_amount:double,total_amount:double,temp_c:double,relative_humidity_pct:int,precipitation_mm:double,wind_speed_kmh:double,weather_condition_code:int,pm25_ug_m3:double,aq_station_count:bigint>
+
+(4) ColumnarToRow [codegen id : 1]
+Input [25]: [trip_id#0, vendor_id#1, pickup_ts#2, dropoff_ts#3, passenger_count#4, trip_distance#5, rate_code_id#6, pu_location_id#7, pickup_zone#8, pickup_borough#9, do_location_id#10, dropoff_zone#11, dropoff_borough#12, payment_type#13, fare_amount#14, total_amount#15, temp_c#16, relative_humidity_pct#17, precipitation_mm#18, wind_speed_kmh#19, weather_condition_code#20, pm25_ug_m3#21, aq_station_count#22L, pickup_year#23, pickup_month#24]
+
+(5) Filter [codegen id : 1]
+Input [25]: [trip_id#0, vendor_id#1, pickup_ts#2, dropoff_ts#3, passenger_count#4, trip_distance#5, rate_code_id#6, pu_location_id#7, pickup_zone#8, pickup_borough#9, do_location_id#10, dropoff_zone#11, dropoff_borough#12, payment_type#13, fare_amount#14, total_amount#15, temp_c#16, relative_humidity_pct#17, precipitation_mm#18, wind_speed_kmh#19, weather_condition_code#20, pm25_ug_m3#21, aq_station_count#22L, pickup_year#23, pickup_month#24]
+Condition : ((isnotnull(pickup_ts#2) AND (pickup_ts#2 >= 2024-01-01 05:00:00)) AND (pickup_ts#2 < 2024-04-01 04:00:00))
+
+(6) Project [codegen id : 1]
+Output [30]: [trip_id#0, vendor_id#1, pickup_ts#2, dropoff_ts#3, passenger_count#4, trip_distance#5, rate_code_id#6, pu_location_id#7, pickup_zone#8, pickup_borough#9, do_location_id#10, dropoff_zone#11, dropoff_borough#12, payment_type#13, fare_amount#14, total_amount#15, temp_c#16, relative_humidity_pct#17, precipitation_mm#18, wind_speed_kmh#19, weather_condition_code#20, pm25_ug_m3#21, aq_station_count#22L, pickup_year#23, pickup_month#24, from_utc_timestamp(pickup_ts#2, America/New_York) AS pickup_local#20525, cast(from_utc_timestamp(pickup_ts#2, America/New_York) as date) AS local_date#20526, date_trunc(hour, pickup_ts#2, Some(UTC)) AS pickup_hour#20527, date_format(from_utc_timestamp(pickup_ts#2, America/New_York), yyyy-MM, Some(UTC)) AS local_month#20528, (cast((unix_timestamp(dropoff_ts#3, yyyy-MM-dd HH:mm:ss, Some(UTC), true) - unix_timestamp(pickup_ts#2, yyyy-MM-dd HH:mm:ss, Some(UTC), true)) as decimal(20,0)) / 60.0) AS duration_min#20529]
+Input [25]: [trip_id#0, vendor_id#1, pickup_ts#2, dropoff_ts#3, passenger_count#4, trip_distance#5, rate_code_id#6, pu_location_id#7, pickup_zone#8, pickup_borough#9, do_location_id#10, dropoff_zone#11, dropoff_borough#12, payment_type#13, fare_amount#14, total_amount#15, temp_c#16, relative_humidity_pct#17, precipitation_mm#18, wind_speed_kmh#19, weather_condition_code#20, pm25_ug_m3#21, aq_station_count#22L, pickup_year#23, pickup_month#24]
+
+(7) HashAggregate [codegen id : 1]
+Input [2]: [trip_distance#23971, weather_condition_code#23986]
+Keys [1]: [weather_condition_code#23986]
+Functions [3]: [partial_count(1), partial_count(trip_distance#23971), partial_avg(trip_distance#23971)]
+Aggregate Attributes [4]: [count#24449L, count#24450L, sum#24451, count#24452L]
+Results [5]: [weather_condition_code#23986, count#24453L, count#24454L, sum#24455, count#24456L]
+
+(8) Exchange
+Input [5]: [weather_condition_code#23986, count#24453L, count#24454L, sum#24455, count#24456L]
+Arguments: hashpartitioning(weather_condition_code#23986, 8), ENSURE_REQUIREMENTS, [plan_id=5757]
+
+(9) HashAggregate [codegen id : 2]
+Input [5]: [weather_condition_code#23986, count#24453L, count#24454L, sum#24455, count#24456L]
+Keys [1]: [weather_condition_code#23986]
+Functions [3]: [count(1), count(trip_distance#23971), avg(trip_distance#23971)]
+Aggregate Attributes [3]: [count(1)#23996L, count(trip_distance#23971)#23997L, avg(trip_distance#23971)#23998]
+Results [4]: [weather_condition_code#23986, count(1)#23996L AS trip_count#23953L, count(trip_distance#23971)#23997L AS valid_distance_count#23954L, avg(trip_distance#23971)#23998 AS avg_distance_miles#23955]
+

@@ -1,0 +1,44 @@
+{
+  "scope": {
+    "rows": 9417844,
+    "rows_with_zone_id": 9417844,
+    "rows_with_borough": 9413067,
+    "missing_weather_code": 0,
+    "missing_air_quality": 8480926
+  },
+  "elapsed_hours": 2183,
+  "products": [
+    {
+      "name": "daily_mobility_summary",
+      "trip_count_total": 9417844,
+      "expected_total": 9417844,
+      "passed": true
+    },
+    {
+      "name": "taxi_zone_statistics",
+      "trip_count_total": 9417844,
+      "expected_total": 9417844,
+      "passed": true
+    },
+    {
+      "name": "weather_impact_summary",
+      "trip_count_total": 9417844,
+      "expected_total": 9417844,
+      "passed": true
+    },
+    {
+      "name": "air_quality_impact_summary",
+      "trip_count_total": 9413067,
+      "expected_total": 9413067,
+      "passed": true
+    }
+  ],
+  "gold_storage": {
+    "active_bytes": 863185977,
+    "active_files": 14,
+    "delta_version": 0
+  },
+  "air_quality_units": [
+    "Micrograms/cubic meter (LC)"
+  ]
+}

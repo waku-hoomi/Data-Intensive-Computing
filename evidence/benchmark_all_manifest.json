@@ -1,0 +1,16 @@
+{
+  "source_delta_version": 0,
+  "analysis_config": {
+    "timezone": "America/New_York",
+    "start_date": "2024-01-01",
+    "end_date_exclusive": "2024-04-01",
+    "min_weather_hours": 24,
+    "schema_version": 1,
+    "weather_interpretation_approved": true,
+    "weather_provenance_status": "unverified",
+    "weather_source_note": "User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis."
+  },
+  "spark": "4.0.4",
+  "master": "local[4]",
+  "measurement_scope": "Warm-process local execution; OS caches not flushed"
+}

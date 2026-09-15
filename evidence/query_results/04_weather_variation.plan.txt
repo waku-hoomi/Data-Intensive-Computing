@@ -1,0 +1,266 @@
+== Physical Plan ==
+AdaptiveSparkPlan (44)
++- Window (43)
+   +- Sort (42)
+      +- Exchange (41)
+         +- Project (40)
+            +- Filter (39)
+               +- HashAggregate (38)
+                  +- Exchange (37)
+                     +- HashAggregate (36)
+                        +- Project (35)
+                           +- Filter (34)
+                              +- HashAggregate (33)
+                                 +- Exchange (32)
+                                    +- HashAggregate (31)
+                                       +- Project (30)
+                                          +- SortMergeJoin LeftOuter (29)
+                                             :- Sort (21)
+                                             :  +- Exchange (20)
+                                             :     +- CartesianProduct Inner (19)
+                                             :        :- HashAggregate (6)
+                                             :        :  +- Exchange (5)
+                                             :        :     +- HashAggregate (4)
+                                             :        :        +- Project (3)
+                                             :        :           +- Filter (2)
+                                             :        :              +- Scan parquet  (1)
+                                             :        +- Project (18)
+                                             :           +- BroadcastHashJoin Inner BuildLeft (17)
+                                             :              :- BroadcastExchange (9)
+                                             :              :  +- Generate (8)
+                                             :              :     +- Scan OneRowRelation (7)
+                                             :              +- Filter (16)
+                                             :                 +- HashAggregate (15)
+                                             :                    +- Exchange (14)
+                                             :                       +- HashAggregate (13)
+                                             :                          +- Project (12)
+                                             :                             +- Filter (11)
+                                             :                                +- Scan parquet  (10)
+                                             +- Sort (28)
+                                                +- HashAggregate (27)
+                                                   +- Exchange (26)
+                                                      +- HashAggregate (25)
+                                                         +- Project (24)
+                                                            +- Filter (23)
+                                                               +- Scan parquet  (22)
+
+
+(1) Scan parquet 
+Output [6]: [pickup_ts#3308, pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, pickup_year#3329, pickup_month#3330]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0), IsNotNull(pu_location_id)]
+ReadSchema: struct<pickup_ts:timestamp,pu_location_id:int,pickup_zone:string,pickup_borough:string>
+
+(2) Filter
+Input [6]: [pickup_ts#3308, pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, pickup_year#3329, pickup_month#3330]
+Condition : (((isnotnull(pickup_ts#3308) AND (pickup_ts#3308 >= 2024-01-01 05:00:00)) AND (pickup_ts#3308 < 2024-04-01 04:00:00)) AND isnotnull(pu_location_id#3313))
+
+(3) Project
+Output [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+Input [6]: [pickup_ts#3308, pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, pickup_year#3329, pickup_month#3330]
+
+(4) HashAggregate
+Input [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+Keys [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+Functions: []
+Aggregate Attributes: []
+Results [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+
+(5) Exchange
+Input [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+Arguments: hashpartitioning(pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, 8), ENSURE_REQUIREMENTS, [plan_id=2186]
+
+(6) HashAggregate
+Input [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+Keys [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+Functions: []
+Aggregate Attributes: []
+Results [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+
+(7) Scan OneRowRelation
+Output: []
+Arguments: ParallelCollectionRDD[41] at collect at /Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/scripts/run_analytics.py:28, OneRowRelation, UnknownPartitioning(0)
+
+(8) Generate
+Input: []
+Arguments: explode(org.apache.spark.sql.catalyst.expressions.UnsafeArrayData@4d864f25), false, [pickup_hour#3366]
+
+(9) BroadcastExchange
+Input [1]: [pickup_hour#3366]
+Arguments: HashedRelationBroadcastMode(List(input[0, timestamp, false]),false), [plan_id=2192]
+
+(10) Scan parquet 
+Output [4]: [pickup_ts#3372, weather_condition_code#3390, pickup_year#3393, pickup_month#3394]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0)]
+ReadSchema: struct<pickup_ts:timestamp,weather_condition_code:int>
+
+(11) Filter
+Input [4]: [pickup_ts#3372, weather_condition_code#3390, pickup_year#3393, pickup_month#3394]
+Condition : (((isnotnull(pickup_ts#3372) AND (pickup_ts#3372 >= 2024-01-01 05:00:00)) AND (pickup_ts#3372 < 2024-04-01 04:00:00)) AND isnotnull(date_trunc(hour, pickup_ts#3372, Some(UTC))))
+
+(12) Project
+Output [2]: [weather_condition_code#3390, date_trunc(hour, pickup_ts#3372, Some(UTC)) AS pickup_hour#3427]
+Input [4]: [pickup_ts#3372, weather_condition_code#3390, pickup_year#3393, pickup_month#3394]
+
+(13) HashAggregate
+Input [2]: [weather_condition_code#3390, pickup_hour#3427]
+Keys [1]: [pickup_hour#3427]
+Functions [1]: [partial_max(weather_condition_code#3390)]
+Aggregate Attributes [1]: [max#3738]
+Results [2]: [pickup_hour#3427, max#3739]
+
+(14) Exchange
+Input [2]: [pickup_hour#3427, max#3739]
+Arguments: hashpartitioning(pickup_hour#3427, 8), ENSURE_REQUIREMENTS, [plan_id=2188]
+
+(15) HashAggregate
+Input [2]: [pickup_hour#3427, max#3739]
+Keys [1]: [pickup_hour#3427]
+Functions [1]: [max(weather_condition_code#3390)]
+Aggregate Attributes [1]: [max(weather_condition_code#3390)#2972]
+Results [2]: [pickup_hour#3427, max(weather_condition_code#3390)#2972 AS weather_condition_code#3430]
+
+(16) Filter
+Input [2]: [pickup_hour#3427, weather_condition_code#3430]
+Condition : isnotnull(weather_condition_code#3430)
+
+(17) BroadcastHashJoin
+Left keys [1]: [pickup_hour#3366]
+Right keys [1]: [pickup_hour#3427]
+Join type: Inner
+Join condition: None
+
+(18) Project
+Output [2]: [pickup_hour#3366, weather_condition_code#3430]
+Input [3]: [pickup_hour#3366, pickup_hour#3427, weather_condition_code#3430]
+
+(19) CartesianProduct
+Join type: Inner
+Join condition: None
+
+(20) Exchange
+Input [5]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, pickup_hour#3366, weather_condition_code#3430]
+Arguments: hashpartitioning(pu_location_id#3313, pickup_hour#3366, 8), ENSURE_REQUIREMENTS, [plan_id=2200]
+
+(21) Sort
+Input [5]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, pickup_hour#3366, weather_condition_code#3430]
+Arguments: [pu_location_id#3313 ASC NULLS FIRST, pickup_hour#3366 ASC NULLS FIRST], false, 0
+
+(22) Scan parquet 
+Output [4]: [pickup_ts#3439, pu_location_id#3444, pickup_year#3460, pickup_month#3461]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0), IsNotNull(pu_location_id)]
+ReadSchema: struct<pickup_ts:timestamp,pu_location_id:int>
+
+(23) Filter
+Input [4]: [pickup_ts#3439, pu_location_id#3444, pickup_year#3460, pickup_month#3461]
+Condition : ((((isnotnull(pickup_ts#3439) AND (pickup_ts#3439 >= 2024-01-01 05:00:00)) AND (pickup_ts#3439 < 2024-04-01 04:00:00)) AND isnotnull(pu_location_id#3444)) AND isnotnull(date_trunc(hour, pickup_ts#3439, Some(UTC))))
+
+(24) Project
+Output [2]: [pu_location_id#3444, date_trunc(hour, pickup_ts#3439, Some(UTC)) AS pickup_hour#3494]
+Input [4]: [pickup_ts#3439, pu_location_id#3444, pickup_year#3460, pickup_month#3461]
+
+(25) HashAggregate
+Input [2]: [pu_location_id#3444, pickup_hour#3494]
+Keys [2]: [pu_location_id#3444, pickup_hour#3494]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#3740L]
+Results [3]: [pu_location_id#3444, pickup_hour#3494, count#3741L]
+
+(26) Exchange
+Input [3]: [pu_location_id#3444, pickup_hour#3494, count#3741L]
+Arguments: hashpartitioning(pu_location_id#3444, pickup_hour#3494, 8), ENSURE_REQUIREMENTS, [plan_id=2196]
+
+(27) HashAggregate
+Input [3]: [pu_location_id#3444, pickup_hour#3494, count#3741L]
+Keys [2]: [pu_location_id#3444, pickup_hour#3494]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#3059L]
+Results [3]: [pu_location_id#3444, pickup_hour#3494, count(1)#3059L AS trip_count#3497L]
+
+(28) Sort
+Input [3]: [pu_location_id#3444, pickup_hour#3494, trip_count#3497L]
+Arguments: [pu_location_id#3444 ASC NULLS FIRST, pickup_hour#3494 ASC NULLS FIRST], false, 0
+
+(29) SortMergeJoin
+Left keys [2]: [pu_location_id#3313, pickup_hour#3366]
+Right keys [2]: [pu_location_id#3444, pickup_hour#3494]
+Join type: LeftOuter
+Join condition: None
+
+(30) Project
+Output [5]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_condition_code#3430, coalesce(trip_count#3497L, 0) AS trip_count#3508L]
+Input [8]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, pickup_hour#3366, weather_condition_code#3430, pu_location_id#3444, pickup_hour#3494, trip_count#3497L]
+
+(31) HashAggregate
+Input [5]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_condition_code#3430, trip_count#3508L]
+Keys [4]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_condition_code#3430]
+Functions [2]: [partial_count(1), partial_avg(trip_count#3508L)]
+Aggregate Attributes [3]: [count#3732L, sum#3733, count#3734L]
+Results [7]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_condition_code#3430, count#3735L, sum#3736, count#3737L]
+
+(32) Exchange
+Input [7]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_condition_code#3430, count#3735L, sum#3736, count#3737L]
+Arguments: hashpartitioning(pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_condition_code#3430, 8), ENSURE_REQUIREMENTS, [plan_id=2207]
+
+(33) HashAggregate
+Input [7]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_condition_code#3430, count#3735L, sum#3736, count#3737L]
+Keys [4]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_condition_code#3430]
+Functions [2]: [count(1), avg(trip_count#3508L)]
+Aggregate Attributes [2]: [count(1)#3062L, avg(trip_count#3508L)#3063]
+Results [5]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, count(1)#3062L AS observed_hours#3511L, avg(trip_count#3508L)#3063 AS mean_hourly_trips#3512]
+
+(34) Filter
+Input [5]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, observed_hours#3511L, mean_hourly_trips#3512]
+Condition : (observed_hours#3511L >= 24)
+
+(35) Project
+Output [4]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, mean_hourly_trips#3512]
+Input [5]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, observed_hours#3511L, mean_hourly_trips#3512]
+
+(36) HashAggregate
+Input [4]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, mean_hourly_trips#3512]
+Keys [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+Functions [4]: [partial_count(1), partial_min(mean_hourly_trips#3512), partial_max(mean_hourly_trips#3512), partial_avg(mean_hourly_trips#3512)]
+Aggregate Attributes [5]: [count#3722L, min#3723, max#3724, sum#3725, count#3726L]
+Results [8]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, count#3727L, min#3728, max#3729, sum#3730, count#3731L]
+
+(37) Exchange
+Input [8]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, count#3727L, min#3728, max#3729, sum#3730, count#3731L]
+Arguments: hashpartitioning(pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, 8), ENSURE_REQUIREMENTS, [plan_id=2213]
+
+(38) HashAggregate
+Input [8]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, count#3727L, min#3728, max#3729, sum#3730, count#3731L]
+Keys [3]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315]
+Functions [4]: [count(1), min(mean_hourly_trips#3512), max(mean_hourly_trips#3512), avg(mean_hourly_trips#3512)]
+Aggregate Attributes [4]: [count(1)#3065L, min(mean_hourly_trips#3512)#3071, max(mean_hourly_trips#3512)#3072, avg(mean_hourly_trips#3512)#3077]
+Results [7]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, count(1)#3065L AS _aggregateexpression#3515L, min(mean_hourly_trips#3512)#3071 AS _aggregateexpression#3516, max(mean_hourly_trips#3512)#3072 AS _aggregateexpression#3517, avg(mean_hourly_trips#3512)#3077 AS _aggregateexpression#3518]
+
+(39) Filter
+Input [7]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, _aggregateexpression#3515L, _aggregateexpression#3516, _aggregateexpression#3517, _aggregateexpression#3518]
+Condition : (_aggregateexpression#3515L >= 2)
+
+(40) Project
+Output [8]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, _aggregateexpression#3515L AS weather_categories#3081L, _aggregateexpression#3516 AS min_hourly_trips#3082, _aggregateexpression#3517 AS max_hourly_trips#3083, (_aggregateexpression#3517 - _aggregateexpression#3516) AS absolute_variation#3084, ((_aggregateexpression#3517 - _aggregateexpression#3516) / if ((_aggregateexpression#3518 = 0.0)) null else _aggregateexpression#3518) AS relative_variation#3085]
+Input [7]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, _aggregateexpression#3515L, _aggregateexpression#3516, _aggregateexpression#3517, _aggregateexpression#3518]
+
+(41) Exchange
+Input [8]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_categories#3081L, min_hourly_trips#3082, max_hourly_trips#3083, absolute_variation#3084, relative_variation#3085]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=2218]
+
+(42) Sort
+Input [8]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_categories#3081L, min_hourly_trips#3082, max_hourly_trips#3083, absolute_variation#3084, relative_variation#3085]
+Arguments: [absolute_variation#3084 DESC NULLS LAST], false, 0
+
+(43) Window
+Input [8]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_categories#3081L, min_hourly_trips#3082, max_hourly_trips#3083, absolute_variation#3084, relative_variation#3085]
+Arguments: [dense_rank(absolute_variation#3084) windowspecdefinition(absolute_variation#3084 DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS variation_rank#2863], [absolute_variation#3084 DESC NULLS LAST]
+
+(44) AdaptiveSparkPlan
+Output [9]: [pu_location_id#3313, pickup_zone#3314, pickup_borough#3315, weather_categories#3081L, min_hourly_trips#3082, max_hourly_trips#3083, absolute_variation#3084, relative_variation#3085, variation_rank#2863]
+Arguments: isFinalPlan=false
+

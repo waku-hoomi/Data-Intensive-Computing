@@ -1,0 +1,24 @@
+{
+  "python": "3.12.14",
+  "spark": "4.0.4",
+  "delta_spark": "4.0.1",
+  "os": "macOS-26.6.2-arm64-arm-64bit",
+  "java": "17.0.20.1",
+  "master": "local[4]",
+  "driver_memory": "4g",
+  "shuffle_partitions": "8",
+  "session_timezone": "UTC",
+  "analysis_config": {
+    "timezone": "America/New_York",
+    "start_date": "2024-01-01",
+    "end_date_exclusive": "2024-04-01",
+    "min_weather_hours": 24,
+    "schema_version": 1,
+    "weather_interpretation_approved": true,
+    "weather_provenance_status": "unverified",
+    "weather_source_note": "User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis."
+  },
+  "cpu": "Apple M5",
+  "memory_bytes": "17179869184",
+  "logical_cpus": "10"
+}

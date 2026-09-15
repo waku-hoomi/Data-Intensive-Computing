@@ -1,0 +1,14 @@
+== Physical Plan ==
+* ColumnarToRow (2)
++- Scan parquet  (1)
+
+
+(1) Scan parquet 
+Output [5]: [local_month#18108, pu_location_id#18109, pickup_zone#18110, pickup_borough#18111, trip_count#18112L]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/products/taxi_zone_statistics]
+ReadSchema: struct<local_month:string,pu_location_id:int,pickup_zone:string,pickup_borough:string,trip_count:bigint>
+
+(2) ColumnarToRow [codegen id : 1]
+Input [5]: [local_month#18108, pu_location_id#18109, pickup_zone#18110, pickup_borough#18111, trip_count#18112L]
+

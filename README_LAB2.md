@@ -1,8 +1,8 @@
 # ID2221 Lab 2: Querying and Optimizing the Urban Data Platform
 
-Implementation in progress, due 2026-09-16. See `docs/LAB2_PROGRESS.md` for current
-validation and pending source decisions. The original README and `docs/` reports
-describe Lab 1 and are not Lab 2 experiment results.
+This extension uses the group's Lab 1 platform and the same six course inputs.
+The original Lab 1 Markdown files are historical reference material, not the
+Lab 2 design/benchmark reports. See `docs/LAB2_PROGRESS.md` for validation status.
 
 ## Environment
 
@@ -35,33 +35,40 @@ python scripts/prepare_local_data.py /path/to/course/files
 ```
 
 The script verifies inputs and extracts the air-quality archive into `dataset/`.
-The existing Lab 1 README lists all raw filenames. Generated data is excluded
-from Git and can be regenerated. Do not replace existing course inputs silently.
+The input directory should contain `air_quality.zip`, `weather.csv`,
+`taxi_zone_lookup.csv`, and `yellow_tripdata_2024-01.parquet`,
+`yellow_tripdata_2024-02.parquet`, `yellow_tripdata_2024-03.parquet`.
+The extracted file is `dataset/air_quality/hourly_88101_2024.csv`.
+Generated data is excluded from Git and can be regenerated. Do not replace
+existing course inputs silently.
 
-Weather location/timezone/unit provenance is awaiting the user's course-data
-confirmation. `config/analytics.yaml` deliberately disables dependent production
-steps until a decision is recorded. Numeric weather codes can be analyzed as
-categories without claiming an undocumented descriptive meaning. Any accepted
-UTC interpretation must be recorded as an assumption, not as source evidence.
+The supplied files were checksum-verified on 2026-09-14. The weather CSV does not
+state its timezone. On 2026-09-15 the group approved continuing Lab 1's UTC
+interpretation and explicitly declined a sensitivity experiment. This is an
+unverified source assumption, recorded in `config/analytics.yaml`, not new source
+evidence. Numeric weather codes are analyzed as categories without inventing
+descriptive labels. If source timestamps are actually NYC local time, weather
+associations may be shifted by 4-5 hours; interpret weather findings accordingly.
 
 ## Run the platform
 
 ```sh
-# Independent of the pending weather decision:
 python scripts/run_lab2_ingestion.py taxi_zone_lookup air_quality taxi_trips
 python scripts/validate_platform.py --bronze-only
-
-# After the weather decision is recorded:
 python scripts/run_lab2_ingestion.py weather
 python scripts/run_integration.py
 python scripts/validate_platform.py
 python scripts/run_analytics.py
 python scripts/build_data_products.py
 python scripts/run_lab2_benchmark.py
+python scripts/finalize_evidence.py
 ```
 
 Run one analysis with `python scripts/run_analytics.py --query 01_zone_monthly`.
 Benchmark subsets are `--suite techniques` and `--suite queries`.
+The explicit pruning and broadcast experiments target this course's Jan-Mar
+2024 interval. If adapting to a different period, update their scope together
+with `config/analytics.yaml`; do not reuse the fixed benchmark predicates blindly.
 
 ## Analytical definitions
 
@@ -80,6 +87,8 @@ Benchmark subsets are `--suite techniques` and `--suite queries`.
   context in this integrated-data-only product and remain missing.
 - Monthly daily averages divide by calendar days in the configured interval.
   Peak-hour averages divide by actual elapsed hour observations, including DST.
+- Undefined Pearson correlation (zero variance) is returned as NULL using a
+  safe covariance/standard-deviation calculation, without disabling ANSI mode.
 
 ## Products and metadata
 
@@ -105,6 +114,17 @@ file caches are not flushed. Compare repeated medians, not invented speedups.
 - `artifacts/benchmarks/`: every run, original/optimized SQL, result equality,
   EXPLAIN FORMATTED and post-execution physical plans.
 
+The submission's `evidence/` folder contains the measured snapshot of these
+artifacts. Regenerated runs write to `artifacts/` and do not overwrite that
+submitted evidence snapshot. Reports are in `reports/`; editable Markdown is in
+`docs/Lab2_Design_Report.md` and `docs/Lab2_Benchmark_Report.md`.
+
+To regenerate PDFs from fresh measurements, install the optional report
+dependency `reportlab` and run `python scripts/build_reports.py` after the full
+benchmark and final evidence step. Report generation requires all ten comparison
+pairs to have passed equality checks. Inspect the resulting PDF layout again if
+the data or report text changes.
+
 The pruning experiment deliberately covers a February local-time window. UTC
 storage requires both February and March partitions to preserve the final local
 evening. The broadcast experiment uses the genuinely small zone lookup table.
@@ -118,6 +138,7 @@ python -m pytest tests -q
 ```
 
 Tests cover cross-state geography, station weighting, malformed values under ANSI,
-valid/invalid duplicate priority, deterministic trip IDs, hand-calculated SQL
-results, zero-demand hours and the DST boundary. These complement full-data checks;
-they do not replace real measurements or imply the final report is complete.
+valid/invalid duplicate priority, deterministic trip IDs, hand-calculated SQL,
+zero-demand hours, DST, zero variance, actual Delta metadata refresh, optimized
+result equality and experiment artifact retention. Full-data validation and
+benchmark records supplement these tests.

@@ -1,0 +1,63 @@
+{
+  "name": "technique_broadcast",
+  "records": {
+    "before": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.9798964170040563,
+        "setup_seconds": 8.300412446260452e-08,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.7941460410074797,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 1.0342112090147566,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 1
+      }
+    ],
+    "after": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.3393907089775894,
+        "setup_seconds": 4.100729711353779e-08,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.3082245420082472,
+        "setup_seconds": 4.202593117952347e-08,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.2935125830117613,
+        "setup_seconds": 8.300412446260452e-08,
+        "order_in_pair": 2
+      }
+    ]
+  },
+  "median_seconds": {
+    "before": 0.9798964170040563,
+    "after": 0.3082245420082472
+  },
+  "speedup": 3.179164159412838,
+  "results_equal": true,
+  "result_rows": 8,
+  "schema": "struct<borough:string,trip_count:bigint>",
+  "before_options": {},
+  "after_options": {},
+  "config": {
+    "warmup_runs": 1,
+    "measured_runs": 3,
+    "shuffle_partitions": 8,
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance": 1e-08
+  },
+  "created_at_utc": "2026-09-15T14:19:06.638617+00:00"
+}

@@ -1,0 +1,65 @@
+{
+  "name": "query_05_peak_hours",
+  "records": {
+    "before": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.5309875000093598,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.4745305000105873,
+        "setup_seconds": 4.100729711353779e-08,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.46759825001936406,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 1
+      }
+    ],
+    "after": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.045531041017966345,
+        "setup_seconds": 0.6197096250252798,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.042628708004485816,
+        "setup_seconds": 0.5221111669961829,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.045094542001606897,
+        "setup_seconds": 0.49881041698972695,
+        "order_in_pair": 2
+      }
+    ]
+  },
+  "median_seconds": {
+    "before": 0.4745305000105873,
+    "after": 0.045094542001606897
+  },
+  "speedup": 10.523014071052721,
+  "results_equal": true,
+  "result_rows": 7,
+  "schema": "struct<weekday_iso:int,local_hour_of_day:int,observed_hours:bigint,trip_count:bigint,mean_hourly_trips:double,peak_rank:int>",
+  "before_options": {},
+  "after_options": {
+    "cache": "city_hours"
+  },
+  "config": {
+    "warmup_runs": 1,
+    "measured_runs": 3,
+    "shuffle_partitions": 8,
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance": 1e-08
+  },
+  "created_at_utc": "2026-09-15T14:20:17.904724+00:00"
+}

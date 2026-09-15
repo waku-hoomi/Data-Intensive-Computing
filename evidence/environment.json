@@ -1,0 +1,9 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "spark": "4.0.4",
+  "delta_spark": "4.0.1",
+  "java": "17.0.20.1",
+  "master": "local[4]",
+  "roundtrip_rows": 10
+}

@@ -1,0 +1,47 @@
+== Physical Plan ==
+AdaptiveSparkPlan (7)
++- HashAggregate (6)
+   +- Exchange (5)
+      +- HashAggregate (4)
+         +- Project (3)
+            +- Filter (2)
+               +- Scan parquet  (1)
+
+
+(1) Scan parquet 
+Output [5]: [pickup_ts#2, trip_distance#5, weather_condition_code#20, pickup_year#23, pickup_month#24]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0)]
+ReadSchema: struct<pickup_ts:timestamp,trip_distance:double,weather_condition_code:int>
+
+(2) Filter
+Input [5]: [pickup_ts#2, trip_distance#5, weather_condition_code#20, pickup_year#23, pickup_month#24]
+Condition : ((isnotnull(pickup_ts#2) AND (pickup_ts#2 >= 2024-01-01 05:00:00)) AND (pickup_ts#2 < 2024-04-01 04:00:00))
+
+(3) Project
+Output [2]: [trip_distance#5, weather_condition_code#20]
+Input [5]: [pickup_ts#2, trip_distance#5, weather_condition_code#20, pickup_year#23, pickup_month#24]
+
+(4) HashAggregate
+Input [2]: [trip_distance#5, weather_condition_code#20]
+Keys [1]: [weather_condition_code#20]
+Functions [3]: [partial_count(1), partial_count(trip_distance#5), partial_avg(trip_distance#5)]
+Aggregate Attributes [4]: [count#1014L, count#1015L, sum#1016, count#1017L]
+Results [5]: [weather_condition_code#20, count#1018L, count#1019L, sum#1020, count#1021L]
+
+(5) Exchange
+Input [5]: [weather_condition_code#20, count#1018L, count#1019L, sum#1020, count#1021L]
+Arguments: hashpartitioning(weather_condition_code#20, 8), ENSURE_REQUIREMENTS, [plan_id=316]
+
+(6) HashAggregate
+Input [5]: [weather_condition_code#20, count#1018L, count#1019L, sum#1020, count#1021L]
+Keys [1]: [weather_condition_code#20]
+Functions [3]: [count(1), count(trip_distance#5), avg(trip_distance#5)]
+Aggregate Attributes [3]: [count(1)#945L, count(trip_distance#5)#946L, avg(trip_distance#5)#947]
+Results [4]: [weather_condition_code#20, count(1)#945L AS trip_count#903L, count(trip_distance#5)#946L AS valid_distance_count#904L, avg(trip_distance#5)#947 AS avg_distance_miles#905]
+
+(7) AdaptiveSparkPlan
+Output [4]: [weather_condition_code#20, trip_count#903L, valid_distance_count#904L, avg_distance_miles#905]
+Arguments: isFinalPlan=false
+

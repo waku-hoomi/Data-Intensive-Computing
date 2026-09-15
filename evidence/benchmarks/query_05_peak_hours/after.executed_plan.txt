@@ -1,0 +1,28 @@
+*(4) Filter (peak_rank#46038 = 1)
++- Window [dense_rank(mean_hourly_trips#46034) windowspecdefinition(weekday_iso#46030, mean_hourly_trips#46034 DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS peak_rank#46038], [weekday_iso#46030], [mean_hourly_trips#46034 DESC NULLS LAST]
+   +- WindowGroupLimit [weekday_iso#46030], [mean_hourly_trips#46034 DESC NULLS LAST], dense_rank(mean_hourly_trips#46034), 1, Final
+      +- *(3) Sort [weekday_iso#46030 ASC NULLS FIRST, mean_hourly_trips#46034 DESC NULLS LAST], false, 0
+         +- Exchange hashpartitioning(weekday_iso#46030, 8), ENSURE_REQUIREMENTS, [plan_id=13015]
+            +- WindowGroupLimit [weekday_iso#46030], [mean_hourly_trips#46034 DESC NULLS LAST], dense_rank(mean_hourly_trips#46034), 1, Partial
+               +- *(2) Sort [weekday_iso#46030 ASC NULLS FIRST, mean_hourly_trips#46034 DESC NULLS LAST], false, 0
+                  +- *(2) HashAggregate(keys=[_groupingexpression#46028, _groupingexpression#46029], functions=[count(1), sum(trip_count#46007L), avg(trip_count#46007L)], output=[weekday_iso#46030, local_hour_of_day#46031, observed_hours#46032L, trip_count#46033L, mean_hourly_trips#46034])
+                     +- Exchange hashpartitioning(_groupingexpression#46028, _groupingexpression#46029, 8), ENSURE_REQUIREMENTS, [plan_id=13009]
+                        +- *(1) HashAggregate(keys=[_groupingexpression#46028, _groupingexpression#46029], functions=[partial_count(1), partial_sum(trip_count#46007L), partial_avg(trip_count#46007L)], output=[_groupingexpression#46028, _groupingexpression#46029, count#46063L, sum#46064L, sum#46065, count#46066L])
+                           +- *(1) Project [trip_count#46007L, (weekday(cast(local_hour#46005 as date)) + 1) AS _groupingexpression#46028, hour(local_hour#46005, Some(UTC)) AS _groupingexpression#46029]
+                              +- Scan In-memory table city_hours [local_hour#46005, trip_count#46007L]
+                                    +- InMemoryRelation [pickup_hour#46004, local_hour#46005, weather_condition_code#46006, trip_count#46007L], StorageLevel(disk, memory, deserialized, 1 replicas)
+                                          +- *(5) Project [pickup_hour#45092, local_hour#45091, weather_condition_code#45081, coalesce(trip_count#45082L, 0) AS trip_count#45087L]
+                                             +- *(5) SortMergeJoin [pickup_hour#45092], [pickup_hour#45125], LeftOuter
+                                                :- *(2) Sort [pickup_hour#45092 ASC NULLS FIRST], false, 0
+                                                :  +- Exchange hashpartitioning(pickup_hour#45092, 8), ENSURE_REQUIREMENTS, [plan_id=12802]
+                                                :     +- *(1) Project [pickup_hour#45092, from_utc_timestamp(pickup_hour#45092, America/New_York) AS local_hour#45091]
+                                                :        +- *(1) Generate explode(org.apache.spark.sql.catalyst.expressions.UnsafeArrayData@4d864f25), false, [pickup_hour#45092]
+                                                :           +- *(1) Scan OneRowRelation[]
+                                                +- *(4) Sort [pickup_hour#45125 ASC NULLS FIRST], false, 0
+                                                   +- *(4) HashAggregate(keys=[pickup_hour#45125], functions=[max(weather_condition_code#20), count(1)], output=[pickup_hour#45125, weather_condition_code#45081, trip_count#45082L])
+                                                      +- Exchange hashpartitioning(pickup_hour#45125, 8), ENSURE_REQUIREMENTS, [plan_id=12813]
+                                                         +- *(3) HashAggregate(keys=[pickup_hour#45125], functions=[partial_max(weather_condition_code#20), partial_count(1)], output=[pickup_hour#45125, max#45198, count#45199L])
+                                                            +- *(3) Project [weather_condition_code#20, date_trunc(hour, pickup_ts#2, Some(UTC)) AS pickup_hour#45125]
+                                                               +- *(3) Filter (((isnotnull(pickup_ts#2) AND (pickup_ts#2 >= 2024-01-01 05:00:00)) AND (pickup_ts#2 < 2024-04-01 04:00:00)) AND isnotnull(date_trunc(hour, pickup_ts#2, Some(UTC))))
+                                                                  +- *(3) ColumnarToRow
+                                                                     +- FileScan parquet [pickup_ts#2,weather_condition_code#20,pickup_year#23,pickup_month#24] Batched: true, DataFilters: [isnotnull(pickup_ts#2), (pickup_ts#2 >= 2024-01-01 05:00:00), (pickup_ts#2 < 2024-04-01 04:00:00..., Format: Parquet, Location: PreparedDeltaFileIndex(1 paths)[file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/..., PartitionFilters: [], PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,20..., ReadSchema: struct<pickup_ts:timestamp,weather_condition_code:int>

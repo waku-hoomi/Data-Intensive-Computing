@@ -1,0 +1,95 @@
+== Physical Plan ==
+* HashAggregate (16)
++- Exchange (15)
+   +- * HashAggregate (14)
+      +- * Project (13)
+         +- * SortMergeJoin LeftOuter (12)
+            :- * Sort (6)
+            :  +- Exchange (5)
+            :     +- * Project (4)
+            :        +- * Filter (3)
+            :           +- * ColumnarToRow (2)
+            :              +- Scan parquet  (1)
+            +- * Sort (11)
+               +- Exchange (10)
+                  +- * Filter (9)
+                     +- * ColumnarToRow (8)
+                        +- Scan parquet  (7)
+
+
+(1) Scan parquet 
+Output [4]: [pickup_ts#14036, pu_location_id#14042, pickup_year#14054, pickup_month#14055]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/bronze/taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0)]
+ReadSchema: struct<pickup_ts:timestamp,pu_location_id:int>
+
+(2) ColumnarToRow [codegen id : 1]
+Input [4]: [pickup_ts#14036, pu_location_id#14042, pickup_year#14054, pickup_month#14055]
+
+(3) Filter [codegen id : 1]
+Input [4]: [pickup_ts#14036, pu_location_id#14042, pickup_year#14054, pickup_month#14055]
+Condition : ((isnotnull(pickup_ts#14036) AND (pickup_ts#14036 >= 2024-01-01 05:00:00)) AND (pickup_ts#14036 < 2024-04-01 04:00:00))
+
+(4) Project [codegen id : 1]
+Output [1]: [pu_location_id#14042]
+Input [4]: [pickup_ts#14036, pu_location_id#14042, pickup_year#14054, pickup_month#14055]
+
+(5) Exchange
+Input [1]: [pu_location_id#14042]
+Arguments: hashpartitioning(pu_location_id#14042, 8), ENSURE_REQUIREMENTS, [plan_id=2244]
+
+(6) Sort [codegen id : 2]
+Input [1]: [pu_location_id#14042]
+Arguments: [pu_location_id#14042 ASC NULLS FIRST], false, 0
+
+(7) Scan parquet 
+Output [2]: [location_id#14056, borough#14057]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/bronze/taxi_zone_lookup]
+PushedFilters: [IsNotNull(location_id)]
+ReadSchema: struct<location_id:int,borough:string>
+
+(8) ColumnarToRow [codegen id : 3]
+Input [2]: [location_id#14056, borough#14057]
+
+(9) Filter [codegen id : 3]
+Input [2]: [location_id#14056, borough#14057]
+Condition : isnotnull(location_id#14056)
+
+(10) Exchange
+Input [2]: [location_id#14056, borough#14057]
+Arguments: hashpartitioning(location_id#14056, 8), ENSURE_REQUIREMENTS, [plan_id=2253]
+
+(11) Sort [codegen id : 4]
+Input [2]: [location_id#14056, borough#14057]
+Arguments: [location_id#14056 ASC NULLS FIRST], false, 0
+
+(12) SortMergeJoin [codegen id : 5]
+Left keys [1]: [pu_location_id#14042]
+Right keys [1]: [location_id#14056]
+Join type: LeftOuter
+Join condition: None
+
+(13) Project [codegen id : 5]
+Output [1]: [borough#14057]
+Input [3]: [pu_location_id#14042, location_id#14056, borough#14057]
+
+(14) HashAggregate [codegen id : 5]
+Input [1]: [borough#14057]
+Keys [1]: [borough#14057]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#14806L]
+Results [2]: [borough#14057, count#14807L]
+
+(15) Exchange
+Input [2]: [borough#14057, count#14807L]
+Arguments: hashpartitioning(borough#14057, 8), ENSURE_REQUIREMENTS, [plan_id=2262]
+
+(16) HashAggregate [codegen id : 6]
+Input [2]: [borough#14057, count#14807L]
+Keys [1]: [borough#14057]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#14673L]
+Results [2]: [borough#14057, count(1)#14673L AS trip_count#14668L]
+

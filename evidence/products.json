@@ -1,0 +1,58 @@
+[
+  {
+    "product_name": "daily_mobility_summary",
+    "data_source": "data/gold/integrated_taxi_trips",
+    "source_delta_version": 0,
+    "created_at_utc": "2026-09-15T14:17:28.614019+00:00",
+    "refreshed_at_utc": "2026-09-15T14:17:28.614019+00:00",
+    "schema_version": 1,
+    "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"local_date\",\"nullable\":true,\"type\":\"date\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":false,\"type\":\"long\"},{\"metadata\":{},\"name\":\"distance_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"distance_n\",\"nullable\":false,\"type\":\"long\"},{\"metadata\":{},\"name\":\"duration_sum\",\"nullable\":true,\"type\":\"decimal(37,6)\"},{\"metadata\":{},\"name\":\"duration_n\",\"nullable\":false,\"type\":\"long\"},{\"metadata\":{},\"name\":\"fare_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"fare_n\",\"nullable\":false,\"type\":\"long\"}],\"type\":\"struct\"}",
+    "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 1, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\"}",
+    "storage_bytes": 31010,
+    "active_files": 1,
+    "row_count": 717,
+    "build_seconds": 4.4511099999945145
+  },
+  {
+    "product_name": "taxi_zone_statistics",
+    "data_source": "data/gold/integrated_taxi_trips",
+    "source_delta_version": 0,
+    "created_at_utc": "2026-09-15T14:17:34.532328+00:00",
+    "refreshed_at_utc": "2026-09-15T14:17:34.532328+00:00",
+    "schema_version": 1,
+    "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"local_month\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pu_location_id\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"pickup_zone\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":false,\"type\":\"long\"},{\"metadata\":{},\"name\":\"avg_distance_miles\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"avg_duration_min\",\"nullable\":true,\"type\":\"decimal(31,10)\"},{\"metadata\":{},\"name\":\"avg_fare\",\"nullable\":true,\"type\":\"double\"}],\"type\":\"struct\"}",
+    "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 1, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\"}",
+    "storage_bytes": 31176,
+    "active_files": 1,
+    "row_count": 773,
+    "build_seconds": 2.323840042023221
+  },
+  {
+    "product_name": "weather_impact_summary",
+    "data_source": "data/gold/integrated_taxi_trips",
+    "source_delta_version": 0,
+    "created_at_utc": "2026-09-15T14:17:37.851974+00:00",
+    "refreshed_at_utc": "2026-09-15T14:17:37.851974+00:00",
+    "schema_version": 1,
+    "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"pu_location_id\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"pickup_zone\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"weather_condition_code\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"observed_hours\",\"nullable\":false,\"type\":\"long\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"distance_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"distance_n\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"mean_hourly_trips\",\"nullable\":true,\"type\":\"double\"}],\"type\":\"struct\"}",
+    "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 1, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\"}",
+    "storage_bytes": 74965,
+    "active_files": 1,
+    "row_count": 3668,
+    "build_seconds": 3.2943327920220327
+  },
+  {
+    "product_name": "air_quality_impact_summary",
+    "data_source": "data/gold/integrated_taxi_trips",
+    "source_delta_version": 0,
+    "created_at_utc": "2026-09-15T14:17:42.020606+00:00",
+    "refreshed_at_utc": "2026-09-15T14:17:42.020606+00:00",
+    "schema_version": 1,
+    "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_hour\",\"nullable\":false,\"type\":\"timestamp\"},{\"metadata\":{},\"name\":\"local_hour\",\"nullable\":false,\"type\":\"timestamp\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":false,\"type\":\"long\"},{\"metadata\":{},\"name\":\"pm25_ug_m3\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"aq_station_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"aq_available\",\"nullable\":false,\"type\":\"boolean\"}],\"type\":\"struct\"}",
+    "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 1, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\"}",
+    "storage_bytes": 107846,
+    "active_files": 1,
+    "row_count": 15281,
+    "build_seconds": 1.5373365840059705
+  }
+]

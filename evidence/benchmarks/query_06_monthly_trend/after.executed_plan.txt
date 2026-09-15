@@ -1,0 +1,25 @@
+*(8) Project [local_month#50970, calendar_days#50971L, trip_count#50942L, mean_daily_trips#50926, ((cast((trip_count#50942L - _we0#50943L) as decimal(20,0)) * 100.0) / if ((_we1#50944L = 0)) null else cast(_we1#50944L as decimal(20,0))) AS month_over_month_pct#50927]
++- Window [lag(trip_count#50942L, -1, null) windowspecdefinition(local_month#50970 ASC NULLS FIRST, specifiedwindowframe(RowFrame, -1, -1)) AS _we0#50943L, lag(trip_count#50942L, -1, null) windowspecdefinition(local_month#50970 ASC NULLS FIRST, specifiedwindowframe(RowFrame, -1, -1)) AS _we1#50944L], [local_month#50970 ASC NULLS FIRST]
+   +- *(7) Sort [local_month#50970 ASC NULLS FIRST], false, 0
+      +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=15496]
+         +- *(6) Project [local_month#50970, calendar_days#50971L, trip_count#50942L, (cast(trip_count#50942L as double) / cast(calendar_days#50971L as double)) AS mean_daily_trips#50926]
+            +- *(6) Project [local_month#50970, calendar_days#50971L, coalesce(trip_count#50983L, 0) AS trip_count#50942L]
+               +- *(6) SortMergeJoin [local_month#50970], [local_month#50982], LeftOuter
+                  :- *(3) Sort [local_month#50970 ASC NULLS FIRST], false, 0
+                  :  +- *(3) HashAggregate(keys=[_groupingexpression#50969], functions=[count(distinct cast(local_hour#50968 as date)#51051)], output=[local_month#50970, calendar_days#50971L])
+                  :     +- Exchange hashpartitioning(_groupingexpression#50969, 8), ENSURE_REQUIREMENTS, [plan_id=15474]
+                  :        +- *(2) HashAggregate(keys=[_groupingexpression#50969], functions=[partial_count(distinct cast(local_hour#50968 as date)#51051)], output=[_groupingexpression#50969, count#51054L])
+                  :           +- *(2) HashAggregate(keys=[_groupingexpression#50969, cast(local_hour#50968 as date)#51051], functions=[], output=[_groupingexpression#50969, cast(local_hour#50968 as date)#51051])
+                  :              +- Exchange hashpartitioning(_groupingexpression#50969, cast(local_hour#50968 as date)#51051, 8), ENSURE_REQUIREMENTS, [plan_id=15469]
+                  :                 +- *(1) HashAggregate(keys=[_groupingexpression#50969, cast(local_hour#50968 as date) AS cast(local_hour#50968 as date)#51051], functions=[], output=[_groupingexpression#50969, cast(local_hour#50968 as date)#51051])
+                  :                    +- *(1) Project [from_utc_timestamp(pickup_hour#50965, America/New_York) AS local_hour#50968, date_format(from_utc_timestamp(pickup_hour#50965, America/New_York), yyyy-MM, Some(UTC)) AS _groupingexpression#50969]
+                  :                       +- *(1) Generate explode(org.apache.spark.sql.catalyst.expressions.UnsafeArrayData@4d864f25), false, [pickup_hour#50965]
+                  :                          +- *(1) Scan OneRowRelation[]
+                  +- *(5) Sort [local_month#50982 ASC NULLS FIRST], false, 0
+                     +- *(5) HashAggregate(keys=[_groupingexpression#50981], functions=[sum(trip_count#50974L)], output=[local_month#50982, trip_count#50983L])
+                        +- Exchange hashpartitioning(_groupingexpression#50981, 8), ENSURE_REQUIREMENTS, [plan_id=15486]
+                           +- *(4) HashAggregate(keys=[_groupingexpression#50981], functions=[partial_sum(trip_count#50974L)], output=[_groupingexpression#50981, sum#51057L])
+                              +- *(4) Project [trip_count#50974L, date_format(cast(local_date#50972 as timestamp), yyyy-MM, Some(UTC)) AS _groupingexpression#50981]
+                                 +- *(4) Filter isnotnull(date_format(cast(local_date#50972 as timestamp), yyyy-MM, Some(UTC)))
+                                    +- *(4) ColumnarToRow
+                                       +- FileScan parquet [local_date#50972,trip_count#50974L] Batched: true, DataFilters: [isnotnull(date_format(cast(local_date#50972 as timestamp), yyyy-MM, Some(UTC)))], Format: Parquet, Location: PreparedDeltaFileIndex(1 paths)[file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/..., PartitionFilters: [], PushedFilters: [], ReadSchema: struct<local_date:date,trip_count:bigint>

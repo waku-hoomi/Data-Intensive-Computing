@@ -1,0 +1,640 @@
+[
+  {
+    "name": "technique_cache",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.532036083022831,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.24496687500504777,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.22553987501305528,
+          "setup_seconds": 1.6600824892520905e-07,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.10487583299982361,
+          "setup_seconds": 9.773645541979931,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.10098058299627155,
+          "setup_seconds": 9.214264667010866,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.11191987499478273,
+          "setup_seconds": 9.090715458005434,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.24496687500504777,
+      "after": 0.10487583299982361
+    },
+    "speedup": 2.3357800171700163,
+    "results_equal": true,
+    "result_rows": 14,
+    "schema": "struct<weather_condition_code:int,trip_count:bigint,valid_distance_count:bigint,avg_distance_miles:double>",
+    "before_options": {},
+    "after_options": {
+      "cache": "analysis_trips"
+    },
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:18:49.583556+00:00"
+  },
+  {
+    "name": "technique_partition_pruning",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.734119875007309,
+          "setup_seconds": 8.297502063214779e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.6889464169798885,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.6963842079858296,
+          "setup_seconds": 1.66997779160738e-07,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.574976959003834,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.5783744170039427,
+          "setup_seconds": 4.1996827349066734e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.5565295839915052,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.6963842079858296,
+      "after": 0.574976959003834
+    },
+    "speedup": 1.2111515028225435,
+    "results_equal": true,
+    "result_rows": 254,
+    "schema": "struct<local_month:string,pu_location_id:int,pickup_zone:string,pickup_borough:string,trip_count:bigint>",
+    "before_options": {},
+    "after_options": {},
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:18:57.967953+00:00"
+  },
+  {
+    "name": "technique_broadcast",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.9798964170040563,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.7941460410074797,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 1.0342112090147566,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.3393907089775894,
+          "setup_seconds": 4.100729711353779e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.3082245420082472,
+          "setup_seconds": 4.202593117952347e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.2935125830117613,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.9798964170040563,
+      "after": 0.3082245420082472
+    },
+    "speedup": 3.179164159412838,
+    "results_equal": true,
+    "result_rows": 8,
+    "schema": "struct<borough:string,trip_count:bigint>",
+    "before_options": {},
+    "after_options": {},
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:19:06.638617+00:00"
+  },
+  {
+    "name": "technique_aqe",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.7302367090014741,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.719946750003146,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.7211634579871316,
+          "setup_seconds": 4.1996827349066734e-08,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.6923756659962237,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.694836208014749,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.6772219169943128,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.7211634579871316,
+      "after": 0.6923756659962237
+    },
+    "speedup": 1.041578283877852,
+    "results_equal": true,
+    "result_rows": 773,
+    "schema": "struct<local_month:string,pu_location_id:int,pickup_zone:string,pickup_borough:string,trip_count:bigint>",
+    "before_options": {},
+    "after_options": {
+      "aqe": true
+    },
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:19:15.518638+00:00"
+  },
+  {
+    "name": "query_01_zone_monthly",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.6750598329817876,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.6932273750135209,
+          "setup_seconds": 8.399365469813347e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.6871487500029616,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.06512520799878985,
+          "setup_seconds": 4.0978193283081055e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.06411241699242964,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.06499058302142657,
+          "setup_seconds": 4.1996827349066734e-08,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.6871487500029616,
+      "after": 0.06499058302142657
+    },
+    "speedup": 10.573051018428583,
+    "results_equal": true,
+    "result_rows": 773,
+    "schema": "struct<local_month:string,pu_location_id:int,pickup_zone:string,pickup_borough:string,trip_count:bigint>",
+    "before_options": {},
+    "after_options": {},
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:19:21.170775+00:00"
+  },
+  {
+    "name": "query_02_weather_distance",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.19803733300068416,
+          "setup_seconds": 8.297502063214779e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.19776258399360813,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.19822916699922644,
+          "setup_seconds": 1.2497184798121452e-07,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.09343358399928547,
+          "setup_seconds": 10.659629292000318,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.08954549999907613,
+          "setup_seconds": 10.064829249982722,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.08687020899378695,
+          "setup_seconds": 9.564735375024611,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.19803733300068416,
+      "after": 0.08954549999907613
+    },
+    "speedup": 2.211583306840962,
+    "results_equal": true,
+    "result_rows": 14,
+    "schema": "struct<weather_condition_code:int,trip_count:bigint,valid_distance_count:bigint,avg_distance_miles:double>",
+    "before_options": {},
+    "after_options": {
+      "cache": "analysis_trips"
+    },
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:19:53.596428+00:00"
+  },
+  {
+    "name": "query_03_air_quality_demand",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.8388074999966193,
+          "setup_seconds": 8.399365469813347e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.7654337910062168,
+          "setup_seconds": 8.399365469813347e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.844397167005809,
+          "setup_seconds": 4.202593117952347e-08,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.0856060000078287,
+          "setup_seconds": 8.297502063214779e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.08475245899171568,
+          "setup_seconds": 1.0840012691915035e-06,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.08622245900915004,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.8388074999966193,
+      "after": 0.0856060000078287
+    },
+    "speedup": 9.798466228067076,
+    "results_equal": true,
+    "result_rows": 3,
+    "schema": "struct<pickup_borough:string,observed_hours:bigint,mean_pm25_ug_m3:double,mean_hourly_trips:double,pearson_r:double>",
+    "before_options": {},
+    "after_options": {},
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:19:59.945975+00:00"
+  },
+  {
+    "name": "query_04_weather_variation",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 1.7393775410018861,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 1.7121515830222052,
+          "setup_seconds": 8.399365469813347e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 1.5886768750206102,
+          "setup_seconds": 1.66997779160738e-07,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.09468116701464169,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.08954991700011306,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.09032200000365265,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 1.7121515830222052,
+      "after": 0.09032200000365265
+    },
+    "speedup": 18.95608581467378,
+    "results_equal": true,
+    "result_rows": 262,
+    "schema": "struct<pu_location_id:int,pickup_zone:string,pickup_borough:string,weather_categories:bigint,min_hourly_trips:double,max_hourly_trips:double,absolute_variation:double,relative_variation:double,variation_rank:int>",
+    "before_options": {},
+    "after_options": {},
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:20:12.653274+00:00"
+  },
+  {
+    "name": "query_05_peak_hours",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.5309875000093598,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.4745305000105873,
+          "setup_seconds": 4.100729711353779e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.46759825001936406,
+          "setup_seconds": 1.2500095181167126e-07,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.045531041017966345,
+          "setup_seconds": 0.6197096250252798,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.042628708004485816,
+          "setup_seconds": 0.5221111669961829,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.045094542001606897,
+          "setup_seconds": 0.49881041698972695,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.4745305000105873,
+      "after": 0.045094542001606897
+    },
+    "speedup": 10.523014071052721,
+    "results_equal": true,
+    "result_rows": 7,
+    "schema": "struct<weekday_iso:int,local_hour_of_day:int,observed_hours:bigint,trip_count:bigint,mean_hourly_trips:double,peak_rank:int>",
+    "before_options": {},
+    "after_options": {
+      "cache": "city_hours"
+    },
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:20:17.904724+00:00"
+  },
+  {
+    "name": "query_06_monthly_trend",
+    "records": {
+      "before": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.8718878749932628,
+          "setup_seconds": 8.40227585285902e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.8803823750058655,
+          "setup_seconds": 8.40227585285902e-08,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.8865828329871874,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 1
+        }
+      ],
+      "after": [
+        {
+          "repetition": 1,
+          "execution_seconds": 0.12350191699806601,
+          "setup_seconds": 1.66997779160738e-07,
+          "order_in_pair": 2
+        },
+        {
+          "repetition": 2,
+          "execution_seconds": 0.10370008301106282,
+          "setup_seconds": 8.300412446260452e-08,
+          "order_in_pair": 1
+        },
+        {
+          "repetition": 3,
+          "execution_seconds": 0.09823716699611396,
+          "setup_seconds": 8.297502063214779e-08,
+          "order_in_pair": 2
+        }
+      ]
+    },
+    "median_seconds": {
+      "before": 0.8803823750058655,
+      "after": 0.10370008301106282
+    },
+    "speedup": 8.489697881070601,
+    "results_equal": true,
+    "result_rows": 3,
+    "schema": "struct<local_month:string,calendar_days:bigint,trip_count:bigint,mean_daily_trips:double,month_over_month_pct:decimal(38,14)>",
+    "before_options": {},
+    "after_options": {},
+    "config": {
+      "warmup_runs": 1,
+      "measured_runs": 3,
+      "shuffle_partitions": 8,
+      "relative_tolerance": 1e-09,
+      "absolute_tolerance": 1e-08
+    },
+    "created_at_utc": "2026-09-15T14:20:24.609266+00:00"
+  }
+]

@@ -1,0 +1,65 @@
+{
+  "name": "query_02_weather_distance",
+  "records": {
+    "before": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.19803733300068416,
+        "setup_seconds": 8.297502063214779e-08,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.19776258399360813,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.19822916699922644,
+        "setup_seconds": 1.2497184798121452e-07,
+        "order_in_pair": 1
+      }
+    ],
+    "after": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.09343358399928547,
+        "setup_seconds": 10.659629292000318,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.08954549999907613,
+        "setup_seconds": 10.064829249982722,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.08687020899378695,
+        "setup_seconds": 9.564735375024611,
+        "order_in_pair": 2
+      }
+    ]
+  },
+  "median_seconds": {
+    "before": 0.19803733300068416,
+    "after": 0.08954549999907613
+  },
+  "speedup": 2.211583306840962,
+  "results_equal": true,
+  "result_rows": 14,
+  "schema": "struct<weather_condition_code:int,trip_count:bigint,valid_distance_count:bigint,avg_distance_miles:double>",
+  "before_options": {},
+  "after_options": {
+    "cache": "analysis_trips"
+  },
+  "config": {
+    "warmup_runs": 1,
+    "measured_runs": 3,
+    "shuffle_partitions": 8,
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance": 1e-08
+  },
+  "created_at_utc": "2026-09-15T14:19:53.596428+00:00"
+}

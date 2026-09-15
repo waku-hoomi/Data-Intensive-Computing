@@ -1,120 +1,144 @@
-# ID2221 Week 1 — Urban Data Integration Platform
+# ID2221 Lab 2: Querying and Optimizing the Urban Data Platform
 
-A PySpark + Delta Lake platform for the KTH ID2221 course project that ingests
-NYC taxi trips, weather, air quality,
-and taxi zone lookup data through a single generic, config-driven ingestion
-framework, then produces an integrated analytical Delta table
-(`integrated_taxi_trips`). See `docs/DESIGN_REPORT.md`, `docs/DATA_CATALOG.md`,
-`docs/ARCHITECTURE.md`, and `docs/BENCHMARK_REPORT.md` for the full write-up.
+This extension uses the group's Lab 1 platform and the same six course inputs.
+The original Lab 1 Markdown files are historical reference material, not the
+Lab 2 design/benchmark reports. See `docs/LAB2_PROGRESS.md` for validation status.
 
-## Requirements
+## Environment
 
-- Python 3.9+ (tested on 3.9.13)
-- Java 17 (tested on Amazon Corretto 17)
-- ~2GB free disk for `dataset/` + generated `data/` (bronze + gold + benchmark)
+Use Python 3.12, Java 17, PySpark 4.0.4 and Delta Lake 4.0.1. Install the project
+requirements into a virtual environment; set `JAVA_HOME` to your JDK directory.
+The default local Spark master is `local[4]` with a 4 GB driver request and eight
+SQL shuffle partitions. Override `LAB2_SPARK_MASTER` or `LAB2_DRIVER_MEMORY` if
+needed and record the change when comparing benchmark results.
 
-## Setup
-
-```bash
-pip install -r requirements.txt
+```sh
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-lab2.txt
+python scripts/check_environment.py
 ```
 
-Installs `pyspark==4.0.4`, `delta-spark==4.0.1`, plus `pandas`/`pyarrow`/`pyyaml`.
+Windows activation uses `.venv\Scripts\activate`; the existing project contains
+optional Windows Hadoop support. All commands below run from this project root.
+Allow enough disk for the 2.37 GB uncompressed air-quality CSV, other raw inputs,
+Delta outputs, temporary Spark work and caches (at least 15 GB free recommended).
+The first Spark start downloads Delta Java dependencies.
 
-### Windows only: Hadoop native libraries
+## Data and source decision
 
-Spark on Windows needs `winutils.exe` and `hadoop.dll` on the PATH (Hadoop's
-Windows filesystem shim — without them, Delta table writes fail with
-`UnsatisfiedLinkError` or `HADOOP_HOME and hadoop.home.dir are unset`). This repo
-expects them at `./hadoop/bin/winutils.exe` and `./hadoop/bin/hadoop.dll`
-(matching the bundled PySpark's Hadoop 3.3.x client). `src/urban_platform/utils/
-spark_session.py` auto-detects this directory and sets `HADOOP_HOME`/`PATH` for
-you — you only need to place the two files there once. They are small,
-widely-mirrored open-source binaries (not part of this submission's own code);
-if missing, obtain them from any `hadoop-3.3.6/bin` winutils mirror.
+Use the same six course files as Lab 1. `config/input_manifest.json` records their
+Google Drive IDs, byte counts and SHA-256 hashes. If downloaded to one directory:
 
-Linux/macOS: no extra setup needed.
-
-## Data
-
-Place the raw source files under `dataset/` (git-ignored, not included in this
-submission due to size):
-
-```
-dataset/
-  taxi_zone_lookup.csv
-  weather.csv
-  air_quality/hourly_88101_2024.csv
-  yellow_tripdata_2024-01.parquet
-  yellow_tripdata_2024-02.parquet
-  yellow_tripdata_2024-03.parquet
+```sh
+python scripts/prepare_local_data.py /path/to/course/files
 ```
 
-Sources: NYC TLC trip records (Jan–Mar 2024 Yellow Taxi), NOAA/Meteostat hourly
-weather for NYC 2024, EPA AQS hourly PM2.5 (`hourly_88101_2024.csv`), TLC taxi
-zone lookup table. See `docs/DATA_CATALOG.md` for exact row counts and schemas.
+The script verifies inputs and extracts the air-quality archive into `dataset/`.
+The input directory should contain `air_quality.zip`, `weather.csv`,
+`taxi_zone_lookup.csv`, and `yellow_tripdata_2024-01.parquet`,
+`yellow_tripdata_2024-02.parquet`, `yellow_tripdata_2024-03.parquet`.
+The extracted file is `dataset/air_quality/hourly_88101_2024.csv`.
+Generated data is excluded from Git and can be regenerated. Do not replace
+existing course inputs silently.
 
-## Running the platform
+The supplied files were checksum-verified on 2026-09-14. The weather CSV does not
+state its timezone. On 2026-09-15 the group approved continuing Lab 1's UTC
+interpretation and explicitly declined a sensitivity experiment. This is an
+unverified source assumption, recorded in `config/analytics.yaml`, not new source
+evidence. Numeric weather codes are analyzed as categories without inventing
+descriptive labels. If source timestamps are actually NYC local time, weather
+associations may be shifted by 4-5 hours; interpret weather findings accordingly.
 
-All commands run from the project root (`ID2221/`).
+## Run the platform
 
-```bash
-# 1. Ingest every dataset into data/bronze/ as Delta tables (Task 3)
-python scripts/run_ingestion.py
-
-#    ...or ingest a single dataset by name:
-python scripts/run_ingestion.py taxi_trips
-
-# 2. Build the integrated analytical table into data/gold/ (Task 5)
+```sh
+python scripts/run_lab2_ingestion.py taxi_zone_lookup air_quality taxi_trips
+python scripts/validate_platform.py --bronze-only
+python scripts/run_lab2_ingestion.py weather
 python scripts/run_integration.py
-
-# 3. Run the Task 6 storage-strategy benchmark
-python scripts/run_benchmark.py
+python scripts/validate_platform.py
+python scripts/run_analytics.py
+python scripts/build_data_products.py
+python scripts/run_lab2_benchmark.py
+python scripts/finalize_evidence.py
 ```
 
-Each script prints a per-dataset summary (rows in/out/rejected, execution time,
-output path) to stdout and appends a structured record to
-`data/_metadata/ingestion_log.jsonl` (ingestion) or writes
-`data/_metadata/benchmark_results.json` (benchmark).
+Run one analysis with `python scripts/run_analytics.py --query 01_zone_monthly`.
+Benchmark subsets are `--suite techniques` and `--suite queries`.
+The explicit pruning and broadcast experiments target this course's Jan-Mar
+2024 interval. If adapting to a different period, update their scope together
+with `config/analytics.yaml`; do not reuse the fixed benchmark predicates blindly.
 
-### Expected output (measured on the reference dataset — see docs for details)
+## Analytical definitions
 
-| Dataset | Input rows | Output rows | Rejected | Time |
-|---|---:|---:|---:|---:|
-| taxi_zone_lookup | 265 | 265 | 0 | ~16s |
-| weather | 8,784 | 8,784 | 0 | ~4–25s |
-| air_quality | 8,139,551 | 7,928,224 | 211,327 | ~17–41s |
-| taxi_trips | 9,554,778 | 9,418,044 | 136,734 | ~33–59s |
+- Demand is the count of accepted trips at their pickup zone/time.
+- Analysis interval is local 2024-01-01 inclusive to 2024-04-01 exclusive.
+- Storage timestamps are UTC; reporting dates, months and hours use New York time.
+- Distance uses TLC miles; missing distances are excluded from averages and their
+  valid sample count is reported.
+- Air-quality association uses one borough-hour per observation, not one copy of
+  PM2.5 per trip. Correlation is descriptive and does not establish causality.
+- Weather demand variation compares mean trips per observed hour, including
+  zero-trip zone-hours. At least 24 observed hours are required per weather code;
+  at least two eligible codes are required per zone. Zones are the observed zones
+  with non-null IDs in this input, not all hypothetical zones.
+- Weather categories that never have any citywide trips have unavailable weather
+  context in this integrated-data-only product and remain missing.
+- Monthly daily averages divide by calendar days in the configured interval.
+  Peak-hour averages divide by actual elapsed hour observations, including DST.
+- Undefined Pearson correlation (zero variance) is returned as NULL using a
+  safe covariance/standard-deviation calculation, without disabling ANSI mode.
 
-`integrated_taxi_trips`: 9,418,044 rows; 0.00% missing weather, 90.05% missing
-air quality (Manhattan/Staten Island have no PM2.5 monitoring stations in the
-source data — see `docs/DESIGN_REPORT.md` §4 for why this is a real coverage
-gap, not a join bug).
+## Products and metadata
 
-## Project layout
+Four Delta products are in `data/products/`: daily mobility, monthly zone
+statistics, weather impacts and borough-hour air-quality context. They are small
+unpartitioned summaries, not copies of the full fact table. Metadata is stored in
+the Delta table `data/lab2_metadata/product_registry`, including source table and
+version, creation and refresh times, schema version/schema, parameters, row count,
+active-file count, storage bytes and build time. Regeneration overwrites product
+contents and appends an auditable metadata record while preserving creation time.
 
+## Experiments and artifacts
+
+Every pair uses one warm-up and three measured runs per variant. Variant order
+alternates; Spark caches are cleared between variants. Explicit cache creation is
+timed separately. Measurements are warm-process local timings; operating-system
+file caches are not flushed. Compare repeated medians, not invented speedups.
+
+- `artifacts/environment.json`: actual software/runtime environment.
+- `artifacts/validation_*.json`: data validation evidence.
+- `artifacts/query_results/`: query output and formatted plans.
+- `artifacts/products.json`: product generation and storage information.
+- `artifacts/benchmarks/`: every run, original/optimized SQL, result equality,
+  EXPLAIN FORMATTED and post-execution physical plans.
+
+The submission's `evidence/` folder contains the measured snapshot of these
+artifacts. Regenerated runs write to `artifacts/` and do not overwrite that
+submitted evidence snapshot. Reports are in `reports/`; editable Markdown is in
+`docs/Lab2_Design_Report.md` and `docs/Lab2_Benchmark_Report.md`.
+
+To regenerate PDFs from fresh measurements, install the optional report
+dependency `reportlab` and run `python scripts/build_reports.py` after the full
+benchmark and final evidence step. Report generation requires all ten comparison
+pairs to have passed equality checks. Inspect the resulting PDF layout again if
+the data or report text changes.
+
+The pruning experiment deliberately covers a February local-time window. UTC
+storage requires both February and March partitions to preserve the final local
+evening. The broadcast experiment uses the genuinely small zone lookup table.
+AQE is tested with other configuration held fixed. Saved plans must be inspected
+before claiming that a requested optimization actually occurred.
+
+## Tests
+
+```sh
+python -m pytest tests -q
 ```
-config/datasets.yaml         # declarative registry: one entry per dataset
-src/urban_platform/
-  utils/                     # Spark session bootstrap, config loader
-  transform/transforms.py    # the ONLY dataset-specific code (one fn per dataset)
-  ingestion/                 # generic pipeline: load, validate, quality-check, write, log
-  integration/integrate.py   # Task 5: builds integrated_taxi_trips
-  benchmark/                 # Task 6: storage-strategy benchmark
-scripts/                     # thin CLI wrappers around the above
-docs/                        # DATA_CATALOG, DESIGN_REPORT, ARCHITECTURE, BENCHMARK_REPORT
-data/                        # generated: bronze/, gold/, _metadata/ (git-ignored)
-hadoop/                      # Windows-only native libs (git-ignored, see Setup)
-```
 
-## Adding a new dataset
-
-1. Add one entry to `config/datasets.yaml`: input format/path, primary key,
-   timestamp columns, numeric validation rules, partitioning.
-2. If the raw shape needs real reshaping (renames, timezone handling,
-   filtering), add one small function to `transform/transforms.py` and point
-   `transform_fn` at it.
-3. Run `python scripts/run_ingestion.py <new_dataset_name>`.
-
-No changes to `ingestion/pipeline.py` or `ingestion/quality.py` are required —
-see `docs/DESIGN_REPORT.md` §3 for why.
+Tests cover cross-state geography, station weighting, malformed values under ANSI,
+valid/invalid duplicate priority, deterministic trip IDs, hand-calculated SQL,
+zero-demand hours, DST, zero variance, actual Delta metadata refresh, optimized
+result equality and experiment artifact retention. Full-data validation and
+benchmark records supplement these tests.

@@ -1,5 +1,1 @@
-pyspark==4.0.4
-delta-spark==4.0.1
-pandas
-pyarrow
-pyyaml
+-r requirements-lab2.txt

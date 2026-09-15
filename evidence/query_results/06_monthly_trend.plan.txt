@@ -1,0 +1,151 @@
+== Physical Plan ==
+AdaptiveSparkPlan (25)
++- Project (24)
+   +- Window (23)
+      +- Sort (22)
+         +- Exchange (21)
+            +- Project (20)
+               +- Project (19)
+                  +- SortMergeJoin LeftOuter (18)
+                     :- Sort (10)
+                     :  +- HashAggregate (9)
+                     :     +- Exchange (8)
+                     :        +- HashAggregate (7)
+                     :           +- HashAggregate (6)
+                     :              +- Exchange (5)
+                     :                 +- HashAggregate (4)
+                     :                    +- Project (3)
+                     :                       +- Generate (2)
+                     :                          +- Scan OneRowRelation (1)
+                     +- Sort (17)
+                        +- HashAggregate (16)
+                           +- Exchange (15)
+                              +- HashAggregate (14)
+                                 +- Project (13)
+                                    +- Filter (12)
+                                       +- Scan parquet  (11)
+
+
+(1) Scan OneRowRelation
+Output: []
+Arguments: ParallelCollectionRDD[41] at collect at /Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/scripts/run_analytics.py:28, OneRowRelation, UnknownPartitioning(0)
+
+(2) Generate
+Input: []
+Arguments: explode(org.apache.spark.sql.catalyst.expressions.UnsafeArrayData@4d864f25), false, [pickup_hour#4828]
+
+(3) Project
+Output [2]: [from_utc_timestamp(pickup_hour#4828, America/New_York) AS local_hour#4831, date_format(from_utc_timestamp(pickup_hour#4828, America/New_York), yyyy-MM, Some(UTC)) AS _groupingexpression#4832]
+Input [1]: [pickup_hour#4828]
+
+(4) HashAggregate
+Input [2]: [local_hour#4831, _groupingexpression#4832]
+Keys [2]: [_groupingexpression#4832, cast(local_hour#4831 as date) AS cast(local_hour#4831 as date)#4963]
+Functions: []
+Aggregate Attributes: []
+Results [2]: [_groupingexpression#4832, cast(local_hour#4831 as date)#4963]
+
+(5) Exchange
+Input [2]: [_groupingexpression#4832, cast(local_hour#4831 as date)#4963]
+Arguments: hashpartitioning(_groupingexpression#4832, cast(local_hour#4831 as date)#4963, 8), ENSURE_REQUIREMENTS, [plan_id=3309]
+
+(6) HashAggregate
+Input [2]: [_groupingexpression#4832, cast(local_hour#4831 as date)#4963]
+Keys [2]: [_groupingexpression#4832, cast(local_hour#4831 as date)#4963]
+Functions: []
+Aggregate Attributes: []
+Results [2]: [_groupingexpression#4832, cast(local_hour#4831 as date)#4963]
+
+(7) HashAggregate
+Input [2]: [_groupingexpression#4832, cast(local_hour#4831 as date)#4963]
+Keys [1]: [_groupingexpression#4832]
+Functions [1]: [partial_count(distinct cast(local_hour#4831 as date)#4963)]
+Aggregate Attributes [1]: [count(cast(local_hour#4831 as date))#4753L]
+Results [2]: [_groupingexpression#4832, count#4966L]
+
+(8) Exchange
+Input [2]: [_groupingexpression#4832, count#4966L]
+Arguments: hashpartitioning(_groupingexpression#4832, 8), ENSURE_REQUIREMENTS, [plan_id=3313]
+
+(9) HashAggregate
+Input [2]: [_groupingexpression#4832, count#4966L]
+Keys [1]: [_groupingexpression#4832]
+Functions [1]: [count(distinct cast(local_hour#4831 as date)#4963)]
+Aggregate Attributes [1]: [count(cast(local_hour#4831 as date))#4753L]
+Results [2]: [_groupingexpression#4832 AS local_month#4833, count(cast(local_hour#4831 as date))#4753L AS calendar_days#4834L]
+
+(10) Sort
+Input [2]: [local_month#4833, calendar_days#4834L]
+Arguments: [local_month#4833 ASC NULLS FIRST], false, 0
+
+(11) Scan parquet 
+Output [3]: [pickup_ts#4837, pickup_year#4858, pickup_month#4859]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0)]
+ReadSchema: struct<pickup_ts:timestamp>
+
+(12) Filter
+Input [3]: [pickup_ts#4837, pickup_year#4858, pickup_month#4859]
+Condition : (((isnotnull(pickup_ts#4837) AND (pickup_ts#4837 >= 2024-01-01 05:00:00)) AND (pickup_ts#4837 < 2024-04-01 04:00:00)) AND isnotnull(date_format(from_utc_timestamp(pickup_ts#4837, America/New_York), yyyy-MM, Some(UTC))))
+
+(13) Project
+Output [1]: [date_format(from_utc_timestamp(pickup_ts#4837, America/New_York), yyyy-MM, Some(UTC)) AS local_month#4893]
+Input [3]: [pickup_ts#4837, pickup_year#4858, pickup_month#4859]
+
+(14) HashAggregate
+Input [1]: [local_month#4893]
+Keys [1]: [local_month#4893]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#4968L]
+Results [2]: [local_month#4893, count#4969L]
+
+(15) Exchange
+Input [2]: [local_month#4893, count#4969L]
+Arguments: hashpartitioning(local_month#4893, 8), ENSURE_REQUIREMENTS, [plan_id=3315]
+
+(16) HashAggregate
+Input [2]: [local_month#4893, count#4969L]
+Keys [1]: [local_month#4893]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#4752L]
+Results [2]: [local_month#4893, count(1)#4752L AS trip_count#4895L]
+
+(17) Sort
+Input [2]: [local_month#4893, trip_count#4895L]
+Arguments: [local_month#4893 ASC NULLS FIRST], false, 0
+
+(18) SortMergeJoin
+Left keys [1]: [local_month#4833]
+Right keys [1]: [local_month#4893]
+Join type: LeftOuter
+Join condition: None
+
+(19) Project
+Output [3]: [local_month#4833, calendar_days#4834L, coalesce(trip_count#4895L, 0) AS trip_count#4756L]
+Input [4]: [local_month#4833, calendar_days#4834L, local_month#4893, trip_count#4895L]
+
+(20) Project
+Output [4]: [local_month#4833, calendar_days#4834L, trip_count#4756L, (cast(trip_count#4756L as double) / cast(calendar_days#4834L as double)) AS mean_daily_trips#4702]
+Input [3]: [local_month#4833, calendar_days#4834L, trip_count#4756L]
+
+(21) Exchange
+Input [4]: [local_month#4833, calendar_days#4834L, trip_count#4756L, mean_daily_trips#4702]
+Arguments: SinglePartition, ENSURE_REQUIREMENTS, [plan_id=3325]
+
+(22) Sort
+Input [4]: [local_month#4833, calendar_days#4834L, trip_count#4756L, mean_daily_trips#4702]
+Arguments: [local_month#4833 ASC NULLS FIRST], false, 0
+
+(23) Window
+Input [4]: [local_month#4833, calendar_days#4834L, trip_count#4756L, mean_daily_trips#4702]
+Arguments: [lag(trip_count#4756L, -1, null) windowspecdefinition(local_month#4833 ASC NULLS FIRST, specifiedwindowframe(RowFrame, -1, -1)) AS _we0#4757L, lag(trip_count#4756L, -1, null) windowspecdefinition(local_month#4833 ASC NULLS FIRST, specifiedwindowframe(RowFrame, -1, -1)) AS _we1#4758L], [local_month#4833 ASC NULLS FIRST]
+
+(24) Project
+Output [5]: [local_month#4833, calendar_days#4834L, trip_count#4756L, mean_daily_trips#4702, ((cast((trip_count#4756L - _we0#4757L) as decimal(20,0)) * 100.0) / if ((_we1#4758L = 0)) null else cast(_we1#4758L as decimal(20,0))) AS month_over_month_pct#4703]
+Input [6]: [local_month#4833, calendar_days#4834L, trip_count#4756L, mean_daily_trips#4702, _we0#4757L, _we1#4758L]
+
+(25) AdaptiveSparkPlan
+Output [5]: [local_month#4833, calendar_days#4834L, trip_count#4756L, mean_daily_trips#4702, month_over_month_pct#4703]
+Arguments: isFinalPlan=false
+

@@ -1,0 +1,46 @@
+== Physical Plan ==
+* HashAggregate (7)
++- Exchange (6)
+   +- * HashAggregate (5)
+      +- * Project (4)
+         +- * Filter (3)
+            +- * ColumnarToRow (2)
+               +- Scan parquet  (1)
+
+
+(1) Scan parquet 
+Output [4]: [pickup_borough#18257, trip_count#18260L, pm25_ug_m3#18261, aq_available#18263]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/products/air_quality_impact_summary]
+PushedFilters: [IsNotNull(aq_available), EqualTo(aq_available,true)]
+ReadSchema: struct<pickup_borough:string,trip_count:bigint,pm25_ug_m3:double,aq_available:boolean>
+
+(2) ColumnarToRow [codegen id : 1]
+Input [4]: [pickup_borough#18257, trip_count#18260L, pm25_ug_m3#18261, aq_available#18263]
+
+(3) Filter [codegen id : 1]
+Input [4]: [pickup_borough#18257, trip_count#18260L, pm25_ug_m3#18261, aq_available#18263]
+Condition : (isnotnull(aq_available#18263) AND aq_available#18263)
+
+(4) Project [codegen id : 1]
+Output [3]: [pickup_borough#18257, trip_count#18260L, pm25_ug_m3#18261]
+Input [4]: [pickup_borough#18257, trip_count#18260L, pm25_ug_m3#18261, aq_available#18263]
+
+(5) HashAggregate [codegen id : 1]
+Input [3]: [pickup_borough#18257, trip_count#18260L, pm25_ug_m3#18261]
+Keys [1]: [pickup_borough#18257]
+Functions [6]: [partial_count(1), partial_avg(pm25_ug_m3#18261), partial_avg(trip_count#18260L), partial_covar_pop(pm25_ug_m3#18261, cast(trip_count#18260L as double)), partial_stddev_pop(pm25_ug_m3#18261), partial_stddev_pop(cast(trip_count#18260L as double))]
+Aggregate Attributes [15]: [count#33984L, sum#33985, count#33986L, sum#33987, count#33988L, n#33878, xAvg#33879, yAvg#33880, ck#33881, n#33860, avg#33861, m2#33862, n#33886, avg#33887, m2#33888]
+Results [16]: [pickup_borough#18257, count#33989L, sum#33990, count#33991L, sum#33992, count#33993L, n#33882, xAvg#33883, yAvg#33884, ck#33885, n#33865, avg#33866, m2#33867, n#33891, avg#33892, m2#33893]
+
+(6) Exchange
+Input [16]: [pickup_borough#18257, count#33989L, sum#33990, count#33991L, sum#33992, count#33993L, n#33882, xAvg#33883, yAvg#33884, ck#33885, n#33865, avg#33866, m2#33867, n#33891, avg#33892, m2#33893]
+Arguments: hashpartitioning(pickup_borough#18257, 8), ENSURE_REQUIREMENTS, [plan_id=7268]
+
+(7) HashAggregate [codegen id : 2]
+Input [16]: [pickup_borough#18257, count#33989L, sum#33990, count#33991L, sum#33992, count#33993L, n#33882, xAvg#33883, yAvg#33884, ck#33885, n#33865, avg#33866, m2#33867, n#33891, avg#33892, m2#33893]
+Keys [1]: [pickup_borough#18257]
+Functions [6]: [count(1), avg(pm25_ug_m3#18261), avg(trip_count#18260L), covar_pop(pm25_ug_m3#18261, cast(trip_count#18260L as double)), stddev_pop(pm25_ug_m3#18261), stddev_pop(cast(trip_count#18260L as double))]
+Aggregate Attributes [6]: [count(1)#33848L, avg(pm25_ug_m3#18261)#33849, avg(trip_count#18260L)#33850, covar_pop(pm25_ug_m3#18261, cast(trip_count#18260L as double))#33859, stddev_pop(pm25_ug_m3#18261)#33868, stddev_pop(cast(trip_count#18260L as double))#33877]
+Results [5]: [pickup_borough#18257, count(1)#33848L AS observed_hours#33840L, avg(pm25_ug_m3#18261)#33849 AS mean_pm25_ug_m3#33841, avg(trip_count#18260L)#33850 AS mean_hourly_trips#33842, (covar_pop(pm25_ug_m3#18261, cast(trip_count#18260L as double))#33859 / (stddev_pop(pm25_ug_m3#18261)#33868 * stddev_pop(cast(trip_count#18260L as double))#33877)) AS pearson_r#33843]
+

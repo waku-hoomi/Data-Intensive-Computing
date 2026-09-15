@@ -1,0 +1,65 @@
+{
+  "name": "technique_aqe",
+  "records": {
+    "before": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.7302367090014741,
+        "setup_seconds": 8.300412446260452e-08,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.719946750003146,
+        "setup_seconds": 8.300412446260452e-08,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.7211634579871316,
+        "setup_seconds": 4.1996827349066734e-08,
+        "order_in_pair": 1
+      }
+    ],
+    "after": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.6923756659962237,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.694836208014749,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.6772219169943128,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 2
+      }
+    ]
+  },
+  "median_seconds": {
+    "before": 0.7211634579871316,
+    "after": 0.6923756659962237
+  },
+  "speedup": 1.041578283877852,
+  "results_equal": true,
+  "result_rows": 773,
+  "schema": "struct<local_month:string,pu_location_id:int,pickup_zone:string,pickup_borough:string,trip_count:bigint>",
+  "before_options": {},
+  "after_options": {
+    "aqe": true
+  },
+  "config": {
+    "warmup_runs": 1,
+    "measured_runs": 3,
+    "shuffle_partitions": 8,
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance": 1e-08
+  },
+  "created_at_utc": "2026-09-15T14:19:15.518638+00:00"
+}

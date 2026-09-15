@@ -1,0 +1,1 @@
+SELECT local_month,pu_location_id,pickup_zone,pickup_borough,trip_count FROM product_taxi_zone_statistics

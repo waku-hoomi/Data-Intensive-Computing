@@ -1,0 +1,7 @@
+*(2) HashAggregate(keys=[weather_condition_code#20], functions=[count(1), count(trip_distance#5), avg(trip_distance#5)], output=[weather_condition_code#20, trip_count#792L, valid_distance_count#793L, avg_distance_miles#794])
++- Exchange hashpartitioning(weather_condition_code#20, 8), ENSURE_REQUIREMENTS, [plan_id=203]
+   +- *(1) HashAggregate(keys=[weather_condition_code#20], functions=[partial_count(1), partial_count(trip_distance#5), partial_avg(trip_distance#5)], output=[weather_condition_code#20, count#903L, count#904L, sum#905, count#906L])
+      +- *(1) Project [trip_distance#5, weather_condition_code#20]
+         +- *(1) Filter ((isnotnull(pickup_ts#2) AND (pickup_ts#2 >= 2024-01-01 05:00:00)) AND (pickup_ts#2 < 2024-04-01 04:00:00))
+            +- *(1) ColumnarToRow
+               +- FileScan parquet [pickup_ts#2,trip_distance#5,weather_condition_code#20,pickup_year#23,pickup_month#24] Batched: true, DataFilters: [isnotnull(pickup_ts#2), (pickup_ts#2 >= 2024-01-01 05:00:00), (pickup_ts#2 < 2024-04-01 04:00:00)], Format: Parquet, Location: PreparedDeltaFileIndex(1 paths)[file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/..., PartitionFilters: [], PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,20..., ReadSchema: struct<pickup_ts:timestamp,trip_distance:double,weather_condition_code:int>

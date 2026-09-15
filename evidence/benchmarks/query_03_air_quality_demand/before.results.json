@@ -1,0 +1,23 @@
+[
+  {
+    "pickup_borough": "Brooklyn",
+    "observed_hours": 2178,
+    "mean_pm25_ug_m3": 7.591712580348944,
+    "mean_hourly_trips": 43.95959595959596,
+    "pearson_r": 0.03231545702904492
+  },
+  {
+    "pickup_borough": "Queens",
+    "observed_hours": 2182,
+    "mean_pm25_ug_m3": 7.58769477543538,
+    "mean_hourly_trips": 374.17690192483957,
+    "pearson_r": -0.05140694950242495
+  },
+  {
+    "pickup_borough": "Bronx",
+    "observed_hours": 2074,
+    "mean_pm25_ug_m3": 6.5497107039537115,
+    "mean_hourly_trips": 11.918997107039537,
+    "pearson_r": -0.03031230398230593
+  }
+]

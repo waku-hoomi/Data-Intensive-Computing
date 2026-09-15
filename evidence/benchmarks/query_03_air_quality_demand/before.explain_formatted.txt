@@ -1,0 +1,184 @@
+== Physical Plan ==
+* HashAggregate (31)
++- Exchange (30)
+   +- * HashAggregate (29)
+      +- * Project (28)
+         +- * SortMergeJoin Cross (27)
+            :- * Sort (22)
+            :  +- Exchange (21)
+            :     +- * Project (20)
+            :        +- * SortMergeJoin Inner (19)
+            :           :- * Sort (8)
+            :           :  +- * HashAggregate (7)
+            :           :     +- Exchange (6)
+            :           :        +- * HashAggregate (5)
+            :           :           +- * Project (4)
+            :           :              +- * Filter (3)
+            :           :                 +- * ColumnarToRow (2)
+            :           :                    +- Scan parquet  (1)
+            :           +- * Sort (18)
+            :              +- Exchange (17)
+            :                 +- * Filter (16)
+            :                    +- * HashAggregate (15)
+            :                       +- Exchange (14)
+            :                          +- * HashAggregate (13)
+            :                             +- * Project (12)
+            :                                +- * Filter (11)
+            :                                   +- * ColumnarToRow (10)
+            :                                      +- Scan parquet  (9)
+            +- * Sort (26)
+               +- Exchange (25)
+                  +- * Generate (24)
+                     +- * Scan OneRowRelation (23)
+
+
+(1) Scan parquet 
+Output [4]: [pickup_ts#2, pickup_borough#9, pickup_year#23, pickup_month#24]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0), IsNotNull(pickup_borough)]
+ReadSchema: struct<pickup_ts:timestamp,pickup_borough:string>
+
+(2) ColumnarToRow [codegen id : 1]
+Input [4]: [pickup_ts#2, pickup_borough#9, pickup_year#23, pickup_month#24]
+
+(3) Filter [codegen id : 1]
+Input [4]: [pickup_ts#2, pickup_borough#9, pickup_year#23, pickup_month#24]
+Condition : (((isnotnull(pickup_ts#2) AND (pickup_ts#2 >= 2024-01-01 05:00:00)) AND (pickup_ts#2 < 2024-04-01 04:00:00)) AND isnotnull(pickup_borough#9))
+
+(4) Project [codegen id : 1]
+Output [1]: [pickup_borough#9]
+Input [4]: [pickup_ts#2, pickup_borough#9, pickup_year#23, pickup_month#24]
+
+(5) HashAggregate [codegen id : 1]
+Input [1]: [pickup_borough#9]
+Keys [1]: [pickup_borough#9]
+Functions: []
+Aggregate Attributes: []
+Results [1]: [pickup_borough#9]
+
+(6) Exchange
+Input [1]: [pickup_borough#9]
+Arguments: hashpartitioning(pickup_borough#9, 8), ENSURE_REQUIREMENTS, [plan_id=6929]
+
+(7) HashAggregate [codegen id : 2]
+Input [1]: [pickup_borough#9]
+Keys [1]: [pickup_borough#9]
+Functions: []
+Aggregate Attributes: []
+Results [1]: [pickup_borough#9]
+
+(8) Sort [codegen id : 2]
+Input [1]: [pickup_borough#9]
+Arguments: [pickup_borough#9 ASC NULLS FIRST], false, 0
+
+(9) Scan parquet 
+Output [5]: [pickup_ts#32939, pickup_borough#32946, pm25_ug_m3#32958, pickup_year#32960, pickup_month#32961]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0), IsNotNull(pickup_borough)]
+ReadSchema: struct<pickup_ts:timestamp,pickup_borough:string,pm25_ug_m3:double>
+
+(10) ColumnarToRow [codegen id : 3]
+Input [5]: [pickup_ts#32939, pickup_borough#32946, pm25_ug_m3#32958, pickup_year#32960, pickup_month#32961]
+
+(11) Filter [codegen id : 3]
+Input [5]: [pickup_ts#32939, pickup_borough#32946, pm25_ug_m3#32958, pickup_year#32960, pickup_month#32961]
+Condition : ((((isnotnull(pickup_ts#32939) AND (pickup_ts#32939 >= 2024-01-01 05:00:00)) AND (pickup_ts#32939 < 2024-04-01 04:00:00)) AND isnotnull(pickup_borough#32946)) AND isnotnull(date_trunc(hour, pickup_ts#32939, Some(UTC))))
+
+(12) Project [codegen id : 3]
+Output [3]: [pickup_borough#32946, pm25_ug_m3#32958, date_trunc(hour, pickup_ts#32939, Some(UTC)) AS pickup_hour#32934]
+Input [5]: [pickup_ts#32939, pickup_borough#32946, pm25_ug_m3#32958, pickup_year#32960, pickup_month#32961]
+
+(13) HashAggregate [codegen id : 3]
+Input [3]: [pickup_borough#32946, pm25_ug_m3#32958, pickup_hour#32934]
+Keys [2]: [pickup_borough#32946, pickup_hour#32934]
+Functions [2]: [partial_count(1), partial_max(pm25_ug_m3#32958)]
+Aggregate Attributes [2]: [count#33209L, max#33210]
+Results [4]: [pickup_borough#32946, pickup_hour#32934, count#33211L, max#33212]
+
+(14) Exchange
+Input [4]: [pickup_borough#32946, pickup_hour#32934, count#33211L, max#33212]
+Arguments: hashpartitioning(pickup_borough#32946, pickup_hour#32934, 8), ENSURE_REQUIREMENTS, [plan_id=6941]
+
+(15) HashAggregate [codegen id : 4]
+Input [4]: [pickup_borough#32946, pickup_hour#32934, count#33211L, max#33212]
+Keys [2]: [pickup_borough#32946, pickup_hour#32934]
+Functions [2]: [count(1), max(pm25_ug_m3#32958)]
+Aggregate Attributes [2]: [count(1)#32962L, max(pm25_ug_m3#32958)#32963]
+Results [4]: [pickup_borough#32946, pickup_hour#32934, count(1)#32962L AS trip_count#32850L, max(pm25_ug_m3#32958)#32963 AS pm25_ug_m3#32851]
+
+(16) Filter [codegen id : 4]
+Input [4]: [pickup_borough#32946, pickup_hour#32934, trip_count#32850L, pm25_ug_m3#32851]
+Condition : isnotnull(pm25_ug_m3#32851)
+
+(17) Exchange
+Input [4]: [pickup_borough#32946, pickup_hour#32934, trip_count#32850L, pm25_ug_m3#32851]
+Arguments: hashpartitioning(pickup_borough#32946, 8), ENSURE_REQUIREMENTS, [plan_id=6946]
+
+(18) Sort [codegen id : 5]
+Input [4]: [pickup_borough#32946, pickup_hour#32934, trip_count#32850L, pm25_ug_m3#32851]
+Arguments: [pickup_borough#32946 ASC NULLS FIRST], false, 0
+
+(19) SortMergeJoin [codegen id : 6]
+Left keys [1]: [pickup_borough#9]
+Right keys [1]: [pickup_borough#32946]
+Join type: Inner
+Join condition: None
+
+(20) Project [codegen id : 6]
+Output [4]: [pickup_borough#9, pickup_hour#32934, trip_count#32850L, pm25_ug_m3#32851]
+Input [5]: [pickup_borough#9, pickup_borough#32946, pickup_hour#32934, trip_count#32850L, pm25_ug_m3#32851]
+
+(21) Exchange
+Input [4]: [pickup_borough#9, pickup_hour#32934, trip_count#32850L, pm25_ug_m3#32851]
+Arguments: hashpartitioning(pickup_hour#32934, 8), ENSURE_REQUIREMENTS, [plan_id=6954]
+
+(22) Sort [codegen id : 7]
+Input [4]: [pickup_borough#9, pickup_hour#32934, trip_count#32850L, pm25_ug_m3#32851]
+Arguments: [pickup_hour#32934 ASC NULLS FIRST], false, 0
+
+(23) Scan OneRowRelation [codegen id : 8]
+Output: []
+Arguments: ParallelCollectionRDD[1010] at collect at /Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/src/urban_platform/analytics/experiments.py:53, OneRowRelation, UnknownPartitioning(0)
+
+(24) Generate [codegen id : 8]
+Input: []
+Arguments: explode(org.apache.spark.sql.catalyst.expressions.UnsafeArrayData@4d864f25), false, [pickup_hour#32901]
+
+(25) Exchange
+Input [1]: [pickup_hour#32901]
+Arguments: hashpartitioning(pickup_hour#32901, 8), ENSURE_REQUIREMENTS, [plan_id=6960]
+
+(26) Sort [codegen id : 9]
+Input [1]: [pickup_hour#32901]
+Arguments: [pickup_hour#32901 ASC NULLS FIRST], false, 0
+
+(27) SortMergeJoin [codegen id : 10]
+Left keys [1]: [pickup_hour#32934]
+Right keys [1]: [pickup_hour#32901]
+Join type: Cross
+Join condition: None
+
+(28) Project [codegen id : 10]
+Output [3]: [pickup_borough#9, coalesce(trip_count#32850L, 0) AS trip_count#32858L, pm25_ug_m3#32851]
+Input [5]: [pickup_borough#9, pickup_hour#32934, trip_count#32850L, pm25_ug_m3#32851, pickup_hour#32901]
+
+(29) HashAggregate [codegen id : 10]
+Input [3]: [pickup_borough#9, trip_count#32858L, pm25_ug_m3#32851]
+Keys [1]: [pickup_borough#9]
+Functions [6]: [partial_count(1), partial_avg(pm25_ug_m3#32851), partial_avg(trip_count#32858L), partial_covar_pop(pm25_ug_m3#32851, cast(trip_count#32858L as double)), partial_stddev_pop(pm25_ug_m3#32851), partial_stddev_pop(cast(trip_count#32858L as double))]
+Aggregate Attributes [15]: [count#33199L, sum#33200, count#33201L, sum#33202, count#33203L, n#33035, xAvg#33036, yAvg#33037, ck#33038, n#33043, avg#33044, m2#33045, n#33003, avg#33004, m2#33005]
+Results [16]: [pickup_borough#9, count#33204L, sum#33205, count#33206L, sum#33207, count#33208L, n#33039, xAvg#33040, yAvg#33041, ck#33042, n#33048, avg#33049, m2#33050, n#33008, avg#33009, m2#33010]
+
+(30) Exchange
+Input [16]: [pickup_borough#9, count#33204L, sum#33205, count#33206L, sum#33207, count#33208L, n#33039, xAvg#33040, yAvg#33041, ck#33042, n#33048, avg#33049, m2#33050, n#33008, avg#33009, m2#33010]
+Arguments: hashpartitioning(pickup_borough#9, 8), ENSURE_REQUIREMENTS, [plan_id=6969]
+
+(31) HashAggregate [codegen id : 11]
+Input [16]: [pickup_borough#9, count#33204L, sum#33205, count#33206L, sum#33207, count#33208L, n#33039, xAvg#33040, yAvg#33041, ck#33042, n#33048, avg#33049, m2#33050, n#33008, avg#33009, m2#33010]
+Keys [1]: [pickup_borough#9]
+Functions [6]: [count(1), avg(pm25_ug_m3#32851), avg(trip_count#32858L), covar_pop(pm25_ug_m3#32851, cast(trip_count#32858L as double)), stddev_pop(pm25_ug_m3#32851), stddev_pop(cast(trip_count#32858L as double))]
+Aggregate Attributes [6]: [count(1)#32965L, avg(pm25_ug_m3#32851)#32966, avg(trip_count#32858L)#32967, covar_pop(pm25_ug_m3#32851, cast(trip_count#32858L as double))#32976, stddev_pop(pm25_ug_m3#32851)#32985, stddev_pop(cast(trip_count#32858L as double))#32994]
+Results [5]: [pickup_borough#9, count(1)#32965L AS observed_hours#32842L, avg(pm25_ug_m3#32851)#32966 AS mean_pm25_ug_m3#32843, avg(trip_count#32858L)#32967 AS mean_hourly_trips#32844, (covar_pop(pm25_ug_m3#32851, cast(trip_count#32858L as double))#32976 / (stddev_pop(pm25_ug_m3#32851)#32985 * stddev_pop(cast(trip_count#32858L as double))#32994)) AS pearson_r#32845]
+

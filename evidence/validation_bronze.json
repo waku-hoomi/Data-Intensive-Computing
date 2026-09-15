@@ -1,0 +1,42 @@
+{
+  "taxi_bronze": {
+    "rows": 9417864,
+    "unique_trip_ids": 9417864,
+    "negative_durations": 0
+  },
+  "candidate_composite_key": {
+    "columns": [
+      "vendor_id",
+      "pickup_ts",
+      "dropoff_ts",
+      "pu_location_id",
+      "do_location_id"
+    ],
+    "duplicate_groups": 348,
+    "note": "Profiles cleaned data; does not prove the same key is valid in future deliveries."
+  },
+  "air_quality_county_states": [
+    {
+      "state_name": "California",
+      "county_name": "Kings",
+      "count": 16933
+    },
+    {
+      "state_name": "New York",
+      "county_name": "Kings",
+      "count": 17460
+    },
+    {
+      "state_name": "New York",
+      "county_name": "Queens",
+      "count": 17021
+    },
+    {
+      "state_name": "New York",
+      "county_name": "Bronx",
+      "count": 17404
+    }
+  ],
+  "nyc_air_quality_geographic_invariance": true,
+  "aq_hourly_rows": 26351
+}

@@ -1,0 +1,63 @@
+{
+  "name": "query_04_weather_variation",
+  "records": {
+    "before": [
+      {
+        "repetition": 1,
+        "execution_seconds": 1.7393775410018861,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 1.7121515830222052,
+        "setup_seconds": 8.399365469813347e-08,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 1.5886768750206102,
+        "setup_seconds": 1.66997779160738e-07,
+        "order_in_pair": 1
+      }
+    ],
+    "after": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.09468116701464169,
+        "setup_seconds": 8.300412446260452e-08,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.08954991700011306,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.09032200000365265,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 2
+      }
+    ]
+  },
+  "median_seconds": {
+    "before": 1.7121515830222052,
+    "after": 0.09032200000365265
+  },
+  "speedup": 18.95608581467378,
+  "results_equal": true,
+  "result_rows": 262,
+  "schema": "struct<pu_location_id:int,pickup_zone:string,pickup_borough:string,weather_categories:bigint,min_hourly_trips:double,max_hourly_trips:double,absolute_variation:double,relative_variation:double,variation_rank:int>",
+  "before_options": {},
+  "after_options": {},
+  "config": {
+    "warmup_runs": 1,
+    "measured_runs": 3,
+    "shuffle_partitions": 8,
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance": 1e-08
+  },
+  "created_at_utc": "2026-09-15T14:20:12.653274+00:00"
+}

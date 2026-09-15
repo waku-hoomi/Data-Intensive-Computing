@@ -4,9 +4,9 @@ analysis:
   end_date_exclusive: '2024-04-01'
   min_weather_hours: 24
   schema_version: 1
-  weather_interpretation_approved: false
+  weather_interpretation_approved: true
   weather_provenance_status: unverified
-  weather_source_note: Pending course source confirmation
+  weather_source_note: 'User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.'
 benchmark:
   warmup_runs: 1
   measured_runs: 3

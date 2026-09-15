@@ -1,0 +1,16 @@
+*(6) HashAggregate(keys=[borough#14057], functions=[count(1)], output=[borough#14057, trip_count#14532L])
++- Exchange hashpartitioning(borough#14057, 8), ENSURE_REQUIREMENTS, [plan_id=2112]
+   +- *(5) HashAggregate(keys=[borough#14057], functions=[partial_count(1)], output=[borough#14057, count#14667L])
+      +- *(5) Project [borough#14057]
+         +- *(5) SortMergeJoin [pu_location_id#14042], [location_id#14056], LeftOuter
+            :- *(2) Sort [pu_location_id#14042 ASC NULLS FIRST], false, 0
+            :  +- Exchange hashpartitioning(pu_location_id#14042, 8), ENSURE_REQUIREMENTS, [plan_id=2094]
+            :     +- *(1) Project [pu_location_id#14042]
+            :        +- *(1) Filter ((isnotnull(pickup_ts#14036) AND (pickup_ts#14036 >= 2024-01-01 05:00:00)) AND (pickup_ts#14036 < 2024-04-01 04:00:00))
+            :           +- *(1) ColumnarToRow
+            :              +- FileScan parquet [pickup_ts#14036,pu_location_id#14042,pickup_year#14054,pickup_month#14055] Batched: true, DataFilters: [isnotnull(pickup_ts#14036), (pickup_ts#14036 >= 2024-01-01 05:00:00), (pickup_ts#14036 < 2024-04..., Format: Parquet, Location: PreparedDeltaFileIndex(1 paths)[file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/..., PartitionFilters: [], PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,20..., ReadSchema: struct<pickup_ts:timestamp,pu_location_id:int>
+            +- *(4) Sort [location_id#14056 ASC NULLS FIRST], false, 0
+               +- Exchange hashpartitioning(location_id#14056, 8), ENSURE_REQUIREMENTS, [plan_id=2103]
+                  +- *(3) Filter isnotnull(location_id#14056)
+                     +- *(3) ColumnarToRow
+                        +- FileScan parquet [location_id#14056,borough#14057] Batched: true, DataFilters: [isnotnull(location_id#14056)], Format: Parquet, Location: PreparedDeltaFileIndex(1 paths)[file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/..., PartitionFilters: [], PushedFilters: [IsNotNull(location_id)], ReadSchema: struct<location_id:int,borough:string>

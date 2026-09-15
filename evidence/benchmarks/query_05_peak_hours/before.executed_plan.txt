@@ -1,0 +1,25 @@
+*(8) Filter (peak_rank#44658 = 1)
++- Window [dense_rank(mean_hourly_trips#44654) windowspecdefinition(weekday_iso#44650, mean_hourly_trips#44654 DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS peak_rank#44658], [weekday_iso#44650], [mean_hourly_trips#44654 DESC NULLS LAST]
+   +- WindowGroupLimit [weekday_iso#44650], [mean_hourly_trips#44654 DESC NULLS LAST], dense_rank(mean_hourly_trips#44654), 1, Final
+      +- *(7) Sort [weekday_iso#44650 ASC NULLS FIRST, mean_hourly_trips#44654 DESC NULLS LAST], false, 0
+         +- Exchange hashpartitioning(weekday_iso#44650, 8), ENSURE_REQUIREMENTS, [plan_id=12473]
+            +- WindowGroupLimit [weekday_iso#44650], [mean_hourly_trips#44654 DESC NULLS LAST], dense_rank(mean_hourly_trips#44654), 1, Partial
+               +- *(6) Sort [weekday_iso#44650 ASC NULLS FIRST, mean_hourly_trips#44654 DESC NULLS LAST], false, 0
+                  +- *(6) HashAggregate(keys=[_groupingexpression#44648, _groupingexpression#44649], functions=[count(1), sum(trip_count#44647L), avg(trip_count#44647L)], output=[weekday_iso#44650, local_hour_of_day#44651, observed_hours#44652L, trip_count#44653L, mean_hourly_trips#44654])
+                     +- Exchange hashpartitioning(_groupingexpression#44648, _groupingexpression#44649, 8), ENSURE_REQUIREMENTS, [plan_id=12467]
+                        +- *(5) HashAggregate(keys=[_groupingexpression#44648, _groupingexpression#44649], functions=[partial_count(1), partial_sum(trip_count#44647L), partial_avg(trip_count#44647L)], output=[_groupingexpression#44648, _groupingexpression#44649, count#44729L, sum#44730L, sum#44731, count#44732L])
+                           +- *(5) Project [coalesce(trip_count#44642L, 0) AS trip_count#44647L, (weekday(cast(local_hour#44580 as date)) + 1) AS _groupingexpression#44648, hour(local_hour#44580, Some(UTC)) AS _groupingexpression#44649]
+                              +- *(5) SortMergeJoin [pickup_hour#44577], [pickup_hour#44638], LeftOuter
+                                 :- *(2) Sort [pickup_hour#44577 ASC NULLS FIRST], false, 0
+                                 :  +- Exchange hashpartitioning(pickup_hour#44577, 8), ENSURE_REQUIREMENTS, [plan_id=12446]
+                                 :     +- *(1) Project [pickup_hour#44577, from_utc_timestamp(pickup_hour#44577, America/New_York) AS local_hour#44580]
+                                 :        +- *(1) Generate explode(org.apache.spark.sql.catalyst.expressions.UnsafeArrayData@4d864f25), false, [pickup_hour#44577]
+                                 :           +- *(1) Scan OneRowRelation[]
+                                 +- *(4) Sort [pickup_hour#44638 ASC NULLS FIRST], false, 0
+                                    +- *(4) HashAggregate(keys=[pickup_hour#44638], functions=[count(1)], output=[pickup_hour#44638, trip_count#44642L])
+                                       +- Exchange hashpartitioning(pickup_hour#44638, 8), ENSURE_REQUIREMENTS, [plan_id=12457]
+                                          +- *(3) HashAggregate(keys=[pickup_hour#44638], functions=[partial_count(1)], output=[pickup_hour#44638, count#44734L])
+                                             +- *(3) Project [date_trunc(hour, pickup_ts#44583, Some(UTC)) AS pickup_hour#44638]
+                                                +- *(3) Filter (((isnotnull(pickup_ts#44583) AND (pickup_ts#44583 >= 2024-01-01 05:00:00)) AND (pickup_ts#44583 < 2024-04-01 04:00:00)) AND isnotnull(date_trunc(hour, pickup_ts#44583, Some(UTC))))
+                                                   +- *(3) ColumnarToRow
+                                                      +- FileScan parquet [pickup_ts#44583,pickup_year#44604,pickup_month#44605] Batched: true, DataFilters: [isnotnull(pickup_ts#44583), (pickup_ts#44583 >= 2024-01-01 05:00:00), (pickup_ts#44583 < 2024-04..., Format: Parquet, Location: PreparedDeltaFileIndex(1 paths)[file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/..., PartitionFilters: [], PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,20..., ReadSchema: struct<pickup_ts:timestamp>

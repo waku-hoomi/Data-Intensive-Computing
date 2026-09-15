@@ -1,0 +1,86 @@
+[
+  {
+    "weather_condition_code": 9,
+    "trip_count": 396266,
+    "valid_distance_count": 396266,
+    "avg_distance_miles": 2.851459348013706
+  },
+  {
+    "weather_condition_code": 5,
+    "trip_count": 232463,
+    "valid_distance_count": 232463,
+    "avg_distance_miles": 3.0049476690914303
+  },
+  {
+    "weather_condition_code": 7,
+    "trip_count": 732706,
+    "valid_distance_count": 732706,
+    "avg_distance_miles": 3.119778273959816
+  },
+  {
+    "weather_condition_code": 3,
+    "trip_count": 2336971,
+    "valid_distance_count": 2336971,
+    "avg_distance_miles": 3.25315610677241
+  },
+  {
+    "weather_condition_code": 1,
+    "trip_count": 223018,
+    "valid_distance_count": 223018,
+    "avg_distance_miles": 3.8056682420253045
+  },
+  {
+    "weather_condition_code": 4,
+    "trip_count": 2039238,
+    "valid_distance_count": 2039238,
+    "avg_distance_miles": 3.208132488704123
+  },
+  {
+    "weather_condition_code": 2,
+    "trip_count": 2984229,
+    "valid_distance_count": 2984229,
+    "avg_distance_miles": 3.2813801253188535
+  },
+  {
+    "weather_condition_code": 8,
+    "trip_count": 249781,
+    "valid_distance_count": 249781,
+    "avg_distance_miles": 3.0787326898362912
+  },
+  {
+    "weather_condition_code": 14,
+    "trip_count": 142218,
+    "valid_distance_count": 142218,
+    "avg_distance_miles": 3.3136651478715757
+  },
+  {
+    "weather_condition_code": 13,
+    "trip_count": 16502,
+    "valid_distance_count": 16502,
+    "avg_distance_miles": 3.0527572415464794
+  },
+  {
+    "weather_condition_code": 16,
+    "trip_count": 15664,
+    "valid_distance_count": 15664,
+    "avg_distance_miles": 2.371562819203268
+  },
+  {
+    "weather_condition_code": 15,
+    "trip_count": 21830,
+    "valid_distance_count": 21830,
+    "avg_distance_miles": 3.0429399908382972
+  },
+  {
+    "weather_condition_code": 12,
+    "trip_count": 17040,
+    "valid_distance_count": 17040,
+    "avg_distance_miles": 3.249978286384979
+  },
+  {
+    "weather_condition_code": 10,
+    "trip_count": 9918,
+    "valid_distance_count": 9918,
+    "avg_distance_miles": 3.111978221415611
+  }
+]

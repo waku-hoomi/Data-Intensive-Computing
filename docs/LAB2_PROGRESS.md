@@ -15,12 +15,12 @@ Base commit: 5187bfa44aec7a5fa188885803f6c7f7bc2d2cce. Local branch: codex/lab2.
 - Verify result equality; record warm-up separately and retain three timed runs.
 - Deliver source, 3-5 page design report, benchmark report, README and ZIP.
 
-## Pending user information
+## Approved weather interpretation
 
-Weather provenance: weather.csv has measurement-source columns but no explicit
-location, timezone, unit dictionary or weather-code legend. User was asked for
-the course download/source documentation immediately. Do not claim NYC/UTC/unit
-semantics are confirmed or run dependent full weather analyses until resolved.
+On 2026-09-15 the user explicitly approved continuing Lab 1's UTC weather
+interpretation and declined sensitivity analysis. The source timezone remains
+unverified. This assumption is recorded in configuration, both reports and the
+Lab 3 handoff; no further user decision is pending for this scope.
 
 ## Completed and verified on 2026-09-14
 
@@ -46,25 +46,34 @@ semantics are confirmed or run dependent full weather analyses until resolved.
   hours, DST, actual Delta product refresh and metadata, optimized equality,
   zero-variance correlation, and the experiment runner's trial/plan retention.
 
-## Pending source decision and production work
+## Supplied dataset verification
 
-The user will supply the dataset; compare its checksums with the existing inputs
-when it arrives. The user states that no additional source information should be
-expected if absent from both the dataset and assignment. A follow-up question is
-pending: may we retain Lab 1's UTC weather interpretation as an explicitly
-documented assumption? `weather_interpretation_approved` remains false until the
-user answers; `weather_provenance_status` must remain unverified if this is an
-assumption rather than actual source evidence.
+The user supplied `/Users/felixchen/Downloads/data/` on 2026-09-14. All six files
+passed SHA-256 comparison against the existing course input manifest; no data
+replacement or repeated ingestion is needed. The directory contains only the six
+data files, and the air-quality ZIP contains only its CSV. No additional weather
+location, timezone, unit dictionary or code legend was supplied.
+The user states that no additional source information should be expected if
+absent from both the dataset and assignment. The approved interpretation does
+not change `weather_provenance_status: unverified` into a verified source claim.
 
-After that decision:
+## Completed full-data work on 2026-09-15
 
-1. Ingest weather, regenerate Gold, and verify one row per accepted taxi trip.
-2. Run all six queries and four products against full data, check coverage.
-3. Run controlled optimization experiments and inspect plans for actual effects.
-4. Generate the 3-5 page design report and benchmark report from real results.
-5. Verify README reproduction, package final source/reports/evidence in ZIP.
+1. Ingested all 8,784 weather observations and regenerated Gold with 9,417,864
+   unique trip IDs; 9,417,844 trips lie in the declared local Jan-Mar interval.
+2. Executed all six SQL queries and generated four Delta products from Gold
+   version 0. Product totals match their declared source scopes.
+3. Completed all ten original/optimized comparison pairs: four independent
+   techniques and six final queries, with 60 measured executions. Every pair
+   passed result and schema equality checks. All physical plans are retained.
+4. Verified in-memory cache scans, partition filters, broadcast hash join and
+   final AQE coalesced shuffle in actual execution plans.
+5. Generated and visually inspected a 5-page design PDF and 3-page benchmark PDF,
+   plus editable Markdown. Reports use actual measurements, including setup
+   costs, source limitations and the approved weather assumption.
+6. Final tests: nine passed. Full validation, input manifest, per-run metrics,
+   query outputs, plans and test results are included in the submission evidence.
 
-No full-data Lab 2 weather result or final performance result has been measured
-yet. Synthetic-test timings must never be presented as coursework benchmarks.
+Synthetic-test timings are separate from the full-data benchmark evidence.
 
 No remote push or course submission has been performed.

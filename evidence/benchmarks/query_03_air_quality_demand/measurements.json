@@ -1,0 +1,63 @@
+{
+  "name": "query_03_air_quality_demand",
+  "records": {
+    "before": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.8388074999966193,
+        "setup_seconds": 8.399365469813347e-08,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.7654337910062168,
+        "setup_seconds": 8.399365469813347e-08,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.844397167005809,
+        "setup_seconds": 4.202593117952347e-08,
+        "order_in_pair": 1
+      }
+    ],
+    "after": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.0856060000078287,
+        "setup_seconds": 8.297502063214779e-08,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.08475245899171568,
+        "setup_seconds": 1.0840012691915035e-06,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.08622245900915004,
+        "setup_seconds": 1.2500095181167126e-07,
+        "order_in_pair": 2
+      }
+    ]
+  },
+  "median_seconds": {
+    "before": 0.8388074999966193,
+    "after": 0.0856060000078287
+  },
+  "speedup": 9.798466228067076,
+  "results_equal": true,
+  "result_rows": 3,
+  "schema": "struct<pickup_borough:string,observed_hours:bigint,mean_pm25_ug_m3:double,mean_hourly_trips:double,pearson_r:double>",
+  "before_options": {},
+  "after_options": {},
+  "config": {
+    "warmup_runs": 1,
+    "measured_runs": 3,
+    "shuffle_partitions": 8,
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance": 1e-08
+  },
+  "created_at_utc": "2026-09-15T14:19:59.945975+00:00"
+}

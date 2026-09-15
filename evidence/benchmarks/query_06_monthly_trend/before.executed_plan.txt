@@ -1,0 +1,25 @@
+*(8) Project [local_month#50209, calendar_days#50210L, trip_count#50132L, mean_daily_trips#50082, ((cast((trip_count#50132L - _we0#50133L) as decimal(20,0)) * 100.0) / if ((_we1#50134L = 0)) null else cast(_we1#50134L as decimal(20,0))) AS month_over_month_pct#50083]
++- Window [lag(trip_count#50132L, -1, null) windowspecdefinition(local_month#50209 ASC NULLS FIRST, specifiedwindowframe(RowFrame, -1, -1)) AS _we0#50133L, lag(trip_count#50132L, -1, null) windowspecdefinition(local_month#50209 ASC NULLS FIRST, specifiedwindowframe(RowFrame, -1, -1)) AS _we1#50134L], [local_month#50209 ASC NULLS FIRST]
+   +- *(7) Sort [local_month#50209 ASC NULLS FIRST], false, 0
+      +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=14852]
+         +- *(6) Project [local_month#50209, calendar_days#50210L, trip_count#50132L, (cast(trip_count#50132L as double) / cast(calendar_days#50210L as double)) AS mean_daily_trips#50082]
+            +- *(6) Project [local_month#50209, calendar_days#50210L, coalesce(trip_count#50271L, 0) AS trip_count#50132L]
+               +- *(6) SortMergeJoin [local_month#50209], [local_month#50269], LeftOuter
+                  :- *(3) Sort [local_month#50209 ASC NULLS FIRST], false, 0
+                  :  +- *(3) HashAggregate(keys=[_groupingexpression#50208], functions=[count(distinct cast(local_hour#50207 as date)#50339)], output=[local_month#50209, calendar_days#50210L])
+                  :     +- Exchange hashpartitioning(_groupingexpression#50208, 8), ENSURE_REQUIREMENTS, [plan_id=14830]
+                  :        +- *(2) HashAggregate(keys=[_groupingexpression#50208], functions=[partial_count(distinct cast(local_hour#50207 as date)#50339)], output=[_groupingexpression#50208, count#50342L])
+                  :           +- *(2) HashAggregate(keys=[_groupingexpression#50208, cast(local_hour#50207 as date)#50339], functions=[], output=[_groupingexpression#50208, cast(local_hour#50207 as date)#50339])
+                  :              +- Exchange hashpartitioning(_groupingexpression#50208, cast(local_hour#50207 as date)#50339, 8), ENSURE_REQUIREMENTS, [plan_id=14825]
+                  :                 +- *(1) HashAggregate(keys=[_groupingexpression#50208, cast(local_hour#50207 as date) AS cast(local_hour#50207 as date)#50339], functions=[], output=[_groupingexpression#50208, cast(local_hour#50207 as date)#50339])
+                  :                    +- *(1) Project [from_utc_timestamp(pickup_hour#50204, America/New_York) AS local_hour#50207, date_format(from_utc_timestamp(pickup_hour#50204, America/New_York), yyyy-MM, Some(UTC)) AS _groupingexpression#50208]
+                  :                       +- *(1) Generate explode(org.apache.spark.sql.catalyst.expressions.UnsafeArrayData@4d864f25), false, [pickup_hour#50204]
+                  :                          +- *(1) Scan OneRowRelation[]
+                  +- *(5) Sort [local_month#50269 ASC NULLS FIRST], false, 0
+                     +- *(5) HashAggregate(keys=[local_month#50269], functions=[count(1)], output=[local_month#50269, trip_count#50271L])
+                        +- Exchange hashpartitioning(local_month#50269, 8), ENSURE_REQUIREMENTS, [plan_id=14842]
+                           +- *(4) HashAggregate(keys=[local_month#50269], functions=[partial_count(1)], output=[local_month#50269, count#50345L])
+                              +- *(4) Project [date_format(from_utc_timestamp(pickup_ts#50213, America/New_York), yyyy-MM, Some(UTC)) AS local_month#50269]
+                                 +- *(4) Filter (((isnotnull(pickup_ts#50213) AND (pickup_ts#50213 >= 2024-01-01 05:00:00)) AND (pickup_ts#50213 < 2024-04-01 04:00:00)) AND isnotnull(date_format(from_utc_timestamp(pickup_ts#50213, America/New_York), yyyy-MM, Some(UTC))))
+                                    +- *(4) ColumnarToRow
+                                       +- FileScan parquet [pickup_ts#50213,pickup_year#50234,pickup_month#50235] Batched: true, DataFilters: [isnotnull(pickup_ts#50213), (pickup_ts#50213 >= 2024-01-01 05:00:00), (pickup_ts#50213 < 2024-04..., Format: Parquet, Location: PreparedDeltaFileIndex(1 paths)[file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/..., PartitionFilters: [], PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,20..., ReadSchema: struct<pickup_ts:timestamp>

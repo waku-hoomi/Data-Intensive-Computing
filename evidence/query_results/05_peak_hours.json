@@ -1,0 +1,58 @@
+[
+  {
+    "weekday_iso": 1,
+    "local_hour_of_day": 18,
+    "observed_hours": 13,
+    "trip_count": 80484,
+    "mean_hourly_trips": 6191.076923076923,
+    "peak_rank": 1
+  },
+  {
+    "weekday_iso": 2,
+    "local_hour_of_day": 18,
+    "observed_hours": 13,
+    "trip_count": 99622,
+    "mean_hourly_trips": 7663.2307692307695,
+    "peak_rank": 1
+  },
+  {
+    "weekday_iso": 3,
+    "local_hour_of_day": 18,
+    "observed_hours": 13,
+    "trip_count": 110914,
+    "mean_hourly_trips": 8531.846153846154,
+    "peak_rank": 1
+  },
+  {
+    "weekday_iso": 4,
+    "local_hour_of_day": 18,
+    "observed_hours": 13,
+    "trip_count": 119127,
+    "mean_hourly_trips": 9163.615384615385,
+    "peak_rank": 1
+  },
+  {
+    "weekday_iso": 5,
+    "local_hour_of_day": 18,
+    "observed_hours": 13,
+    "trip_count": 102923,
+    "mean_hourly_trips": 7917.153846153846,
+    "peak_rank": 1
+  },
+  {
+    "weekday_iso": 6,
+    "local_hour_of_day": 19,
+    "observed_hours": 13,
+    "trip_count": 96491,
+    "mean_hourly_trips": 7422.384615384615,
+    "peak_rank": 1
+  },
+  {
+    "weekday_iso": 7,
+    "local_hour_of_day": 0,
+    "observed_hours": 13,
+    "trip_count": 79602,
+    "mean_hourly_trips": 6123.2307692307695,
+    "peak_rank": 1
+  }
+]

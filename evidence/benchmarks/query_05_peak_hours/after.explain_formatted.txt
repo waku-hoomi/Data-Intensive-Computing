@@ -1,0 +1,158 @@
+== Physical Plan ==
+* Filter (28)
++- Window (27)
+   +- WindowGroupLimit (26)
+      +- * Sort (25)
+         +- Exchange (24)
+            +- WindowGroupLimit (23)
+               +- * Sort (22)
+                  +- * HashAggregate (21)
+                     +- Exchange (20)
+                        +- * HashAggregate (19)
+                           +- * Project (18)
+                              +- Scan In-memory table city_hours (1)
+                                    +- InMemoryRelation (2)
+                                          +- * Project (17)
+                                             +- * SortMergeJoin LeftOuter (16)
+                                                :- * Sort (7)
+                                                :  +- Exchange (6)
+                                                :     +- * Project (5)
+                                                :        +- * Generate (4)
+                                                :           +- * Scan OneRowRelation (3)
+                                                +- * Sort (15)
+                                                   +- * HashAggregate (14)
+                                                      +- Exchange (13)
+                                                         +- * HashAggregate (12)
+                                                            +- * Project (11)
+                                                               +- * Filter (10)
+                                                                  +- * ColumnarToRow (9)
+                                                                     +- Scan parquet  (8)
+
+
+(1) Scan In-memory table city_hours
+Output [2]: [local_hour#46328, trip_count#46330L]
+Arguments: [local_hour#46328, trip_count#46330L]
+
+(2) InMemoryRelation
+Arguments: [pickup_hour#46327, local_hour#46328, weather_condition_code#46329, trip_count#46330L], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(3) Scan OneRowRelation [codegen id : 1]
+Output: []
+Arguments: ParallelCollectionRDD[1729] at sql at <unknown>:0, OneRowRelation, UnknownPartitioning(0)
+
+(4) Generate [codegen id : 1]
+Input: []
+Arguments: explode(org.apache.spark.sql.catalyst.expressions.UnsafeArrayData@4d864f25), false, [pickup_hour#45092]
+
+(5) Project [codegen id : 1]
+Output [2]: [pickup_hour#45092, from_utc_timestamp(pickup_hour#45092, America/New_York) AS local_hour#45091]
+Input [1]: [pickup_hour#45092]
+
+(6) Exchange
+Input [2]: [pickup_hour#45092, local_hour#45091]
+Arguments: hashpartitioning(pickup_hour#45092, 8), ENSURE_REQUIREMENTS, [plan_id=12802]
+
+(7) Sort [codegen id : 2]
+Input [2]: [pickup_hour#45092, local_hour#45091]
+Arguments: [pickup_hour#45092 ASC NULLS FIRST], false, 0
+
+(8) Scan parquet 
+Output [4]: [pickup_ts#2, weather_condition_code#20, pickup_year#23, pickup_month#24]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/gold/integrated_taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0)]
+ReadSchema: struct<pickup_ts:timestamp,weather_condition_code:int>
+
+(9) ColumnarToRow [codegen id : 3]
+Input [4]: [pickup_ts#2, weather_condition_code#20, pickup_year#23, pickup_month#24]
+
+(10) Filter [codegen id : 3]
+Input [4]: [pickup_ts#2, weather_condition_code#20, pickup_year#23, pickup_month#24]
+Condition : (((isnotnull(pickup_ts#2) AND (pickup_ts#2 >= 2024-01-01 05:00:00)) AND (pickup_ts#2 < 2024-04-01 04:00:00)) AND isnotnull(date_trunc(hour, pickup_ts#2, Some(UTC))))
+
+(11) Project [codegen id : 3]
+Output [2]: [weather_condition_code#20, date_trunc(hour, pickup_ts#2, Some(UTC)) AS pickup_hour#45125]
+Input [4]: [pickup_ts#2, weather_condition_code#20, pickup_year#23, pickup_month#24]
+
+(12) HashAggregate [codegen id : 3]
+Input [2]: [weather_condition_code#20, pickup_hour#45125]
+Keys [1]: [pickup_hour#45125]
+Functions [2]: [partial_max(weather_condition_code#20), partial_count(1)]
+Aggregate Attributes [2]: [max#45196, count#45197L]
+Results [3]: [pickup_hour#45125, max#45198, count#45199L]
+
+(13) Exchange
+Input [3]: [pickup_hour#45125, max#45198, count#45199L]
+Arguments: hashpartitioning(pickup_hour#45125, 8), ENSURE_REQUIREMENTS, [plan_id=12813]
+
+(14) HashAggregate [codegen id : 4]
+Input [3]: [pickup_hour#45125, max#45198, count#45199L]
+Keys [1]: [pickup_hour#45125]
+Functions [2]: [max(weather_condition_code#20), count(1)]
+Aggregate Attributes [2]: [max(weather_condition_code#20)#45128, count(1)#45129L]
+Results [3]: [pickup_hour#45125, max(weather_condition_code#20)#45128 AS weather_condition_code#45081, count(1)#45129L AS trip_count#45082L]
+
+(15) Sort [codegen id : 4]
+Input [3]: [pickup_hour#45125, weather_condition_code#45081, trip_count#45082L]
+Arguments: [pickup_hour#45125 ASC NULLS FIRST], false, 0
+
+(16) SortMergeJoin [codegen id : 5]
+Left keys [1]: [pickup_hour#45092]
+Right keys [1]: [pickup_hour#45125]
+Join type: LeftOuter
+Join condition: None
+
+(17) Project [codegen id : 5]
+Output [4]: [pickup_hour#45092, local_hour#45091, weather_condition_code#45081, coalesce(trip_count#45082L, 0) AS trip_count#45087L]
+Input [5]: [pickup_hour#45092, local_hour#45091, pickup_hour#45125, weather_condition_code#45081, trip_count#45082L]
+
+(18) Project [codegen id : 1]
+Output [3]: [trip_count#46330L, (weekday(cast(local_hour#46328 as date)) + 1) AS _groupingexpression#46351, hour(local_hour#46328, Some(UTC)) AS _groupingexpression#46352]
+Input [2]: [local_hour#46328, trip_count#46330L]
+
+(19) HashAggregate [codegen id : 1]
+Input [3]: [trip_count#46330L, _groupingexpression#46351, _groupingexpression#46352]
+Keys [2]: [_groupingexpression#46351, _groupingexpression#46352]
+Functions [3]: [partial_count(1), partial_sum(trip_count#46330L), partial_avg(trip_count#46330L)]
+Aggregate Attributes [4]: [count#46382L, sum#46383L, sum#46384, count#46385L]
+Results [6]: [_groupingexpression#46351, _groupingexpression#46352, count#46386L, sum#46387L, sum#46388, count#46389L]
+
+(20) Exchange
+Input [6]: [_groupingexpression#46351, _groupingexpression#46352, count#46386L, sum#46387L, sum#46388, count#46389L]
+Arguments: hashpartitioning(_groupingexpression#46351, _groupingexpression#46352, 8), ENSURE_REQUIREMENTS, [plan_id=13088]
+
+(21) HashAggregate [codegen id : 2]
+Input [6]: [_groupingexpression#46351, _groupingexpression#46352, count#46386L, sum#46387L, sum#46388, count#46389L]
+Keys [2]: [_groupingexpression#46351, _groupingexpression#46352]
+Functions [3]: [count(1), sum(trip_count#46330L), avg(trip_count#46330L)]
+Aggregate Attributes [3]: [count(1)#46182L, sum(trip_count#46330L)#46183L, avg(trip_count#46330L)#46184]
+Results [5]: [_groupingexpression#46351 AS weekday_iso#46353, _groupingexpression#46352 AS local_hour_of_day#46354, count(1)#46182L AS observed_hours#46355L, sum(trip_count#46330L)#46183L AS trip_count#46356L, avg(trip_count#46330L)#46184 AS mean_hourly_trips#46357]
+
+(22) Sort [codegen id : 2]
+Input [5]: [weekday_iso#46353, local_hour_of_day#46354, observed_hours#46355L, trip_count#46356L, mean_hourly_trips#46357]
+Arguments: [weekday_iso#46353 ASC NULLS FIRST, mean_hourly_trips#46357 DESC NULLS LAST], false, 0
+
+(23) WindowGroupLimit
+Input [5]: [weekday_iso#46353, local_hour_of_day#46354, observed_hours#46355L, trip_count#46356L, mean_hourly_trips#46357]
+Arguments: [weekday_iso#46353], [mean_hourly_trips#46357 DESC NULLS LAST], dense_rank(mean_hourly_trips#46357), 1, Partial
+
+(24) Exchange
+Input [5]: [weekday_iso#46353, local_hour_of_day#46354, observed_hours#46355L, trip_count#46356L, mean_hourly_trips#46357]
+Arguments: hashpartitioning(weekday_iso#46353, 8), ENSURE_REQUIREMENTS, [plan_id=13094]
+
+(25) Sort [codegen id : 3]
+Input [5]: [weekday_iso#46353, local_hour_of_day#46354, observed_hours#46355L, trip_count#46356L, mean_hourly_trips#46357]
+Arguments: [weekday_iso#46353 ASC NULLS FIRST, mean_hourly_trips#46357 DESC NULLS LAST], false, 0
+
+(26) WindowGroupLimit
+Input [5]: [weekday_iso#46353, local_hour_of_day#46354, observed_hours#46355L, trip_count#46356L, mean_hourly_trips#46357]
+Arguments: [weekday_iso#46353], [mean_hourly_trips#46357 DESC NULLS LAST], dense_rank(mean_hourly_trips#46357), 1, Final
+
+(27) Window
+Input [5]: [weekday_iso#46353, local_hour_of_day#46354, observed_hours#46355L, trip_count#46356L, mean_hourly_trips#46357]
+Arguments: [dense_rank(mean_hourly_trips#46357) windowspecdefinition(weekday_iso#46353, mean_hourly_trips#46357 DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS peak_rank#46361], [weekday_iso#46353], [mean_hourly_trips#46357 DESC NULLS LAST]
+
+(28) Filter [codegen id : 4]
+Input [6]: [weekday_iso#46353, local_hour_of_day#46354, observed_hours#46355L, trip_count#46356L, mean_hourly_trips#46357, peak_rank#46361]
+Condition : (peak_rank#46361 = 1)
+

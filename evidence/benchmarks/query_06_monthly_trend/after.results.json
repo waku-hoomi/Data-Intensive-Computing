@@ -1,0 +1,23 @@
+[
+  {
+    "local_month": "2024-01",
+    "calendar_days": 31,
+    "trip_count": 2927082,
+    "mean_daily_trips": 94422.0,
+    "month_over_month_pct": null
+  },
+  {
+    "local_month": "2024-02",
+    "calendar_days": 29,
+    "trip_count": 2966828,
+    "mean_daily_trips": 102304.41379310345,
+    "month_over_month_pct": "1.35787108116547"
+  },
+  {
+    "local_month": "2024-03",
+    "calendar_days": 31,
+    "trip_count": 3523934,
+    "mean_daily_trips": 113675.29032258065,
+    "month_over_month_pct": "18.77783275606136"
+  }
+]

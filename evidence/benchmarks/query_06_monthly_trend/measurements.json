@@ -1,0 +1,63 @@
+{
+  "name": "query_06_monthly_trend",
+  "records": {
+    "before": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.8718878749932628,
+        "setup_seconds": 8.40227585285902e-08,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.8803823750058655,
+        "setup_seconds": 8.40227585285902e-08,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.8865828329871874,
+        "setup_seconds": 8.300412446260452e-08,
+        "order_in_pair": 1
+      }
+    ],
+    "after": [
+      {
+        "repetition": 1,
+        "execution_seconds": 0.12350191699806601,
+        "setup_seconds": 1.66997779160738e-07,
+        "order_in_pair": 2
+      },
+      {
+        "repetition": 2,
+        "execution_seconds": 0.10370008301106282,
+        "setup_seconds": 8.300412446260452e-08,
+        "order_in_pair": 1
+      },
+      {
+        "repetition": 3,
+        "execution_seconds": 0.09823716699611396,
+        "setup_seconds": 8.297502063214779e-08,
+        "order_in_pair": 2
+      }
+    ]
+  },
+  "median_seconds": {
+    "before": 0.8803823750058655,
+    "after": 0.10370008301106282
+  },
+  "speedup": 8.489697881070601,
+  "results_equal": true,
+  "result_rows": 3,
+  "schema": "struct<local_month:string,calendar_days:bigint,trip_count:bigint,mean_daily_trips:double,month_over_month_pct:decimal(38,14)>",
+  "before_options": {},
+  "after_options": {},
+  "config": {
+    "warmup_runs": 1,
+    "measured_runs": 3,
+    "shuffle_partitions": 8,
+    "relative_tolerance": 1e-09,
+    "absolute_tolerance": 1e-08
+  },
+  "created_at_utc": "2026-09-15T14:20:24.609266+00:00"
+}

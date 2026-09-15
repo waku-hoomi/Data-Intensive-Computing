@@ -1,0 +1,80 @@
+== Physical Plan ==
+* HashAggregate (13)
++- Exchange (12)
+   +- * HashAggregate (11)
+      +- * Project (10)
+         +- * BroadcastHashJoin LeftOuter BuildRight (9)
+            :- * Project (4)
+            :  +- * Filter (3)
+            :     +- * ColumnarToRow (2)
+            :        +- Scan parquet  (1)
+            +- BroadcastExchange (8)
+               +- * Filter (7)
+                  +- * ColumnarToRow (6)
+                     +- Scan parquet  (5)
+
+
+(1) Scan parquet 
+Output [4]: [pickup_ts#14036, pu_location_id#14042, pickup_year#14054, pickup_month#14055]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/bronze/taxi_trips]
+PushedFilters: [IsNotNull(pickup_ts), GreaterThanOrEqual(pickup_ts,2024-01-01 06:00:00.0), LessThan(pickup_ts,2024-04-01 06:00:00.0)]
+ReadSchema: struct<pickup_ts:timestamp,pu_location_id:int>
+
+(2) ColumnarToRow [codegen id : 2]
+Input [4]: [pickup_ts#14036, pu_location_id#14042, pickup_year#14054, pickup_month#14055]
+
+(3) Filter [codegen id : 2]
+Input [4]: [pickup_ts#14036, pu_location_id#14042, pickup_year#14054, pickup_month#14055]
+Condition : ((isnotnull(pickup_ts#14036) AND (pickup_ts#14036 >= 2024-01-01 05:00:00)) AND (pickup_ts#14036 < 2024-04-01 04:00:00))
+
+(4) Project [codegen id : 2]
+Output [1]: [pu_location_id#14042]
+Input [4]: [pickup_ts#14036, pu_location_id#14042, pickup_year#14054, pickup_month#14055]
+
+(5) Scan parquet 
+Output [2]: [location_id#14056, borough#14057]
+Batched: true
+Location: PreparedDeltaFileIndex [file:/Users/felixchen/Documents/ChatGPT/data-intensive computing/lab2/data/bronze/taxi_zone_lookup]
+PushedFilters: [IsNotNull(location_id)]
+ReadSchema: struct<location_id:int,borough:string>
+
+(6) ColumnarToRow [codegen id : 1]
+Input [2]: [location_id#14056, borough#14057]
+
+(7) Filter [codegen id : 1]
+Input [2]: [location_id#14056, borough#14057]
+Condition : isnotnull(location_id#14056)
+
+(8) BroadcastExchange
+Input [2]: [location_id#14056, borough#14057]
+Arguments: HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=2629]
+
+(9) BroadcastHashJoin [codegen id : 2]
+Left keys [1]: [pu_location_id#14042]
+Right keys [1]: [location_id#14056]
+Join type: LeftOuter
+Join condition: None
+
+(10) Project [codegen id : 2]
+Output [1]: [borough#14057]
+Input [3]: [pu_location_id#14042, location_id#14056, borough#14057]
+
+(11) HashAggregate [codegen id : 2]
+Input [1]: [borough#14057]
+Keys [1]: [borough#14057]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#15218L]
+Results [2]: [borough#14057, count#15219L]
+
+(12) Exchange
+Input [2]: [borough#14057, count#15219L]
+Arguments: hashpartitioning(borough#14057, 8), ENSURE_REQUIREMENTS, [plan_id=2635]
+
+(13) HashAggregate [codegen id : 3]
+Input [2]: [borough#14057, count#15219L]
+Keys [1]: [borough#14057]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#15085L]
+Results [2]: [borough#14057, count(1)#15085L AS trip_count#15080L]
+

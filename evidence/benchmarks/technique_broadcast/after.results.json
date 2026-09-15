@@ -1,0 +1,34 @@
+[
+  {
+    "borough": "Brooklyn",
+    "trip_count": 95744
+  },
+  {
+    "borough": "EWR",
+    "trip_count": 915
+  },
+  {
+    "borough": null,
+    "trip_count": 4777
+  },
+  {
+    "borough": "Staten Island",
+    "trip_count": 220
+  },
+  {
+    "borough": "Manhattan",
+    "trip_count": 8443012
+  },
+  {
+    "borough": "Unknown",
+    "trip_count": 31300
+  },
+  {
+    "borough": "Queens",
+    "trip_count": 817156
+  },
+  {
+    "borough": "Bronx",
+    "trip_count": 24720
+  }
+]
