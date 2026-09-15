@@ -4,6 +4,19 @@ This extension uses the group's Lab 1 platform and the same six course inputs.
 The original Lab 1 Markdown files are historical reference material, not the
 Lab 2 design/benchmark reports. See `docs/LAB2_PROGRESS.md` for validation status.
 
+## Repository guide
+
+- `src/`, `scripts/`, `config/`: shared platform and Lab 2 workflows.
+- `sql/`: six analyses, four data products and optimized queries.
+- `reports/`: final Lab 2 design and benchmark PDFs.
+- `docs/`: editable Lab 2 reports, validation status and Chinese Lab 3 handoff.
+  The four uppercase Lab 1 reports remain historical references.
+- `evidence/`: measured experiment snapshot. Before/after SQL and results are
+  retained separately to make each comparison auditable, even when identical.
+
+The existing Lab 1 files are reused in place. Raw data, generated Delta tables,
+local runtime files and the Lab 2 submission ZIP are not committed.
+
 ## Environment
 
 Use Python 3.12, Java 17, PySpark 4.0.4 and Delta Lake 4.0.1. Install the project

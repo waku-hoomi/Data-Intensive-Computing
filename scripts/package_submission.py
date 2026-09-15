@@ -29,7 +29,7 @@ def main():
         for path in (ROOT/folder).rglob("*"):
             if path.is_file() and "__pycache__" not in path.parts and path.suffix!=".pyc":
                 pairs.append((path,path.relative_to(ROOT)))
-    for name in ["README.md","README_LAB2.md","requirements.txt","requirements-lab2.txt",".gitignore"]:
+    for name in ["README.md","requirements.txt","requirements-lab2.txt",".gitignore"]:
         pairs.append((ROOT/name,Path(name)))
     for name in ["Lab2_Design_Report.md","Lab2_Benchmark_Report.md","LAB3_HANDOFF_ZH.md","LAB2_PROGRESS.md"]:
         pairs.append((ROOT/"docs"/name,Path("docs")/name))
