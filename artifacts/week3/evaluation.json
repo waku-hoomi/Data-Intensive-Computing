@@ -1,0 +1,807 @@
+{
+  "benchmark_version": 2,
+  "method": "same baseline; matched orchestration/publication; alternating variant order; full-data monitoring on/off; materialised validation controls; no VACUUM",
+  "trial_count": 2,
+  "trials": [
+    {
+      "benchmark_version": 2,
+      "signature": "f11a7084bf06f74a73a0573e35e69fcf70bee35c889fe8acc3a7922e86393db5",
+      "trial": 1,
+      "variant_order": [
+        "incremental",
+        "full",
+        "monitoring_off"
+      ],
+      "incremental_total_seconds": 1480.424291400006,
+      "incremental_gold_seconds": 244.44492189999437,
+      "incremental_affected_trips": 2528301,
+      "incremental_products": {
+        "daily_mobility_summary": {
+          "mode": "groups",
+          "groups": 415,
+          "seconds": 24.31878830003552
+        },
+        "taxi_zone_statistics": {
+          "mode": "groups",
+          "groups": 899,
+          "seconds": 34.71759919996839
+        },
+        "weather_impact_summary": {
+          "mode": "full",
+          "seconds": 964.1682134000002
+        },
+        "air_quality_impact_summary": {
+          "mode": "groups",
+          "groups": 7238,
+          "seconds": 13.417646199988667
+        }
+      },
+      "full_total_seconds": 247.17149410001002,
+      "full_gold_seconds": 49.87996300001396,
+      "full_product_seconds": 65.20288300001994,
+      "validation_pair": {
+        "datasets": {
+          "taxi_zone_lookup": {
+            "preparation_seconds": 0.3287920000148006,
+            "rows": 3,
+            "order": [
+              "enabled",
+              "disabled"
+            ],
+            "invalid_or_duplicate_rows": 0,
+            "enabled_seconds": 0.6469940999522805,
+            "disabled_seconds": 0.10401660000206903,
+            "additional_seconds": 0.5429774999502115,
+            "identical_input_and_sink": true
+          },
+          "weather": {
+            "preparation_seconds": 0.4221826000139117,
+            "rows": 174,
+            "order": [
+              "enabled",
+              "disabled"
+            ],
+            "invalid_or_duplicate_rows": 0,
+            "enabled_seconds": 0.8359011999564245,
+            "disabled_seconds": 0.1487399999750778,
+            "additional_seconds": 0.6871611999813467,
+            "identical_input_and_sink": true
+          },
+          "air_quality": {
+            "preparation_seconds": 0.649552799994126,
+            "rows": 507,
+            "order": [
+              "enabled",
+              "disabled"
+            ],
+            "invalid_or_duplicate_rows": 0,
+            "enabled_seconds": 0.862543499970343,
+            "disabled_seconds": 0.12978540000040084,
+            "additional_seconds": 0.7327580999699421,
+            "identical_input_and_sink": true
+          },
+          "taxi_trips": {
+            "preparation_seconds": 6.8003087999532,
+            "rows": 859930,
+            "order": [
+              "enabled",
+              "disabled"
+            ],
+            "invalid_or_duplicate_rows": 0,
+            "enabled_seconds": 22.827693299972452,
+            "disabled_seconds": 0.6838380999979563,
+            "additional_seconds": 22.143855199974496,
+            "identical_input_and_sink": true
+          }
+        },
+        "enabled_seconds": 25.1731320998515,
+        "disabled_seconds": 1.066380099975504,
+        "additional_seconds": 24.106751999875996
+      },
+      "validation_overhead_seconds": 24.106751999875996,
+      "monitoring_off_total_seconds": 512.8451130999601,
+      "monitoring_overhead_seconds": 967.5791783000459,
+      "monitoring_write_seconds": 19.794985299988184,
+      "monitoring_off_write_seconds": 0.0,
+      "before_storage": {
+        "groups": {
+          "bronze": {
+            "data_parquet_bytes": 1706329242,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 511413,
+            "other_bytes": 13333328,
+            "total_bytes": 1720173983,
+            "file_count": 552,
+            "active_data_bytes": 853164621,
+            "retained_data_bytes": 853164621
+          },
+          "gold": {
+            "data_parquet_bytes": 1705598968,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 129619,
+            "other_bytes": 13325280,
+            "total_bytes": 1719053867,
+            "file_count": 64,
+            "active_data_bytes": 852799484,
+            "retained_data_bytes": 852799484
+          },
+          "lab2_metadata": {
+            "data_parquet_bytes": 45158,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 29995,
+            "other_bytes": 432,
+            "total_bytes": 75585,
+            "file_count": 32,
+            "active_data_bytes": 39562,
+            "retained_data_bytes": 5596
+          },
+          "monitoring": {
+            "data_parquet_bytes": 105348,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 128928,
+            "other_bytes": 1040,
+            "total_bytes": 235316,
+            "file_count": 88,
+            "active_data_bytes": 85865,
+            "retained_data_bytes": 19483
+          },
+          "products": {
+            "data_parquet_bytes": 230110,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 17109,
+            "other_bytes": 1836,
+            "total_bytes": 249055,
+            "file_count": 24,
+            "active_data_bytes": 230110,
+            "retained_data_bytes": 0
+          },
+          "metadata/raw_schemas": {
+            "data_parquet_bytes": 0,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 0,
+            "other_bytes": 1921,
+            "total_bytes": 1921,
+            "file_count": 4
+          }
+        },
+        "total_logical_bytes": 3439789727,
+        "active_business_data_bytes": 1706194215,
+        "operational_and_retained_bytes": 1733595512,
+        "policy": "No VACUUM; all retained files and CDF counted. Logical file bytes; hard links counted per path."
+      },
+      "after_storage": {
+        "groups": {
+          "bronze": {
+            "data_parquet_bytes": 1771202089,
+            "cdf_bytes": 21018,
+            "delta_log_bytes": 599759,
+            "other_bytes": 13840204,
+            "total_bytes": 1785663070,
+            "file_count": 586,
+            "active_data_bytes": 917444169,
+            "retained_data_bytes": 853757920
+          },
+          "gold": {
+            "data_parquet_bytes": 2629924052,
+            "cdf_bytes": 273047002,
+            "delta_log_bytes": 161609,
+            "other_bytes": 20546624,
+            "total_bytes": 2923679287,
+            "file_count": 88,
+            "active_data_bytes": 924332522,
+            "retained_data_bytes": 1705591530
+          },
+          "lab2_metadata": {
+            "data_parquet_bytes": 91196,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 83101,
+            "other_bytes": 868,
+            "total_bytes": 175165,
+            "file_count": 64,
+            "active_data_bytes": 80004,
+            "retained_data_bytes": 11192
+          },
+          "monitoring": {
+            "data_parquet_bytes": 201113,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 424196,
+            "other_bytes": 1988,
+            "total_bytes": 627297,
+            "file_count": 174,
+            "active_data_bytes": 164010,
+            "retained_data_bytes": 37103
+          },
+          "products": {
+            "data_parquet_bytes": 451969,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 34170,
+            "other_bytes": 3608,
+            "total_bytes": 489747,
+            "file_count": 48,
+            "active_data_bytes": 221859,
+            "retained_data_bytes": 230110
+          },
+          "metadata/raw_schemas": {
+            "data_parquet_bytes": 0,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 0,
+            "other_bytes": 1921,
+            "total_bytes": 1921,
+            "file_count": 4
+          },
+          "metadata/change_keys": {
+            "data_parquet_bytes": 44168970,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 11200,
+            "other_bytes": 345136,
+            "total_bytes": 44525306,
+            "file_count": 30
+          },
+          "metadata/classified": {
+            "data_parquet_bytes": 80017291,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 60637,
+            "other_bytes": 625304,
+            "total_bytes": 80703232,
+            "file_count": 48
+          },
+          "metadata/quarantine": {
+            "data_parquet_bytes": 13393746,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 32446,
+            "other_bytes": 104720,
+            "total_bytes": 13530912,
+            "file_count": 32
+          }
+        },
+        "total_logical_bytes": 4849395937,
+        "active_business_data_bytes": 1841998550,
+        "operational_and_retained_bytes": 3007397387,
+        "policy": "No VACUUM; all retained files and CDF counted. Logical file bytes; hard links counted per path."
+      },
+      "storage_delta_bytes": {
+        "total_logical_bytes": 1409606210,
+        "active_business_data_bytes": 135804335,
+        "operational_and_retained_bytes": 1273801875
+      },
+      "bronze_metrics": {
+        "taxi_zone_lookup": {
+          "dataset_name": "taxi_zone_lookup",
+          "status": "success",
+          "processed": 3,
+          "inserted": 0,
+          "updated": 3,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\change_keys\\week3-revised-01-incremental\\taxi_zone_lookup\\before_1",
+          "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\quarantine\\taxi_zone_lookup\\week3-revised-01-incremental",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 22.681,
+          "validation_seconds": 3.742,
+          "merge_seconds": 4.605,
+          "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\classified\\week3-revised-01-incremental\\taxi_zone_lookup\\before_1",
+          "unpublished_change_keys": 3
+        },
+        "weather": {
+          "dataset_name": "weather",
+          "status": "success",
+          "processed": 174,
+          "inserted": 168,
+          "updated": 6,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\change_keys\\week3-revised-01-incremental\\weather\\before_1",
+          "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\quarantine\\weather\\week3-revised-01-incremental",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 14.657,
+          "validation_seconds": 1.216,
+          "merge_seconds": 3.478,
+          "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\classified\\week3-revised-01-incremental\\weather\\before_1",
+          "unpublished_change_keys": 174
+        },
+        "air_quality": {
+          "dataset_name": "air_quality",
+          "status": "success",
+          "processed": 507,
+          "inserted": 504,
+          "updated": 3,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\change_keys\\week3-revised-01-incremental\\air_quality\\before_1",
+          "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\quarantine\\air_quality\\week3-revised-01-incremental",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 30.21,
+          "validation_seconds": 1.295,
+          "merge_seconds": 6.606,
+          "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\classified\\week3-revised-01-incremental\\air_quality\\before_1",
+          "unpublished_change_keys": 507
+        },
+        "taxi_trips": {
+          "dataset_name": "taxi_trips",
+          "status": "success",
+          "processed": 859930,
+          "inserted": 716608,
+          "updated": 0,
+          "duplicates": 143322,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\change_keys\\week3-revised-01-incremental\\taxi_trips\\before_1",
+          "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\quarantine\\taxi_trips\\week3-revised-01-incremental",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 143322
+          },
+          "execution_seconds": 77.246,
+          "validation_seconds": 11.711,
+          "merge_seconds": 19.048,
+          "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-01\\incremental\\data\\_metadata\\classified\\week3-revised-01-incremental\\taxi_trips\\before_1",
+          "unpublished_change_keys": 716608
+        }
+      },
+      "verification": {
+        "gold": {
+          "rows": 10040297,
+          "hash_sum": "-8210051251956235147274",
+          "hash_min": -9223371167394095133,
+          "hash_max": 9223371761732475073
+        },
+        "products": {
+          "daily_mobility_summary": 574,
+          "taxi_zone_statistics": 1009,
+          "weather_impact_summary": 3885,
+          "air_quality_impact_summary": 14394
+        },
+        "queries": {
+          "01_zone_monthly": 1009,
+          "02_weather_distance": 14,
+          "03_air_quality_demand": 3,
+          "04_weather_variation": 259,
+          "05_peak_hours": 7,
+          "06_monthly_trend": 4
+        }
+      },
+      "monitoring_verification": {
+        "gold": {
+          "rows": 10040297,
+          "hash_sum": "-8210051251956235147274",
+          "hash_min": -9223371167394095133,
+          "hash_max": 9223371761732475073
+        },
+        "products": {
+          "daily_mobility_summary": 574,
+          "taxi_zone_statistics": 1009,
+          "weather_impact_summary": 3885,
+          "air_quality_impact_summary": 14394
+        },
+        "queries": {
+          "01_zone_monthly": 1009,
+          "02_weather_distance": 14,
+          "03_air_quality_demand": 3,
+          "04_weather_variation": 259,
+          "05_peak_hours": 7,
+          "06_monthly_trend": 4
+        }
+      }
+    },
+    {
+      "benchmark_version": 2,
+      "signature": "f11a7084bf06f74a73a0573e35e69fcf70bee35c889fe8acc3a7922e86393db5",
+      "trial": 2,
+      "variant_order": [
+        "monitoring_off",
+        "full",
+        "incremental"
+      ],
+      "incremental_total_seconds": 514.5227368999622,
+      "incremental_gold_seconds": 253.1778256999678,
+      "incremental_affected_trips": 2528301,
+      "incremental_products": {
+        "daily_mobility_summary": {
+          "mode": "groups",
+          "groups": 415,
+          "seconds": 20.75209140003426
+        },
+        "taxi_zone_statistics": {
+          "mode": "groups",
+          "groups": 899,
+          "seconds": 31.33497929997975
+        },
+        "weather_impact_summary": {
+          "mode": "full",
+          "seconds": 16.652867599972524
+        },
+        "air_quality_impact_summary": {
+          "mode": "groups",
+          "groups": 7238,
+          "seconds": 14.104470499965828
+        }
+      },
+      "full_total_seconds": 277.90168150002137,
+      "full_gold_seconds": 50.03244560002349,
+      "full_product_seconds": 72.47769980004523,
+      "validation_pair": {
+        "datasets": {
+          "taxi_zone_lookup": {
+            "preparation_seconds": 0.3040274999802932,
+            "rows": 3,
+            "order": [
+              "disabled",
+              "enabled"
+            ],
+            "disabled_seconds": 0.10554939997382462,
+            "invalid_or_duplicate_rows": 0,
+            "enabled_seconds": 0.5740723999915645,
+            "additional_seconds": 0.46852300001773983,
+            "identical_input_and_sink": true
+          },
+          "weather": {
+            "preparation_seconds": 0.3547073999652639,
+            "rows": 174,
+            "order": [
+              "disabled",
+              "enabled"
+            ],
+            "disabled_seconds": 0.12399890000233427,
+            "invalid_or_duplicate_rows": 0,
+            "enabled_seconds": 0.7228893999708816,
+            "additional_seconds": 0.5988904999685474,
+            "identical_input_and_sink": true
+          },
+          "air_quality": {
+            "preparation_seconds": 0.47292200004449114,
+            "rows": 507,
+            "order": [
+              "disabled",
+              "enabled"
+            ],
+            "disabled_seconds": 0.12369199999375269,
+            "invalid_or_duplicate_rows": 0,
+            "enabled_seconds": 0.7904738999786787,
+            "additional_seconds": 0.666781899984926,
+            "identical_input_and_sink": true
+          },
+          "taxi_trips": {
+            "preparation_seconds": 6.7127881000051275,
+            "rows": 859930,
+            "order": [
+              "disabled",
+              "enabled"
+            ],
+            "disabled_seconds": 0.567451799986884,
+            "invalid_or_duplicate_rows": 0,
+            "enabled_seconds": 23.031110599986278,
+            "additional_seconds": 22.463658799999394,
+            "identical_input_and_sink": true
+          }
+        },
+        "enabled_seconds": 25.118546299927402,
+        "disabled_seconds": 0.9206920999567956,
+        "additional_seconds": 24.197854199970607
+      },
+      "validation_overhead_seconds": 24.197854199970607,
+      "monitoring_off_total_seconds": 531.934371499985,
+      "monitoring_overhead_seconds": -17.411634600022808,
+      "monitoring_write_seconds": 22.47465839999495,
+      "monitoring_off_write_seconds": 0.0,
+      "before_storage": {
+        "groups": {
+          "bronze": {
+            "data_parquet_bytes": 1706329242,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 511413,
+            "other_bytes": 13333328,
+            "total_bytes": 1720173983,
+            "file_count": 552,
+            "active_data_bytes": 853164621,
+            "retained_data_bytes": 853164621
+          },
+          "gold": {
+            "data_parquet_bytes": 1705598968,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 129619,
+            "other_bytes": 13325280,
+            "total_bytes": 1719053867,
+            "file_count": 64,
+            "active_data_bytes": 852799484,
+            "retained_data_bytes": 852799484
+          },
+          "lab2_metadata": {
+            "data_parquet_bytes": 45158,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 29995,
+            "other_bytes": 432,
+            "total_bytes": 75585,
+            "file_count": 32,
+            "active_data_bytes": 39562,
+            "retained_data_bytes": 5596
+          },
+          "monitoring": {
+            "data_parquet_bytes": 105348,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 128928,
+            "other_bytes": 1040,
+            "total_bytes": 235316,
+            "file_count": 88,
+            "active_data_bytes": 85865,
+            "retained_data_bytes": 19483
+          },
+          "products": {
+            "data_parquet_bytes": 230110,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 17109,
+            "other_bytes": 1836,
+            "total_bytes": 249055,
+            "file_count": 24,
+            "active_data_bytes": 230110,
+            "retained_data_bytes": 0
+          },
+          "metadata/raw_schemas": {
+            "data_parquet_bytes": 0,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 0,
+            "other_bytes": 1921,
+            "total_bytes": 1921,
+            "file_count": 4
+          }
+        },
+        "total_logical_bytes": 3439789727,
+        "active_business_data_bytes": 1706194215,
+        "operational_and_retained_bytes": 1733595512,
+        "policy": "No VACUUM; all retained files and CDF counted. Logical file bytes; hard links counted per path."
+      },
+      "after_storage": {
+        "groups": {
+          "bronze": {
+            "data_parquet_bytes": 1771202089,
+            "cdf_bytes": 21018,
+            "delta_log_bytes": 599771,
+            "other_bytes": 13840204,
+            "total_bytes": 1785663082,
+            "file_count": 586,
+            "active_data_bytes": 917444169,
+            "retained_data_bytes": 853757920
+          },
+          "gold": {
+            "data_parquet_bytes": 2629924052,
+            "cdf_bytes": 273047002,
+            "delta_log_bytes": 161615,
+            "other_bytes": 20546624,
+            "total_bytes": 2923679293,
+            "file_count": 88,
+            "active_data_bytes": 924332522,
+            "retained_data_bytes": 1705591530
+          },
+          "lab2_metadata": {
+            "data_parquet_bytes": 91195,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 83105,
+            "other_bytes": 868,
+            "total_bytes": 175168,
+            "file_count": 64,
+            "active_data_bytes": 80003,
+            "retained_data_bytes": 11192
+          },
+          "monitoring": {
+            "data_parquet_bytes": 201118,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 424211,
+            "other_bytes": 1988,
+            "total_bytes": 627317,
+            "file_count": 174,
+            "active_data_bytes": 164015,
+            "retained_data_bytes": 37103
+          },
+          "products": {
+            "data_parquet_bytes": 451969,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 34190,
+            "other_bytes": 3608,
+            "total_bytes": 489767,
+            "file_count": 48,
+            "active_data_bytes": 221859,
+            "retained_data_bytes": 230110
+          },
+          "metadata/raw_schemas": {
+            "data_parquet_bytes": 0,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 0,
+            "other_bytes": 1921,
+            "total_bytes": 1921,
+            "file_count": 4
+          },
+          "metadata/change_keys": {
+            "data_parquet_bytes": 44168970,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 11200,
+            "other_bytes": 345136,
+            "total_bytes": 44525306,
+            "file_count": 30
+          },
+          "metadata/classified": {
+            "data_parquet_bytes": 80017291,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 60637,
+            "other_bytes": 625304,
+            "total_bytes": 80703232,
+            "file_count": 48
+          },
+          "metadata/quarantine": {
+            "data_parquet_bytes": 13393746,
+            "cdf_bytes": 0,
+            "delta_log_bytes": 32446,
+            "other_bytes": 104720,
+            "total_bytes": 13530912,
+            "file_count": 32
+          }
+        },
+        "total_logical_bytes": 4849395998,
+        "active_business_data_bytes": 1841998550,
+        "operational_and_retained_bytes": 3007397448,
+        "policy": "No VACUUM; all retained files and CDF counted. Logical file bytes; hard links counted per path."
+      },
+      "storage_delta_bytes": {
+        "total_logical_bytes": 1409606271,
+        "active_business_data_bytes": 135804335,
+        "operational_and_retained_bytes": 1273801936
+      },
+      "bronze_metrics": {
+        "taxi_zone_lookup": {
+          "dataset_name": "taxi_zone_lookup",
+          "status": "success",
+          "processed": 3,
+          "inserted": 0,
+          "updated": 3,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\change_keys\\week3-revised-02-incremental\\taxi_zone_lookup\\before_1",
+          "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\quarantine\\taxi_zone_lookup\\week3-revised-02-incremental",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 12.895,
+          "validation_seconds": 0.483,
+          "merge_seconds": 3.946,
+          "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\classified\\week3-revised-02-incremental\\taxi_zone_lookup\\before_1",
+          "unpublished_change_keys": 3
+        },
+        "weather": {
+          "dataset_name": "weather",
+          "status": "success",
+          "processed": 174,
+          "inserted": 168,
+          "updated": 6,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\change_keys\\week3-revised-02-incremental\\weather\\before_1",
+          "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\quarantine\\weather\\week3-revised-02-incremental",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 12.592,
+          "validation_seconds": 0.762,
+          "merge_seconds": 2.377,
+          "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\classified\\week3-revised-02-incremental\\weather\\before_1",
+          "unpublished_change_keys": 174
+        },
+        "air_quality": {
+          "dataset_name": "air_quality",
+          "status": "success",
+          "processed": 507,
+          "inserted": 504,
+          "updated": 3,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\change_keys\\week3-revised-02-incremental\\air_quality\\before_1",
+          "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\quarantine\\air_quality\\week3-revised-02-incremental",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 25.539,
+          "validation_seconds": 0.9,
+          "merge_seconds": 7.064,
+          "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\classified\\week3-revised-02-incremental\\air_quality\\before_1",
+          "unpublished_change_keys": 507
+        },
+        "taxi_trips": {
+          "dataset_name": "taxi_trips",
+          "status": "success",
+          "processed": 859930,
+          "inserted": 716608,
+          "updated": 0,
+          "duplicates": 143322,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\change_keys\\week3-revised-02-incremental\\taxi_trips\\before_1",
+          "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\quarantine\\taxi_trips\\week3-revised-02-incremental",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 143322
+          },
+          "execution_seconds": 73.091,
+          "validation_seconds": 12.263,
+          "merge_seconds": 16.62,
+          "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\evaluation\\revised-trial-02\\incremental\\data\\_metadata\\classified\\week3-revised-02-incremental\\taxi_trips\\before_1",
+          "unpublished_change_keys": 716608
+        }
+      },
+      "verification": {
+        "gold": {
+          "rows": 10040297,
+          "hash_sum": "-8210051251956235147274",
+          "hash_min": -9223371167394095133,
+          "hash_max": 9223371761732475073
+        },
+        "products": {
+          "daily_mobility_summary": 574,
+          "taxi_zone_statistics": 1009,
+          "weather_impact_summary": 3885,
+          "air_quality_impact_summary": 14394
+        },
+        "queries": {
+          "01_zone_monthly": 1009,
+          "02_weather_distance": 14,
+          "03_air_quality_demand": 3,
+          "04_weather_variation": 259,
+          "05_peak_hours": 7,
+          "06_monthly_trend": 4
+        }
+      },
+      "monitoring_verification": {
+        "gold": {
+          "rows": 10040297,
+          "hash_sum": "-8210051251956235147274",
+          "hash_min": -9223371167394095133,
+          "hash_max": 9223371761732475073
+        },
+        "products": {
+          "daily_mobility_summary": 574,
+          "taxi_zone_statistics": 1009,
+          "weather_impact_summary": 3885,
+          "air_quality_impact_summary": 14394
+        },
+        "queries": {
+          "01_zone_monthly": 1009,
+          "02_weather_distance": 14,
+          "03_air_quality_demand": 3,
+          "04_weather_variation": 259,
+          "05_peak_hours": 7,
+          "06_monthly_trend": 4
+        }
+      }
+    }
+  ],
+  "observations": [
+    {
+      "kind": "host_response_delay",
+      "trial": 1,
+      "stage": "weather_impact_summary",
+      "note": "The terminal status request was delayed for approximately 16 minutes during this refresh. Weather refresh wall time was 964.17 seconds; later comparable refreshes took about 17-20 seconds. No causal diagnosis of the host delay was established. Original measurements are retained."
+    }
+  ]
+}

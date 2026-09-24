@@ -1,5 +1,16 @@
 # Design Report — Urban Data Integration Platform (Week 1)
 
+> **Historical report / correction (2026-09-23).** The numbers and design discussion
+> below describe the original Week 1 run and are retained as submitted, not as a
+> measurement of the current Windows implementation. Later platform validation
+> counted 9,417,864 accepted trips, rather than the 9,418,044 reported below.
+> The statement that a new monthly input creates a partition with no rewrite of
+> old data describes the intended layout, not the original ingestion code:
+> `ingestion/pipeline.py` used full-table `overwrite`. Week 3 introduces the
+> incremental Delta `MERGE` workflow. Recompute all row-dependent percentages
+> and join-coverage counts from a validated baseline before using them in a new
+> evaluation; the historical values below have not been edited.
+
 ## 1. Storage Architecture (Task 2)
 
 ### Directory structure

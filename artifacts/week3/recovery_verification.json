@@ -1,0 +1,845 @@
+{
+  "evidence": "Real Delta fault-injection test artifacts; assertions recorded in pytest-all.xml",
+  "runs": {
+    "after-gold-failure": {
+      "run_id": "after-gold-failure",
+      "kind": "incremental",
+      "started_at_utc": "2026-09-23T22:46:15.480674+00:00",
+      "monitoring_write_seconds": 19.03615469991928,
+      "previous_publication_run": "recovery-baseline",
+      "refresh_mode": "incremental",
+      "monitoring_enabled": true,
+      "bronze": {
+        "taxi_zone_lookup": {
+          "dataset_name": "taxi_zone_lookup",
+          "status": "success",
+          "processed": 1,
+          "inserted": 0,
+          "updated": 1,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\after-gold-failure\\taxi_zone_lookup\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_zone_lookup\\after-gold-failure",
+          "before_version": 0,
+          "after_version": 1,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 17.845,
+          "validation_seconds": 0.755,
+          "merge_seconds": 6.678,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\after-gold-failure\\taxi_zone_lookup\\before_0",
+          "unpublished_change_keys": 1
+        },
+        "weather": {
+          "dataset_name": "weather",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\after-gold-failure\\weather\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\weather\\after-gold-failure",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 8.618,
+          "validation_seconds": 0.628,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\after-gold-failure\\weather\\before_0"
+        },
+        "air_quality": {
+          "dataset_name": "air_quality",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\after-gold-failure\\air_quality\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\air_quality\\after-gold-failure",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 10.017,
+          "validation_seconds": 1.363,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\after-gold-failure\\air_quality\\before_0"
+        },
+        "taxi_trips": {
+          "dataset_name": "taxi_trips",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\after-gold-failure\\taxi_trips\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_trips\\after-gold-failure",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 10.098,
+          "validation_seconds": 1.621,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\after-gold-failure\\taxi_trips\\before_0"
+        }
+      },
+      "gold": {
+        "before_version": 0,
+        "after_version": 1,
+        "affected_trips": 2,
+        "changed": true,
+        "seconds": 17.95096129999729
+      },
+      "status": "failed",
+      "error": "RuntimeError: injected after Gold commit",
+      "total_seconds": 86.43827089999104
+    },
+    "after-gold-retry": {
+      "run_id": "after-gold-retry",
+      "kind": "incremental",
+      "started_at_utc": "2026-09-23T22:47:42.676534+00:00",
+      "monitoring_write_seconds": 29.779362999950536,
+      "previous_publication_run": "recovery-baseline",
+      "refresh_mode": "incremental",
+      "monitoring_enabled": true,
+      "bronze": {
+        "taxi_zone_lookup": {
+          "dataset_name": "taxi_zone_lookup",
+          "status": "success",
+          "processed": 1,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 1,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\after-gold-retry\\taxi_zone_lookup\\before_1",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_zone_lookup\\after-gold-retry",
+          "before_version": 1,
+          "after_version": 1,
+          "validation_failures": {
+            "cross_batch_duplicate": 1
+          },
+          "execution_seconds": 12.383,
+          "validation_seconds": 0.762,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\after-gold-retry\\taxi_zone_lookup\\before_1",
+          "unpublished_change_keys": 1
+        },
+        "weather": {
+          "dataset_name": "weather",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\after-gold-retry\\weather\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\weather\\after-gold-retry",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 8.1,
+          "validation_seconds": 0.715,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\after-gold-retry\\weather\\before_0"
+        },
+        "air_quality": {
+          "dataset_name": "air_quality",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\after-gold-retry\\air_quality\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\air_quality\\after-gold-retry",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 8.033,
+          "validation_seconds": 0.811,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\after-gold-retry\\air_quality\\before_0"
+        },
+        "taxi_trips": {
+          "dataset_name": "taxi_trips",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\after-gold-retry\\taxi_trips\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_trips\\after-gold-retry",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 10.152,
+          "validation_seconds": 1.485,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\after-gold-retry\\taxi_trips\\before_0"
+        }
+      },
+      "gold": {
+        "before_version": 1,
+        "after_version": 2,
+        "affected_trips": 2,
+        "changed": true,
+        "seconds": 12.795662999968044
+      },
+      "products": {
+        "daily_mobility_summary": {
+          "mode": "skipped",
+          "seconds": 0.0
+        },
+        "taxi_zone_statistics": {
+          "mode": "groups",
+          "groups": 2,
+          "seconds": 9.685948499944061
+        },
+        "weather_impact_summary": {
+          "mode": "groups",
+          "groups": 4,
+          "seconds": 16.176799800014123
+        },
+        "air_quality_impact_summary": {
+          "mode": "skipped",
+          "seconds": 0.0
+        }
+      },
+      "publication": {
+        "run_id": "after-gold-retry",
+        "published_at_utc": "2026-09-23T22:49:36.275737+00:00",
+        "gold_version": 2,
+        "product_versions_json": "{\"air_quality_impact_summary\": 0, \"daily_mobility_summary\": 0, \"taxi_zone_statistics\": 1, \"weather_impact_summary\": 1}",
+        "bronze_versions_json": "{\"air_quality\": 0, \"taxi_trips\": 0, \"taxi_zone_lookup\": 1, \"weather\": 0}",
+        "analysis_config_json": "{\"end_date_exclusive\": \"2024-01-02\", \"min_weather_hours\": 1, \"schema_version\": 3, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true}",
+        "product_versions": {
+          "daily_mobility_summary": 0,
+          "taxi_zone_statistics": 1,
+          "weather_impact_summary": 1,
+          "air_quality_impact_summary": 0
+        },
+        "bronze_versions": {
+          "taxi_zone_lookup": 1,
+          "weather": 0,
+          "air_quality": 0,
+          "taxi_trips": 0
+        },
+        "analysis_config": {
+          "timezone": "America/New_York",
+          "start_date": "2024-01-01",
+          "end_date_exclusive": "2024-01-02",
+          "min_weather_hours": 1,
+          "schema_version": 3,
+          "weather_interpretation_approved": true
+        }
+      },
+      "status": "success",
+      "total_seconds": 116.21908140002051
+    },
+    "completed-replay": {
+      "run_id": "completed-replay",
+      "kind": "incremental",
+      "started_at_utc": "2026-09-23T22:52:48.391227+00:00",
+      "monitoring_write_seconds": 21.16824930004077,
+      "previous_publication_run": "mixed-batch-retry",
+      "refresh_mode": "incremental",
+      "monitoring_enabled": true,
+      "bronze": {
+        "taxi_zone_lookup": {
+          "dataset_name": "taxi_zone_lookup",
+          "status": "success",
+          "processed": 1,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 1,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\completed-replay\\taxi_zone_lookup\\before_3",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_zone_lookup\\completed-replay",
+          "before_version": 3,
+          "after_version": 3,
+          "validation_failures": {
+            "cross_batch_duplicate": 1
+          },
+          "execution_seconds": 11.9,
+          "validation_seconds": 0.744,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\completed-replay\\taxi_zone_lookup\\before_3"
+        },
+        "weather": {
+          "dataset_name": "weather",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\completed-replay\\weather\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\weather\\completed-replay",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 11.262,
+          "validation_seconds": 0.894,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\completed-replay\\weather\\before_0"
+        },
+        "air_quality": {
+          "dataset_name": "air_quality",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\completed-replay\\air_quality\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\air_quality\\completed-replay",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 6.589,
+          "validation_seconds": 0.749,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\completed-replay\\air_quality\\before_0"
+        },
+        "taxi_trips": {
+          "dataset_name": "taxi_trips",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\completed-replay\\taxi_trips\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_trips\\completed-replay",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 7.31,
+          "validation_seconds": 1.237,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\completed-replay\\taxi_trips\\before_0"
+        }
+      },
+      "gold": {
+        "before_version": 4,
+        "after_version": 4,
+        "affected_trips": 0,
+        "changed": false,
+        "seconds": 2.6626950000063516
+      },
+      "products": {
+        "daily_mobility_summary": {
+          "mode": "skipped",
+          "seconds": 0.0
+        },
+        "taxi_zone_statistics": {
+          "mode": "skipped",
+          "seconds": 0.0
+        },
+        "weather_impact_summary": {
+          "mode": "skipped",
+          "seconds": 0.0
+        },
+        "air_quality_impact_summary": {
+          "mode": "skipped",
+          "seconds": 0.0
+        }
+      },
+      "publication": {
+        "run_id": "completed-replay",
+        "published_at_utc": "2026-09-23T22:53:51.808738+00:00",
+        "gold_version": 4,
+        "product_versions_json": "{\"air_quality_impact_summary\": 0, \"daily_mobility_summary\": 0, \"taxi_zone_statistics\": 3, \"weather_impact_summary\": 2}",
+        "bronze_versions_json": "{\"air_quality\": 0, \"taxi_trips\": 0, \"taxi_zone_lookup\": 3, \"weather\": 0}",
+        "analysis_config_json": "{\"end_date_exclusive\": \"2024-01-02\", \"min_weather_hours\": 1, \"schema_version\": 3, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true}",
+        "product_versions": {
+          "daily_mobility_summary": 0,
+          "taxi_zone_statistics": 3,
+          "weather_impact_summary": 2,
+          "air_quality_impact_summary": 0
+        },
+        "bronze_versions": {
+          "taxi_zone_lookup": 3,
+          "weather": 0,
+          "air_quality": 0,
+          "taxi_trips": 0
+        },
+        "analysis_config": {
+          "timezone": "America/New_York",
+          "start_date": "2024-01-01",
+          "end_date_exclusive": "2024-01-02",
+          "min_weather_hours": 1,
+          "schema_version": 3,
+          "weather_interpretation_approved": true
+        }
+      },
+      "status": "success",
+      "total_seconds": 64.98374540003715
+    },
+    "mixed-batch-retry": {
+      "run_id": "mixed-batch-retry",
+      "kind": "incremental",
+      "started_at_utc": "2026-09-23T22:51:01.555449+00:00",
+      "monitoring_write_seconds": 26.0309650998679,
+      "previous_publication_run": "after-gold-retry",
+      "refresh_mode": "incremental",
+      "monitoring_enabled": true,
+      "bronze": {
+        "taxi_zone_lookup": {
+          "dataset_name": "taxi_zone_lookup",
+          "status": "success",
+          "processed": 1,
+          "inserted": 0,
+          "updated": 1,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\mixed-batch-retry\\taxi_zone_lookup\\before_2",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_zone_lookup\\mixed-batch-retry",
+          "before_version": 2,
+          "after_version": 3,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 10.967,
+          "validation_seconds": 0.547,
+          "merge_seconds": 2.83,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\mixed-batch-retry\\taxi_zone_lookup\\before_2",
+          "unpublished_change_keys": 2
+        },
+        "weather": {
+          "dataset_name": "weather",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\mixed-batch-retry\\weather\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\weather\\mixed-batch-retry",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 7.656,
+          "validation_seconds": 0.542,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\mixed-batch-retry\\weather\\before_0"
+        },
+        "air_quality": {
+          "dataset_name": "air_quality",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\mixed-batch-retry\\air_quality\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\air_quality\\mixed-batch-retry",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 7.776,
+          "validation_seconds": 0.725,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\mixed-batch-retry\\air_quality\\before_0"
+        },
+        "taxi_trips": {
+          "dataset_name": "taxi_trips",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\mixed-batch-retry\\taxi_trips\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_trips\\mixed-batch-retry",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 8.91,
+          "validation_seconds": 1.447,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\mixed-batch-retry\\taxi_trips\\before_0"
+        }
+      },
+      "gold": {
+        "before_version": 3,
+        "after_version": 4,
+        "affected_trips": 2,
+        "changed": true,
+        "seconds": 11.132639699964784
+      },
+      "products": {
+        "daily_mobility_summary": {
+          "mode": "skipped",
+          "seconds": 0.0
+        },
+        "taxi_zone_statistics": {
+          "mode": "groups",
+          "groups": 2,
+          "seconds": 7.9212597999721766
+        },
+        "weather_impact_summary": {
+          "mode": "groups",
+          "groups": 4,
+          "seconds": 11.676880399987567
+        },
+        "air_quality_impact_summary": {
+          "mode": "skipped",
+          "seconds": 0.0
+        }
+      },
+      "publication": {
+        "run_id": "mixed-batch-retry",
+        "published_at_utc": "2026-09-23T22:52:40.012921+00:00",
+        "gold_version": 4,
+        "product_versions_json": "{\"air_quality_impact_summary\": 0, \"daily_mobility_summary\": 0, \"taxi_zone_statistics\": 3, \"weather_impact_summary\": 2}",
+        "bronze_versions_json": "{\"air_quality\": 0, \"taxi_trips\": 0, \"taxi_zone_lookup\": 3, \"weather\": 0}",
+        "analysis_config_json": "{\"end_date_exclusive\": \"2024-01-02\", \"min_weather_hours\": 1, \"schema_version\": 3, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true}",
+        "product_versions": {
+          "daily_mobility_summary": 0,
+          "taxi_zone_statistics": 3,
+          "weather_impact_summary": 2,
+          "air_quality_impact_summary": 0
+        },
+        "bronze_versions": {
+          "taxi_zone_lookup": 3,
+          "weather": 0,
+          "air_quality": 0,
+          "taxi_trips": 0
+        },
+        "analysis_config": {
+          "timezone": "America/New_York",
+          "start_date": "2024-01-01",
+          "end_date_exclusive": "2024-01-02",
+          "min_weather_hours": 1,
+          "schema_version": 3,
+          "weather_interpretation_approved": true
+        }
+      },
+      "status": "success",
+      "total_seconds": 101.10646620002808
+    },
+    "partial-product-failure": {
+      "run_id": "partial-product-failure",
+      "kind": "incremental",
+      "started_at_utc": "2026-09-23T22:49:43.923984+00:00",
+      "monitoring_write_seconds": 16.48975759994937,
+      "previous_publication_run": "after-gold-retry",
+      "refresh_mode": "incremental",
+      "monitoring_enabled": true,
+      "bronze": {
+        "taxi_zone_lookup": {
+          "dataset_name": "taxi_zone_lookup",
+          "status": "success",
+          "processed": 1,
+          "inserted": 0,
+          "updated": 1,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\partial-product-failure\\taxi_zone_lookup\\before_1",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_zone_lookup\\partial-product-failure",
+          "before_version": 1,
+          "after_version": 2,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 11.785,
+          "validation_seconds": 0.557,
+          "merge_seconds": 2.949,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\partial-product-failure\\taxi_zone_lookup\\before_1",
+          "unpublished_change_keys": 1
+        },
+        "weather": {
+          "dataset_name": "weather",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\partial-product-failure\\weather\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\weather\\partial-product-failure",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 7.847,
+          "validation_seconds": 0.68,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\partial-product-failure\\weather\\before_0"
+        },
+        "air_quality": {
+          "dataset_name": "air_quality",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\partial-product-failure\\air_quality\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\air_quality\\partial-product-failure",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 7.672,
+          "validation_seconds": 0.834,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\partial-product-failure\\air_quality\\before_0"
+        },
+        "taxi_trips": {
+          "dataset_name": "taxi_trips",
+          "status": "success",
+          "processed": 0,
+          "inserted": 0,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\change_keys\\partial-product-failure\\taxi_trips\\before_0",
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_trips\\partial-product-failure",
+          "before_version": 0,
+          "after_version": 0,
+          "validation_failures": {
+            "cross_batch_duplicate": 0
+          },
+          "execution_seconds": 8.947,
+          "validation_seconds": 1.404,
+          "merge_seconds": 0.0,
+          "classified_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\classified\\partial-product-failure\\taxi_trips\\before_0"
+        }
+      },
+      "gold": {
+        "before_version": 2,
+        "after_version": 3,
+        "affected_trips": 2,
+        "changed": true,
+        "seconds": 12.220193099987227
+      },
+      "status": "failed",
+      "error": "RuntimeError: injected after product commit",
+      "total_seconds": 77.14433509996161
+    },
+    "recovery-baseline": {
+      "run_id": "recovery-baseline",
+      "kind": "baseline",
+      "started_at_utc": "2026-09-23T22:44:00.508167+00:00",
+      "monitoring_write_seconds": 17.278084100049455,
+      "bronze": {
+        "taxi_zone_lookup": {
+          "dataset_name": "taxi_zone_lookup",
+          "status": "success",
+          "processed": 2,
+          "inserted": 2,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": null,
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_zone_lookup\\baseline",
+          "before_version": null,
+          "after_version": 0,
+          "validation_failures": {},
+          "execution_seconds": 33.539,
+          "validation_seconds": 7.935,
+          "merge_seconds": 0.0
+        },
+        "air_quality": {
+          "dataset_name": "air_quality",
+          "status": "success",
+          "processed": 2,
+          "inserted": 2,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": null,
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\air_quality\\baseline",
+          "before_version": null,
+          "after_version": 0,
+          "validation_failures": {},
+          "execution_seconds": 12.914,
+          "validation_seconds": 2.13,
+          "merge_seconds": 0.0
+        },
+        "taxi_trips": {
+          "dataset_name": "taxi_trips",
+          "status": "success",
+          "processed": 2,
+          "inserted": 2,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": null,
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\taxi_trips\\baseline",
+          "before_version": null,
+          "after_version": 0,
+          "validation_failures": {},
+          "execution_seconds": 15.017,
+          "validation_seconds": 4.868,
+          "merge_seconds": 0.0
+        },
+        "weather": {
+          "dataset_name": "weather",
+          "status": "success",
+          "processed": 2,
+          "inserted": 2,
+          "updated": 0,
+          "duplicates": 0,
+          "rejected": 0,
+          "schema_version": 3,
+          "changed_keys_path": null,
+          "quarantine_path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\_metadata\\quarantine\\weather\\baseline",
+          "before_version": null,
+          "after_version": 0,
+          "validation_failures": {},
+          "execution_seconds": 6.693,
+          "validation_seconds": 1.471,
+          "merge_seconds": 0.0
+        }
+      },
+      "gold": {
+        "path": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\gold\\integrated_taxi_trips",
+        "seconds": 7.999198500008788
+      },
+      "products": [
+        {
+          "product_name": "daily_mobility_summary",
+          "data_source": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\gold\\integrated_taxi_trips",
+          "source_delta_version": 0,
+          "created_at_utc": "2026-09-23T22:45:35.342379+00:00",
+          "refreshed_at_utc": "2026-09-23T22:45:35.342379+00:00",
+          "schema_version": 3,
+          "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"local_date\",\"nullable\":true,\"type\":\"date\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"distance_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"distance_n\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"duration_sum\",\"nullable\":true,\"type\":\"decimal(37,6)\"},{\"metadata\":{},\"name\":\"duration_n\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"fare_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"fare_n\",\"nullable\":true,\"type\":\"long\"}],\"type\":\"struct\"}",
+          "analysis_config_json": "{\"end_date_exclusive\": \"2024-01-02\", \"min_weather_hours\": 1, \"schema_version\": 3, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true}",
+          "storage_bytes": 2861,
+          "active_files": 1,
+          "row_count": 1,
+          "build_seconds": 3.793102200026624
+        },
+        {
+          "product_name": "taxi_zone_statistics",
+          "data_source": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\gold\\integrated_taxi_trips",
+          "source_delta_version": 0,
+          "created_at_utc": "2026-09-23T22:45:44.974856+00:00",
+          "refreshed_at_utc": "2026-09-23T22:45:44.974856+00:00",
+          "schema_version": 3,
+          "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"local_month\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pu_location_id\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"pickup_zone\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"avg_distance_miles\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"avg_duration_min\",\"nullable\":true,\"type\":\"decimal(31,10)\"},{\"metadata\":{},\"name\":\"avg_fare\",\"nullable\":true,\"type\":\"double\"}],\"type\":\"struct\"}",
+          "analysis_config_json": "{\"end_date_exclusive\": \"2024-01-02\", \"min_weather_hours\": 1, \"schema_version\": 3, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true}",
+          "storage_bytes": 2804,
+          "active_files": 1,
+          "row_count": 2,
+          "build_seconds": 4.007184700050857
+        },
+        {
+          "product_name": "weather_impact_summary",
+          "data_source": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\gold\\integrated_taxi_trips",
+          "source_delta_version": 0,
+          "created_at_utc": "2026-09-23T22:45:54.028805+00:00",
+          "refreshed_at_utc": "2026-09-23T22:45:54.028805+00:00",
+          "schema_version": 3,
+          "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"pu_location_id\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"pickup_zone\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"weather_condition_code\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"observed_hours\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"distance_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"distance_n\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"mean_hourly_trips\",\"nullable\":true,\"type\":\"double\"}],\"type\":\"struct\"}",
+          "analysis_config_json": "{\"end_date_exclusive\": \"2024-01-02\", \"min_weather_hours\": 1, \"schema_version\": 3, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true}",
+          "storage_bytes": 3208,
+          "active_files": 1,
+          "row_count": 4,
+          "build_seconds": 4.5744683999801055
+        },
+        {
+          "product_name": "air_quality_impact_summary",
+          "data_source": "D:\\st_tmp\\pytest-of-\u5f20\u6d69\u6c11\\pytest-40\\test_failure_after_gold_and_pa0\\data\\gold\\integrated_taxi_trips",
+          "source_delta_version": 0,
+          "created_at_utc": "2026-09-23T22:46:01.533660+00:00",
+          "refreshed_at_utc": "2026-09-23T22:46:01.533660+00:00",
+          "schema_version": 3,
+          "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_hour\",\"nullable\":true,\"type\":\"timestamp\"},{\"metadata\":{},\"name\":\"local_hour\",\"nullable\":true,\"type\":\"timestamp\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"pm25_ug_m3\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"aq_station_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"aqi_max\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"aq_available\",\"nullable\":true,\"type\":\"boolean\"}],\"type\":\"struct\"}",
+          "analysis_config_json": "{\"end_date_exclusive\": \"2024-01-02\", \"min_weather_hours\": 1, \"schema_version\": 3, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true}",
+          "storage_bytes": 2923,
+          "active_files": 1,
+          "row_count": 24,
+          "build_seconds": 3.8787624000106007
+        }
+      ],
+      "publication": {
+        "run_id": "recovery-baseline",
+        "published_at_utc": "2026-09-23T22:46:12.004904+00:00",
+        "gold_version": 0,
+        "product_versions_json": "{\"air_quality_impact_summary\": 0, \"daily_mobility_summary\": 0, \"taxi_zone_statistics\": 0, \"weather_impact_summary\": 0}",
+        "bronze_versions_json": "{\"air_quality\": 0, \"taxi_trips\": 0, \"taxi_zone_lookup\": 0, \"weather\": 0}",
+        "analysis_config_json": "{\"end_date_exclusive\": \"2024-01-02\", \"min_weather_hours\": 1, \"schema_version\": 3, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true}",
+        "product_versions": {
+          "daily_mobility_summary": 0,
+          "taxi_zone_statistics": 0,
+          "weather_impact_summary": 0,
+          "air_quality_impact_summary": 0
+        },
+        "bronze_versions": {
+          "taxi_zone_lookup": 0,
+          "weather": 0,
+          "air_quality": 0,
+          "taxi_trips": 0
+        },
+        "analysis_config": {
+          "timezone": "America/New_York",
+          "start_date": "2024-01-01",
+          "end_date_exclusive": "2024-01-02",
+          "min_weather_hours": 1,
+          "schema_version": 3,
+          "weather_interpretation_approved": true
+        }
+      },
+      "status": "success",
+      "total_seconds": 134.09430150000844
+    }
+  }
+}

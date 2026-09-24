@@ -1,0 +1,28 @@
+{
+  "taxi_trips": {
+    "sha256": "passed",
+    "original_rows": 9554778,
+    "new_rows": 716608,
+    "duplicates": 143322,
+    "sampled_exact_duplicates": 100,
+    "latest_original": "2024-04-02 18:08:46",
+    "schema": "passed"
+  },
+  "weather": {
+    "sha256": "passed",
+    "new_rows": 168,
+    "total_rows": 174,
+    "consecutive_hours": true
+  },
+  "air_quality": {
+    "sha256": "passed",
+    "new_rows": 504,
+    "total_rows": 507,
+    "station_series": 3,
+    "latest_original": "2025-01-01 09:00"
+  },
+  "taxi_zone_lookup": {
+    "sha256": "passed",
+    "modified_rows": 3
+  }
+}

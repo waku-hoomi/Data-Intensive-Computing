@@ -1,0 +1,30 @@
+[
+  {
+    "dataset_name": "taxi_trips",
+    "executions": 3,
+    "failed_validation_executions": 3,
+    "validation_failures": 660434,
+    "rejected_records": 462176
+  },
+  {
+    "dataset_name": "air_quality",
+    "executions": 3,
+    "failed_validation_executions": 3,
+    "validation_failures": 423161,
+    "rejected_records": 422654
+  },
+  {
+    "dataset_name": "taxi_zone_lookup",
+    "executions": 4,
+    "failed_validation_executions": 3,
+    "validation_failures": 7,
+    "rejected_records": 4
+  },
+  {
+    "dataset_name": "weather",
+    "executions": 4,
+    "failed_validation_executions": 1,
+    "validation_failures": 174,
+    "rejected_records": 0
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "dataset_name": "taxi_trips",
+    "executions": 3,
+    "mean_seconds": 329.8326666666667,
+    "longest_seconds": 389.467
+  },
+  {
+    "dataset_name": "air_quality",
+    "executions": 3,
+    "mean_seconds": 230.30133333333333,
+    "longest_seconds": 319.831
+  },
+  {
+    "dataset_name": "taxi_zone_lookup",
+    "executions": 4,
+    "mean_seconds": 59.57175,
+    "longest_seconds": 103.572
+  },
+  {
+    "dataset_name": "weather",
+    "executions": 4,
+    "mean_seconds": 26.749499999999998,
+    "longest_seconds": 65.27
+  }
+]

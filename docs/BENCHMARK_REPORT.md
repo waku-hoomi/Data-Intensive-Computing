@@ -1,5 +1,15 @@
 # Benchmark Report (Task 6)
 
+> **Historical report / correction (2026-09-23).** Timings and counts below are
+> from the original Week 1 run, not a Windows Week 3 benchmark. The report's
+> 9,418,044 accepted trips differ from the later validated 9,417,864. Also, the
+> attribution of the `by_borough` query speedup to *partition pruning* is
+> incorrect for these unfiltered queries: `GROUP BY pickup_borough` alone has
+> no partition predicate and cannot prune partitions. The observed timings may
+> reflect file layout, scheduling, caching, and shuffle differences; the old
+> experiment did not isolate a cause. All original measured values are retained
+> for historical comparison.
+
 ## Setup
 
 Both strategies write the same source data — bronze `taxi_trips` (9,418,044 clean

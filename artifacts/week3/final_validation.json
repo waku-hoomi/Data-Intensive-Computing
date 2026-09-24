@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "run_id": "week3-release-windows-20260924-retry1",
+  "publication_gold_version": 2,
+  "current_gold_version": 2,
+  "gold_rows": 10040297,
+  "bronze_taxi_rows": 10040297,
+  "product_rows": {
+    "daily_mobility_summary": 574,
+    "taxi_zone_statistics": 1009,
+    "weather_impact_summary": 3885,
+    "air_quality_impact_summary": 14394
+  },
+  "query_rows": {
+    "01_zone_monthly": 1009,
+    "02_weather_distance": 14,
+    "03_air_quality_demand": 3,
+    "04_weather_variation": 259,
+    "05_peak_hours": 7,
+    "06_monthly_trend": 4
+  },
+  "analysis_config": {
+    "end_date_exclusive": "2024-04-10",
+    "historical_end_date_exclusive": "2024-04-01",
+    "min_weather_hours": 24,
+    "schema_version": 2,
+    "start_date": "2024-01-01",
+    "timezone": "America/New_York",
+    "weather_interpretation_approved": true,
+    "weather_provenance_status": "unverified",
+    "weather_source_note": "User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.",
+    "window_mode": "latest_trip_day"
+  },
+  "last_month": {
+    "local_month": "2024-04",
+    "calendar_days": 9,
+    "trip_count": 716610,
+    "mean_daily_trips": 79623.33333333333,
+    "is_complete_month": false,
+    "month_over_month_pct": null
+  },
+  "update_sha256": {
+    "taxi_trips": "1e0f365d31c8ef00f71c887cc872f8570646ba610aa60fcbb8ef4d53ef6f72a9",
+    "weather": "a8f3c1c8783205bc284cc608d774fe35d8a47aca1bf367519f3f2ceaaf0a43ed",
+    "air_quality": "a2c26d65241b796a735e9ecf1d8b0c506cc1db9b1495e5952232f5ee0e851966",
+    "taxi_zone_lookup": "e79c56aa9bed75e8dc0f4412a89609a93db69f71e97d46c36322e9918a0d246b"
+  }
+}

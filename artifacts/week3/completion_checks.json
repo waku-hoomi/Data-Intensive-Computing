@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "tests_passed": 20,
+  "full_data_runs": 6,
+  "trials": 2,
+  "code_config_input_signature": "f11a7084bf06f74a73a0573e35e69fcf70bee35c889fe8acc3a7922e86393db5",
+  "all_bronze_counts_equal": true,
+  "all_gold_products_queries_equal": true,
+  "all_storage_inventories_reconciled": true,
+  "all_validation_controls_preserve_rows_and_columns": true,
+  "gold_rows": 10040297,
+  "published_state_check": "passed",
+  "monitoring_queries": [
+    "01_validation_frequency",
+    "02_longest_processing",
+    "03_rejections_by_execution",
+    "04_processing_time_trend"
+  ],
+  "pdf_pages": {
+    "Lab3_Design_Report.pdf": 3,
+    "Lab3_Evaluation_Report.pdf": 3
+  },
+  "pdf_visual_review": "All six rendered pages inspected; no clipping, overlap or orphan headings.",
+  "python_syntax_check": "passed",
+  "post_evaluation_format_only_changes": {
+    "files": [
+      "src/urban_platform/simulation/__init__.py"
+    ],
+    "change": "Removed an extra blank line at EOF for git diff --check; AST unchanged. Original experiment signatures retained.",
+    "current_signature": "59874f5775f87b4ea944179bfea23deefd1759f05a06c61b112f3a8741b24092"
+  }
+}

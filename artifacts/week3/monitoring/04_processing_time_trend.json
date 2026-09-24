@@ -1,0 +1,146 @@
+[
+  {
+    "dataset_name": "air_quality",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T08:35:23.118472+00:00",
+    "run_id": "week3-baseline-windows-20260923",
+    "duration_seconds": 315.961,
+    "three_run_mean_seconds": 315.961
+  },
+  {
+    "dataset_name": "air_quality",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T08:50:55.230844+00:00",
+    "run_id": "week3-baseline-windows-20260923-r2",
+    "duration_seconds": 319.831,
+    "three_run_mean_seconds": 317.896
+  },
+  {
+    "dataset_name": "air_quality",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T18:28:01.639328+00:00",
+    "run_id": "week3-release-windows-20260924-retry1",
+    "duration_seconds": 55.112,
+    "three_run_mean_seconds": 230.30133333333333
+  },
+  {
+    "dataset_name": "air_quality_impact_summary",
+    "stage": "product",
+    "started_at_utc": "2026-09-23T18:38:55.136249+00:00",
+    "run_id": "week3-release-windows-20260924-retry1",
+    "duration_seconds": 17.089360300044063,
+    "three_run_mean_seconds": 17.089360300044063
+  },
+  {
+    "dataset_name": "daily_mobility_summary",
+    "stage": "product",
+    "started_at_utc": "2026-09-23T18:38:55.136249+00:00",
+    "run_id": "week3-release-windows-20260924-retry1",
+    "duration_seconds": 21.514313100022264,
+    "three_run_mean_seconds": 21.514313100022264
+  },
+  {
+    "dataset_name": "taxi_trips",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T08:35:23.118472+00:00",
+    "run_id": "week3-baseline-windows-20260923",
+    "duration_seconds": 375.076,
+    "three_run_mean_seconds": 375.076
+  },
+  {
+    "dataset_name": "taxi_trips",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T08:50:55.230844+00:00",
+    "run_id": "week3-baseline-windows-20260923-r2",
+    "duration_seconds": 389.467,
+    "three_run_mean_seconds": 382.2715
+  },
+  {
+    "dataset_name": "taxi_trips",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T18:29:07.889793+00:00",
+    "run_id": "week3-release-windows-20260924-retry1",
+    "duration_seconds": 224.955,
+    "three_run_mean_seconds": 329.8326666666667
+  },
+  {
+    "dataset_name": "taxi_zone_lookup",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T08:35:23.118472+00:00",
+    "run_id": "week3-baseline-windows-20260923",
+    "duration_seconds": 29.82,
+    "three_run_mean_seconds": 29.82
+  },
+  {
+    "dataset_name": "taxi_zone_lookup",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T08:50:55.230844+00:00",
+    "run_id": "week3-baseline-windows-20260923-r2",
+    "duration_seconds": 38.253,
+    "three_run_mean_seconds": 34.036500000000004
+  },
+  {
+    "dataset_name": "taxi_zone_lookup",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T18:11:04.838266+00:00",
+    "run_id": "week3-release-windows-20260924",
+    "duration_seconds": 103.572,
+    "three_run_mean_seconds": 57.215
+  },
+  {
+    "dataset_name": "taxi_zone_lookup",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T18:25:58.417257+00:00",
+    "run_id": "week3-release-windows-20260924-retry1",
+    "duration_seconds": 66.642,
+    "three_run_mean_seconds": 69.48899999999999
+  },
+  {
+    "dataset_name": "taxi_zone_statistics",
+    "stage": "product",
+    "started_at_utc": "2026-09-23T18:38:55.136249+00:00",
+    "run_id": "week3-release-windows-20260924-retry1",
+    "duration_seconds": 34.67612730001565,
+    "three_run_mean_seconds": 34.67612730001565
+  },
+  {
+    "dataset_name": "weather",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T08:35:23.118472+00:00",
+    "run_id": "week3-baseline-windows-20260923",
+    "duration_seconds": 4.876,
+    "three_run_mean_seconds": 4.876
+  },
+  {
+    "dataset_name": "weather",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T08:50:55.230844+00:00",
+    "run_id": "week3-baseline-windows-20260923-r2",
+    "duration_seconds": 7.38,
+    "three_run_mean_seconds": 6.128
+  },
+  {
+    "dataset_name": "weather",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T18:13:27.983368+00:00",
+    "run_id": "week3-release-windows-20260924",
+    "duration_seconds": 65.27,
+    "three_run_mean_seconds": 25.842
+  },
+  {
+    "dataset_name": "weather",
+    "stage": "bronze",
+    "started_at_utc": "2026-09-23T18:27:19.214231+00:00",
+    "run_id": "week3-release-windows-20260924-retry1",
+    "duration_seconds": 29.472,
+    "three_run_mean_seconds": 34.04066666666666
+  },
+  {
+    "dataset_name": "weather_impact_summary",
+    "stage": "product",
+    "started_at_utc": "2026-09-23T18:38:55.136249+00:00",
+    "run_id": "week3-release-windows-20260924-retry1",
+    "duration_seconds": 21.269632300012745,
+    "three_run_mean_seconds": 21.269632300012745
+  }
+]

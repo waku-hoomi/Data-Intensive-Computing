@@ -1,0 +1,158 @@
+{
+  "run_id": "week3-release-windows-20260924-retry1",
+  "kind": "incremental",
+  "started_at_utc": "2026-09-23T18:25:58.417257+00:00",
+  "monitoring_write_seconds": 43.9946532001195,
+  "previous_publication_run": "week3-baseline-windows-20260923-r2",
+  "bronze": {
+    "taxi_zone_lookup": {
+      "dataset_name": "taxi_zone_lookup",
+      "status": "success",
+      "processed": 3,
+      "inserted": 0,
+      "updated": 0,
+      "duplicates": 3,
+      "rejected": 0,
+      "schema_version": 3,
+      "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\change_keys\\week3-release-windows-20260924-retry1\\taxi_zone_lookup\\before_2",
+      "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\quarantine\\taxi_zone_lookup\\week3-release-windows-20260924-retry1",
+      "before_version": 2,
+      "after_version": 2,
+      "validation_failures": {
+        "cross_batch_duplicate": 3
+      },
+      "execution_seconds": 66.642,
+      "validation_seconds": 14.236,
+      "merge_seconds": 0.0,
+      "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\classified\\week3-release-windows-20260924-retry1\\taxi_zone_lookup\\before_2",
+      "recovered_unpublished_change_keys": 3
+    },
+    "weather": {
+      "dataset_name": "weather",
+      "status": "success",
+      "processed": 174,
+      "inserted": 0,
+      "updated": 0,
+      "duplicates": 174,
+      "rejected": 0,
+      "schema_version": 3,
+      "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\change_keys\\week3-release-windows-20260924-retry1\\weather\\before_2",
+      "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\quarantine\\weather\\week3-release-windows-20260924-retry1",
+      "before_version": 2,
+      "after_version": 2,
+      "validation_failures": {
+        "cross_batch_duplicate": 174
+      },
+      "execution_seconds": 29.472,
+      "validation_seconds": 2.489,
+      "merge_seconds": 0.0,
+      "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\classified\\week3-release-windows-20260924-retry1\\weather\\before_2",
+      "recovered_unpublished_change_keys": 174
+    },
+    "air_quality": {
+      "dataset_name": "air_quality",
+      "status": "success",
+      "processed": 507,
+      "inserted": 0,
+      "updated": 0,
+      "duplicates": 507,
+      "rejected": 0,
+      "schema_version": 3,
+      "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\change_keys\\week3-release-windows-20260924-retry1\\air_quality\\before_2",
+      "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\quarantine\\air_quality\\week3-release-windows-20260924-retry1",
+      "before_version": 2,
+      "after_version": 2,
+      "validation_failures": {
+        "cross_batch_duplicate": 507
+      },
+      "execution_seconds": 55.112,
+      "validation_seconds": 3.542,
+      "merge_seconds": 0.0,
+      "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\classified\\week3-release-windows-20260924-retry1\\air_quality\\before_2",
+      "recovered_unpublished_change_keys": 507
+    },
+    "taxi_trips": {
+      "dataset_name": "taxi_trips",
+      "status": "success",
+      "processed": 859930,
+      "inserted": 716608,
+      "updated": 0,
+      "duplicates": 143322,
+      "rejected": 0,
+      "schema_version": 3,
+      "changed_keys_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\change_keys\\week3-release-windows-20260924-retry1\\taxi_trips\\before_1",
+      "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\quarantine\\taxi_trips\\week3-release-windows-20260924-retry1",
+      "before_version": 1,
+      "after_version": 2,
+      "validation_failures": {
+        "cross_batch_duplicate": 143322
+      },
+      "execution_seconds": 224.955,
+      "validation_seconds": 34.831,
+      "merge_seconds": 51.008,
+      "classified_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\classified\\week3-release-windows-20260924-retry1\\taxi_trips\\before_1"
+    }
+  },
+  "gold": {
+    "before_version": 1,
+    "after_version": 2,
+    "affected_trips": 2528301,
+    "changed": true,
+    "seconds": 349.6723235999816
+  },
+  "products": {
+    "daily_mobility_summary": {
+      "mode": "groups",
+      "groups": 415,
+      "seconds": 21.514313100022264
+    },
+    "taxi_zone_statistics": {
+      "mode": "groups",
+      "groups": 899,
+      "seconds": 34.67612730001565
+    },
+    "weather_impact_summary": {
+      "mode": "full",
+      "seconds": 21.269632300012745
+    },
+    "air_quality_impact_summary": {
+      "mode": "groups",
+      "groups": 7238,
+      "seconds": 17.089360300044063
+    }
+  },
+  "publication": {
+    "run_id": "week3-release-windows-20260924-retry1",
+    "published_at_utc": "2026-09-23T18:41:18.528331+00:00",
+    "gold_version": 2,
+    "product_versions_json": "{\"air_quality_impact_summary\": 1, \"daily_mobility_summary\": 1, \"taxi_zone_statistics\": 1, \"weather_impact_summary\": 1}",
+    "bronze_versions_json": "{\"air_quality\": 2, \"taxi_trips\": 2, \"taxi_zone_lookup\": 2, \"weather\": 2}",
+    "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-10\", \"historical_end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 2, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\", \"window_mode\": \"latest_trip_day\"}",
+    "product_versions": {
+      "daily_mobility_summary": 1,
+      "taxi_zone_statistics": 1,
+      "weather_impact_summary": 1,
+      "air_quality_impact_summary": 1
+    },
+    "bronze_versions": {
+      "taxi_zone_lookup": 2,
+      "weather": 2,
+      "air_quality": 2,
+      "taxi_trips": 2
+    },
+    "analysis_config": {
+      "timezone": "America/New_York",
+      "start_date": "2024-01-01",
+      "end_date_exclusive": "2024-04-10",
+      "window_mode": "latest_trip_day",
+      "historical_end_date_exclusive": "2024-04-01",
+      "min_weather_hours": 24,
+      "schema_version": 2,
+      "weather_interpretation_approved": true,
+      "weather_provenance_status": "unverified",
+      "weather_source_note": "User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis."
+    }
+  },
+  "status": "success",
+  "total_seconds": 922.0600939999858
+}

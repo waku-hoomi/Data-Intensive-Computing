@@ -1,0 +1,188 @@
+{
+  "run_id": "week3-baseline-windows-20260923-r2",
+  "kind": "baseline",
+  "started_at_utc": "2026-09-23T08:50:55.230844+00:00",
+  "monitoring_write_seconds": 44.1120853999746,
+  "bronze": {
+    "taxi_zone_lookup": {
+      "dataset_name": "taxi_zone_lookup",
+      "status": "success",
+      "processed": 265,
+      "inserted": 263,
+      "updated": 0,
+      "duplicates": 0,
+      "rejected": 2,
+      "schema_version": 3,
+      "changed_keys_path": null,
+      "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\quarantine\\taxi_zone_lookup\\baseline",
+      "before_version": 0,
+      "after_version": 1,
+      "validation_failures": {
+        "missing_required:zone": 1,
+        "missing_required:borough": 1
+      },
+      "execution_seconds": 38.253,
+      "validation_seconds": 6.715,
+      "merge_seconds": 0.0
+    },
+    "air_quality": {
+      "dataset_name": "air_quality",
+      "status": "success",
+      "processed": 8139551,
+      "inserted": 7928224,
+      "updated": 0,
+      "duplicates": 0,
+      "rejected": 211327,
+      "schema_version": 3,
+      "changed_keys_path": null,
+      "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\quarantine\\air_quality\\baseline",
+      "before_version": 0,
+      "after_version": 1,
+      "validation_failures": {
+        "invalid_value:pm25_ug_m3": 211327
+      },
+      "execution_seconds": 319.831,
+      "validation_seconds": 105.539,
+      "merge_seconds": 0.0
+    },
+    "taxi_trips": {
+      "dataset_name": "taxi_trips",
+      "status": "success",
+      "processed": 9554778,
+      "inserted": 9323689,
+      "updated": 0,
+      "duplicates": 1,
+      "rejected": 231088,
+      "schema_version": 3,
+      "changed_keys_path": null,
+      "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\quarantine\\taxi_trips\\baseline",
+      "before_version": 0,
+      "after_version": 1,
+      "validation_failures": {
+        "invalid_value:trip_distance": 162,
+        "duplicate_primary_key": 1,
+        "invalid_value:fare_amount": 136574,
+        "missing_foreign_key:pu_location_id": 36760,
+        "negative_trip_duration": 180,
+        "missing_foreign_key:do_location_id": 84879
+      },
+      "execution_seconds": 389.467,
+      "validation_seconds": 113.547,
+      "merge_seconds": 0.0
+    },
+    "weather": {
+      "dataset_name": "weather",
+      "status": "success",
+      "processed": 8784,
+      "inserted": 8784,
+      "updated": 0,
+      "duplicates": 0,
+      "rejected": 0,
+      "schema_version": 3,
+      "changed_keys_path": null,
+      "quarantine_path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/_metadata\\quarantine\\weather\\baseline",
+      "before_version": 0,
+      "after_version": 1,
+      "validation_failures": {},
+      "execution_seconds": 7.38,
+      "validation_seconds": 1.385,
+      "merge_seconds": 0.0
+    }
+  },
+  "gold": {
+    "path": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data/gold\\integrated_taxi_trips",
+    "seconds": 56.557375400007004
+  },
+  "products": [
+    {
+      "product_name": "daily_mobility_summary",
+      "data_source": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\gold\\integrated_taxi_trips",
+      "source_delta_version": 1,
+      "created_at_utc": "2026-09-23T09:05:17.520560+00:00",
+      "refreshed_at_utc": "2026-09-23T09:05:17.520560+00:00",
+      "schema_version": 2,
+      "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"local_date\",\"nullable\":true,\"type\":\"date\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"distance_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"distance_n\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"duration_sum\",\"nullable\":true,\"type\":\"decimal(37,6)\"},{\"metadata\":{},\"name\":\"duration_n\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"fare_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"fare_n\",\"nullable\":true,\"type\":\"long\"}],\"type\":\"struct\"}",
+      "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-02\", \"historical_end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 2, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\", \"window_mode\": \"latest_trip_day\"}",
+      "storage_bytes": 24710,
+      "active_files": 1,
+      "row_count": 535,
+      "build_seconds": 10.627300899999682
+    },
+    {
+      "product_name": "taxi_zone_statistics",
+      "data_source": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\gold\\integrated_taxi_trips",
+      "source_delta_version": 1,
+      "created_at_utc": "2026-09-23T09:05:37.089687+00:00",
+      "refreshed_at_utc": "2026-09-23T09:05:37.089687+00:00",
+      "schema_version": 2,
+      "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"local_month\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pu_location_id\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"pickup_zone\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"avg_distance_miles\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"avg_duration_min\",\"nullable\":true,\"type\":\"decimal(31,10)\"},{\"metadata\":{},\"name\":\"avg_fare\",\"nullable\":true,\"type\":\"double\"}],\"type\":\"struct\"}",
+      "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-02\", \"historical_end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 2, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\", \"window_mode\": \"latest_trip_day\"}",
+      "storage_bytes": 30911,
+      "active_files": 1,
+      "row_count": 767,
+      "build_seconds": 12.298569600010524
+    },
+    {
+      "product_name": "weather_impact_summary",
+      "data_source": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\gold\\integrated_taxi_trips",
+      "source_delta_version": 1,
+      "created_at_utc": "2026-09-23T09:06:00.212352+00:00",
+      "refreshed_at_utc": "2026-09-23T09:06:00.212352+00:00",
+      "schema_version": 2,
+      "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"pu_location_id\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"pickup_zone\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"weather_condition_code\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"observed_hours\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"distance_sum\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"distance_n\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"mean_hourly_trips\",\"nullable\":true,\"type\":\"double\"}],\"type\":\"struct\"}",
+      "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-02\", \"historical_end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 2, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\", \"window_mode\": \"latest_trip_day\"}",
+      "storage_bytes": 75765,
+      "active_files": 1,
+      "row_count": 3885,
+      "build_seconds": 15.752478400012478
+    },
+    {
+      "product_name": "air_quality_impact_summary",
+      "data_source": "D:\\Homework\\ID2221\\Data-Intensive-Computing\\data\\gold\\integrated_taxi_trips",
+      "source_delta_version": 1,
+      "created_at_utc": "2026-09-23T09:06:24.146904+00:00",
+      "refreshed_at_utc": "2026-09-23T09:06:24.146904+00:00",
+      "schema_version": 2,
+      "schema_json": "{\"fields\":[{\"metadata\":{},\"name\":\"pickup_borough\",\"nullable\":true,\"type\":\"string\"},{\"metadata\":{},\"name\":\"pickup_hour\",\"nullable\":true,\"type\":\"timestamp\"},{\"metadata\":{},\"name\":\"local_hour\",\"nullable\":true,\"type\":\"timestamp\"},{\"metadata\":{},\"name\":\"trip_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"pm25_ug_m3\",\"nullable\":true,\"type\":\"double\"},{\"metadata\":{},\"name\":\"aq_station_count\",\"nullable\":true,\"type\":\"long\"},{\"metadata\":{},\"name\":\"aqi_max\",\"nullable\":true,\"type\":\"integer\"},{\"metadata\":{},\"name\":\"aq_available\",\"nullable\":true,\"type\":\"boolean\"}],\"type\":\"struct\"}",
+      "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-02\", \"historical_end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 2, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\", \"window_mode\": \"latest_trip_day\"}",
+      "storage_bytes": 98724,
+      "active_files": 1,
+      "row_count": 13242,
+      "build_seconds": 12.222751099994639
+    }
+  ],
+  "publication": {
+    "run_id": "week3-baseline-windows-20260923-r2",
+    "published_at_utc": "2026-09-23T09:06:47.853835+00:00",
+    "gold_version": 1,
+    "product_versions_json": "{\"air_quality_impact_summary\": 0, \"daily_mobility_summary\": 0, \"taxi_zone_statistics\": 0, \"weather_impact_summary\": 0}",
+    "bronze_versions_json": "{\"air_quality\": 1, \"taxi_trips\": 1, \"taxi_zone_lookup\": 1, \"weather\": 1}",
+    "analysis_config_json": "{\"end_date_exclusive\": \"2024-04-02\", \"historical_end_date_exclusive\": \"2024-04-01\", \"min_weather_hours\": 24, \"schema_version\": 2, \"start_date\": \"2024-01-01\", \"timezone\": \"America/New_York\", \"weather_interpretation_approved\": true, \"weather_provenance_status\": \"unverified\", \"weather_source_note\": \"User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis.\", \"window_mode\": \"latest_trip_day\"}",
+    "product_versions": {
+      "daily_mobility_summary": 0,
+      "taxi_zone_statistics": 0,
+      "weather_impact_summary": 0,
+      "air_quality_impact_summary": 0
+    },
+    "bronze_versions": {
+      "taxi_zone_lookup": 1,
+      "weather": 1,
+      "air_quality": 1,
+      "taxi_trips": 1
+    },
+    "analysis_config": {
+      "timezone": "America/New_York",
+      "start_date": "2024-01-01",
+      "end_date_exclusive": "2024-04-02",
+      "window_mode": "latest_trip_day",
+      "historical_end_date_exclusive": "2024-04-01",
+      "min_weather_hours": 24,
+      "schema_version": 2,
+      "weather_interpretation_approved": true,
+      "weather_provenance_status": "unverified",
+      "weather_source_note": "User approved on 2026-09-15: interpret weather as UTC following Lab 1; source timezone is unspecified. No sensitivity analysis."
+    }
+  },
+  "status": "success",
+  "total_seconds": 961.3321394999803
+}
