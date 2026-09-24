@@ -7,7 +7,7 @@ numeric_rules) instead of hardcoded column names, so a new dataset gets
 these checks for free just by declaring its config in datasets.yaml.
 """
 from dataclasses import dataclass, field
-from typing import Dict
+from typing import Dict, Optional
 
 from pyspark.sql import DataFrame, Window, functions as F
 
@@ -45,6 +45,8 @@ def apply_quality_checks(df: DataFrame, cfg: DatasetConfig) -> "tuple[DataFrame,
     #    allowed through -- a missing measurement is not the same defect as
     #    an impossible one, see Task 4 "rules for handling missing values")
     for rule in cfg.numeric_rules:
+        if rule.column not in df.columns:
+            continue  # A declared, additive Week 3 field may not exist in Week 1 data.
         col = F.col(rule.column)
         conditions = []
         if rule.min is not None:
@@ -103,3 +105,84 @@ def apply_quality_checks(df: DataFrame, cfg: DatasetConfig) -> "tuple[DataFrame,
         rejected_by_reason=rejected_by_reason,
     )
     return clean_df, report
+
+
+def validate_records(
+    df: DataFrame,
+    cfg: DatasetConfig,
+    reference_tables: Optional[Dict[str, DataFrame]] = None,
+) -> "tuple[DataFrame, DataFrame, QualityReport]":
+    """Strict, row-level validation for Week 3, retaining every rejection reason.
+
+    The quarantine frame has all standardized columns and `_reject_reason`.
+    Foreign-key reference frames are supplied by the caller so this module
+    remains independent of storage locations.
+    """
+    references = reference_tables or {}
+    flagged = df
+    reasons = []
+    for column in [*cfg.required_fields, *[c for c in cfg.required_when_present if c in df.columns]]:
+        if column not in df.columns:
+            raise ValueError(f"{cfg.name}: standardized required field missing: {column}")
+        reasons.append(F.when(F.col(column).isNull(), F.lit(f"missing_required:{column}")))
+    for column in cfg.timestamp_cols:
+        if column in df.columns:
+            bad = F.col(column).isNull() | (F.col(column) < F.lit("2000-01-01")) | (F.col(column) >= F.lit("2100-01-01"))
+            reasons.append(F.when(bad, F.lit(f"invalid_timestamp:{column}")))
+    for rule in cfg.numeric_rules:
+        if rule.column not in df.columns:
+            continue
+        value = F.col(rule.column)
+        bad = F.isnan(value.cast("double"))
+        if rule.min is not None:
+            bad = bad | (value < F.lit(rule.min))
+        if rule.max is not None:
+            bad = bad | (value > F.lit(rule.max))
+        reasons.append(F.when(bad, F.lit(f"invalid_value:{rule.column}")))
+    if {"pickup_ts", "dropoff_ts"}.issubset(df.columns):
+        reasons.append(F.when(F.col("dropoff_ts") < F.col("pickup_ts"), F.lit("negative_trip_duration")))
+
+    for rule in cfg.foreign_keys:
+        if rule.dataset not in references:
+            raise ValueError(f"{cfg.name}: missing foreign-key reference {rule.dataset}")
+        marker = f"_fk_exists_{rule.column}"
+        ref = references[rule.dataset].select(F.col(rule.ref_column).alias(rule.column)).distinct().withColumn(marker, F.lit(1))
+        flagged = flagged.join(F.broadcast(ref), on=rule.column, how="left")
+        reasons.append(F.when(F.col(rule.column).isNotNull() & F.col(marker).isNull(),
+                              F.lit(f"missing_foreign_key:{rule.column}")))
+
+    if reasons:
+        flagged = flagged.withColumn("_reject_reasons", F.array(*reasons))
+        flagged = flagged.withColumn("_reject_reasons", F.expr("filter(_reject_reasons, x -> x IS NOT NULL)"))
+    else:
+        flagged = flagged.withColumn("_reject_reasons", F.array().cast("array<string>"))
+    if cfg.primary_key:
+        # A valid row wins over an invalid row with the same key. Among
+        # conflicting valid rows, choose a deterministic payload ordering.
+        payload = F.to_json(F.struct(*[F.col(c) for c in sorted(df.columns)]),
+                            {"ignoreNullFields": "false"})
+        window = Window.partitionBy(*cfg.primary_key).orderBy(
+            F.size("_reject_reasons").asc(), payload.asc())
+        flagged = flagged.withColumn("_batch_row_number", F.row_number().over(window))
+        flagged = flagged.withColumn(
+            "_reject_reasons",
+            F.when((F.col("_batch_row_number") > 1) & (F.size("_reject_reasons") == 0),
+                   F.array(F.lit("duplicate_primary_key"))).otherwise(F.col("_reject_reasons")),
+        ).drop("_batch_row_number")
+    flagged = flagged.withColumn("_reject_reason", F.concat_ws(";", F.col("_reject_reasons")))
+    clean = flagged.filter(F.size("_reject_reasons") == 0).select(*df.columns)
+    rejected = flagged.filter(F.size("_reject_reasons") > 0).select(*df.columns, "_reject_reason")
+    # A single grouped pass computes both row totals and per-reason counts.
+    # Counting clean/rejected separately would repeat the PK window shuffle.
+    groups = flagged.groupBy("_reject_reason").count().collect()
+    reason_counts = {}
+    input_rows = rejected_rows = 0
+    for row in groups:
+        count = row["count"]
+        input_rows += count
+        if row["_reject_reason"]:
+            rejected_rows += count
+            for reason in row["_reject_reason"].split(";"):
+                reason_counts[reason] = reason_counts.get(reason, 0) + count
+    return clean, rejected, QualityReport(input_rows, input_rows - rejected_rows,
+                                           rejected_rows, reason_counts)

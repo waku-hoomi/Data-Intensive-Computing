@@ -1,4 +1,5 @@
 """Shared analytical scope and small temporal views; no implicit weather approval."""
+from datetime import date, timedelta
 from pathlib import Path
 import yaml
 from pyspark.sql import functions as F
@@ -24,16 +25,30 @@ def sql_text(name, directory="queries"):
     return (SQL_ROOT / directory / f"{name}.sql").read_text()
 
 
+def effective_analysis_config(integrated_df, cfg=None):
+    """Resolve the live end date from the newest accepted local pickup day."""
+    cfg = dict(cfg or analytics_config()["analysis"])
+    if cfg.get("window_mode") == "latest_trip_day":
+        tz = cfg["timezone"]
+        last_day = integrated_df.select(
+            F.max(F.to_date(F.from_utc_timestamp("pickup_ts", tz))).alias("last_day")
+        ).first().last_day
+        if last_day is not None:
+            cfg["end_date_exclusive"] = (last_day + timedelta(days=1)).isoformat()
+    return cfg
+
+
 def register_analysis_views(spark, integrated_df, cfg=None):
-    cfg = cfg or analytics_config()["analysis"]
+    cfg = effective_analysis_config(integrated_df, cfg)
     tz = cfg["timezone"]
     start, end = cfg["start_date"], cfg["end_date_exclusive"]
     # Values originate from local configuration, not arbitrary SQL user input.
-    from datetime import date
     date.fromisoformat(start)
     date.fromisoformat(end)
     if tz != "America/New_York":
         raise ValueError("This version supports the approved NYC timezone only")
+    if "aqi_max" not in integrated_df.columns:
+        integrated_df = integrated_df.withColumn("aqi_max", F.lit(None).cast("int"))
     integrated_df.createOrReplaceTempView("integrated_source")
     spark.sql(f"""CREATE OR REPLACE TEMP VIEW analysis_trips AS
       SELECT *, from_utc_timestamp(pickup_ts, '{tz}') AS pickup_local,
@@ -75,16 +90,27 @@ def register_analysis_views(spark, integrated_df, cfg=None):
     spark.sql("""CREATE OR REPLACE TEMP VIEW borough_hours AS
       SELECT b.pickup_borough, h.pickup_hour, h.local_hour,
              coalesce(t.trip_count,0L) AS trip_count, t.pm25_ug_m3,
-             t.aq_station_count, t.pm25_ug_m3 IS NOT NULL AS aq_available
+             t.aq_station_count, t.aqi_max,
+             t.pm25_ug_m3 IS NOT NULL AS aq_available
       FROM (SELECT DISTINCT pickup_borough FROM analysis_trips
             WHERE pickup_borough IS NOT NULL) b CROSS JOIN hour_spine h
       LEFT JOIN (SELECT pickup_borough,pickup_hour,count(*) AS trip_count,
-                        max(pm25_ug_m3) AS pm25_ug_m3, max(aq_station_count) AS aq_station_count
+                        max(pm25_ug_m3) AS pm25_ug_m3,
+                        max(aq_station_count) AS aq_station_count,
+                        max(aqi_max) AS aqi_max
                  FROM analysis_trips GROUP BY pickup_borough,pickup_hour) t
       ON b.pickup_borough=t.pickup_borough AND h.pickup_hour=t.pickup_hour
     """)
     spark.sql(f"CREATE OR REPLACE TEMP VIEW analysis_settings AS SELECT {int(cfg['min_weather_hours'])} AS min_weather_hours")
+    return cfg
 
 
 def read_integrated(spark, platform_cfg):
-    return spark.read.format("delta").load(str(Path(platform_cfg.gold_dir) / "integrated_taxi_trips"))
+    # A publication pointer is written only after Gold and every product are
+    # ready. During an update, readers continue to see the prior Gold version.
+    from urban_platform.monitoring.publication import latest_publication
+    reader = spark.read.format("delta")
+    publication = latest_publication(spark, platform_cfg)
+    if publication is not None:
+        reader = reader.option("versionAsOf", publication["gold_version"])
+    return reader.load(str(Path(platform_cfg.gold_dir) / "integrated_taxi_trips"))

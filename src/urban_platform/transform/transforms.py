@@ -54,7 +54,7 @@ def transform_weather(df: DataFrame) -> DataFrame:
         F.lit(0),
         F.lit(0.0),
     )
-    return df.select(
+    fields = [
         ts.alias("observation_ts"),
         F.col("temp").try_cast("double").alias("temp_c"),
         F.col("rhum").try_cast("int").alias("relative_humidity_pct"),
@@ -68,7 +68,12 @@ def transform_weather(df: DataFrame) -> DataFrame:
         F.col("coco").try_cast("int").alias("condition_code"),
         F.year(ts).alias("obs_year"),
         F.month(ts).alias("obs_month"),
-    )
+    ]
+    # Keep the original rhum-derived column for Week 1/2 compatibility.
+    # The Week 3 humidity field is a distinct, explicitly versioned measure.
+    if "humidity" in df.columns:
+        fields.append(F.col("humidity").try_cast("double").alias("humidity_pct_v2"))
+    return df.select(*fields)
 
 
 def transform_air_quality(df: DataFrame) -> DataFrame:
@@ -85,9 +90,7 @@ def transform_air_quality(df: DataFrame) -> DataFrame:
     valid_id = (_text("State Code").rlike(r"^\d{1,2}$") & _text("County Code").rlike(r"^\d{1,3}$")
                 & _text("Site Num").rlike(r"^\d{1,4}$"))
     station_id = F.when(valid_id, station_id)
-    return (
-        df.filter(F.col("Parameter Name") == "PM2.5 - Local Conditions")
-        .select(
+    fields = [
             station_id.alias("station_id"),
             F.col("Parameter Code").try_cast("int").alias("parameter_code"),
             F.col("POC").try_cast("int").alias("poc"),
@@ -100,8 +103,10 @@ def transform_air_quality(df: DataFrame) -> DataFrame:
             F.col("County Name").cast(StringType()).alias("county_name"),
             F.year(ts).alias("obs_year"),
             F.month(ts).alias("obs_month"),
-        )
-    )
+    ]
+    if "aqi" in df.columns:
+        fields.append(F.col("aqi").try_cast("int").alias("aqi"))
+    return df.filter(F.col("Parameter Name") == "PM2.5 - Local Conditions").select(*fields)
 
 
 def transform_taxi_trips(df: DataFrame) -> DataFrame:

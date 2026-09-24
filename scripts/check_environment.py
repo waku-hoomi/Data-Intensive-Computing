@@ -1,5 +1,6 @@
 """Verify the installed runtime with a real Delta round-trip."""
 import importlib.metadata
+import hashlib
 import json
 import platform
 import sys
@@ -9,6 +10,16 @@ from tempfile import TemporaryDirectory
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from urban_platform.utils.spark_session import get_spark
+
+
+def sha256(path: Path) -> str | None:
+    if not path.is_file():
+        return None
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 if __name__ == "__main__":
     spark = get_spark("lab2-environment-check")
@@ -22,8 +33,11 @@ if __name__ == "__main__":
             "spark": spark.version,
             "delta_spark": importlib.metadata.version("delta-spark"),
             "java": spark._jvm.java.lang.System.getProperty("java.version"),
+            "hadoop": spark._jvm.org.apache.hadoop.util.VersionInfo.getVersion(),
             "master": spark.sparkContext.master,
             "roundtrip_rows": 10,
+            "winutils_sha256": sha256(ROOT / "hadoop/bin/winutils.exe"),
+            "hadoop_dll_sha256": sha256(ROOT / "hadoop/bin/hadoop.dll"),
         }
         target = ROOT / "artifacts" / "environment.json"
         target.parent.mkdir(parents=True, exist_ok=True)

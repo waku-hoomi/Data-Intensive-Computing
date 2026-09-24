@@ -1,2 +1,2 @@
-SELECT pickup_borough,pickup_hour,local_hour,trip_count,pm25_ug_m3,aq_station_count,aq_available
+SELECT pickup_borough,pickup_hour,local_hour,trip_count,pm25_ug_m3,aq_station_count,aqi_max,aq_available
 FROM borough_hours

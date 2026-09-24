@@ -20,6 +20,13 @@ class NumericRule:
 
 
 @dataclass
+class ForeignKeyRule:
+    column: str
+    dataset: str
+    ref_column: str
+
+
+@dataclass
 class DatasetConfig:
     name: str
     dataset_type: str  # "fact" | "lookup"
@@ -33,6 +40,10 @@ class DatasetConfig:
     numeric_rules: List[NumericRule]
     partition_by: List[str]
     derive_partition_cols_from: Optional[str]
+    required_fields: List[str] = field(default_factory=list)
+    required_when_present: List[str] = field(default_factory=list)
+    allowed_raw_additions: Dict[str, str] = field(default_factory=dict)
+    foreign_keys: List[ForeignKeyRule] = field(default_factory=list)
 
     def resolve_transform_fn(self) -> Callable:
         module_path, fn_name = self.transform_fn_path.rsplit(".", 1)
@@ -80,6 +91,10 @@ def load_config(config_path: str) -> PlatformConfig:
                 numeric_rules=numeric_rules,
                 partition_by=d.get("partition_by", []),
                 derive_partition_cols_from=d.get("derive_partition_cols_from"),
+                required_fields=d.get("required_fields", []),
+                required_when_present=d.get("required_when_present", []),
+                allowed_raw_additions=d.get("allowed_raw_additions", {}) or {},
+                foreign_keys=[ForeignKeyRule(**rule) for rule in d.get("foreign_keys", [])],
             )
         )
 

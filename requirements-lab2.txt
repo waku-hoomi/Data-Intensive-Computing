@@ -1,5 +1,7 @@
 pyspark==4.0.4
 delta-spark==4.0.1
 pyarrow==19.0.1
+numpy==2.2.6
 pyyaml==6.0.3
 pytest==9.1.1
+reportlab==4.4.4

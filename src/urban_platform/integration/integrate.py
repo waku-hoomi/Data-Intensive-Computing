@@ -32,6 +32,7 @@ Design decisions (see docs/DESIGN_REPORT.md for full justification):
 import os
 
 from pyspark.sql import DataFrame, SparkSession, functions as F
+from pyspark.sql.types import DoubleType, IntegerType
 
 from urban_platform.utils.config import PlatformConfig
 
@@ -54,15 +55,23 @@ def aggregate_nyc_air_quality(air_quality: DataFrame) -> DataFrame:
     nyc = (air_quality.filter(F.col("station_id").startswith("36-"))
            .withColumn("pickup_borough", county_to_borough[F.substring("station_id", 4, 3)])
            .filter(F.col("pickup_borough").isNotNull() & F.col("pm25_ug_m3").isNotNull()))
+    if "aqi" not in nyc.columns:
+        nyc = nyc.withColumn("aqi", F.lit(None).cast(IntegerType()))
     stations = nyc.groupBy("pickup_borough", "observation_ts", "station_id").agg(
-        F.avg("pm25_ug_m3").alias("station_pm25"))
+        F.avg("pm25_ug_m3").alias("station_pm25"),
+        F.max("aqi").alias("station_aqi_max"))
     return (stations.groupBy("pickup_borough", "observation_ts")
-            .agg(F.avg("station_pm25").alias("pm25_ug_m3"), F.count("*").alias("aq_station_count"))
+            .agg(F.avg("station_pm25").alias("pm25_ug_m3"),
+                 F.max("station_aqi_max").alias("aqi_max"),
+                 F.count("*").alias("aq_station_count"))
             .withColumnRenamed("observation_ts", "pickup_hour"))
 
 
-def build_integrated_taxi_trips(spark: SparkSession, platform_cfg: PlatformConfig) -> DataFrame:
-    trips = _read_bronze(spark, platform_cfg, "taxi_trips")
+def build_integrated_taxi_trips(
+    spark: SparkSession, platform_cfg: PlatformConfig, trips_subset: DataFrame | None = None
+) -> DataFrame:
+    """Enrich all accepted trips, or only the trips affected by a new batch."""
+    trips = trips_subset if trips_subset is not None else _read_bronze(spark, platform_cfg, "taxi_trips")
     weather = _read_bronze(spark, platform_cfg, "weather")
     air_quality = _read_bronze(spark, platform_cfg, "air_quality")
     zones = _read_bronze(spark, platform_cfg, "taxi_zone_lookup")
@@ -85,10 +94,13 @@ def build_integrated_taxi_trips(spark: SparkSession, platform_cfg: PlatformConfi
         .join(do_zones, on="do_location_id", how="left")
     )
 
+    if "humidity_pct_v2" not in weather.columns:
+        weather = weather.withColumn("humidity_pct_v2", F.lit(None).cast(DoubleType()))
     weather_hourly = weather.select(
         F.col("observation_ts").alias("pickup_hour"),
         F.col("temp_c"),
         F.col("relative_humidity_pct"),
+        F.col("humidity_pct_v2"),
         F.col("precipitation_mm"),
         F.col("wind_speed_kmh"),
         F.col("condition_code").alias("weather_condition_code"),
@@ -118,10 +130,12 @@ def build_integrated_taxi_trips(spark: SparkSession, platform_cfg: PlatformConfi
         "total_amount",
         "temp_c",
         "relative_humidity_pct",
+        "humidity_pct_v2",
         "precipitation_mm",
         "wind_speed_kmh",
         "weather_condition_code",
         "pm25_ug_m3",
+        "aqi_max",
         "aq_station_count",
         "pickup_year",
         "pickup_month",
@@ -135,6 +149,7 @@ def write_integrated_taxi_trips(spark: SparkSession, platform_cfg: PlatformConfi
         df.write.format("delta")
         .mode("overwrite")
         .option("overwriteSchema", "true")
+        .option("delta.enableChangeDataFeed", "true")
         .partitionBy("pickup_year", "pickup_month")
         .save(output_path)
     )

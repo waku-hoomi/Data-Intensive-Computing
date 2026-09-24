@@ -11,7 +11,7 @@ platform:
   bronze_dir: data/bronze        # one Delta table per source dataset, standardized schema
   gold_dir: data/gold            # integrated / derived analytical Delta tables
   metadata_dir: data/_metadata   # ingestion run log + benchmark results
-  schema_version: 2
+  schema_version: 3
 
 datasets:
   - name: taxi_zone_lookup
@@ -22,8 +22,12 @@ datasets:
     expected_raw_columns: [LocationID, Borough, Zone, service_zone]
     transform_fn: urban_platform.transform.transforms.transform_taxi_zone_lookup
     primary_key: [location_id]
+    required_fields: [location_id, borough, zone]
+    allowed_raw_additions: {}
+    foreign_keys: []
     timestamp_cols: []
-    numeric_rules: []
+    numeric_rules:
+      - {column: location_id, min: 1, max: 999}
     partition_by: []
     derive_partition_cols_from: null
 
@@ -32,12 +36,17 @@ datasets:
     input_format: csv
     input_path: weather.csv
     csv_options: {}
-    expected_raw_columns: [year, month, day, hour, temp, rhum, prcp, snwd, wdir, wspd, wpgt, pres, cldc, coco]
+    expected_raw_columns: [year, month, day, hour, temp, temp_source, rhum, rhum_source, prcp, prcp_source, snwd, snwd_source, wdir, wdir_source, wspd, wspd_source, wpgt, wpgt_source, pres, pres_source, cldc, cldc_source, coco, coco_source]
     transform_fn: urban_platform.transform.transforms.transform_weather
     primary_key: [observation_ts]
+    required_fields: [observation_ts]
+    required_when_present: [humidity_pct_v2]
+    allowed_raw_additions: {humidity: string}
+    foreign_keys: []
     timestamp_cols: [observation_ts]
     numeric_rules:
       - {column: relative_humidity_pct, min: 0, max: 100}
+      - {column: humidity_pct_v2, min: 0, max: 100}
       - {column: wind_direction_deg, min: 0, max: 360}
       - {column: precipitation_mm, min: 0, max: 1000}
     partition_by: []
@@ -48,12 +57,17 @@ datasets:
     input_format: csv
     input_path: air_quality/hourly_88101_2024.csv
     csv_options: {}
-    expected_raw_columns: [State Code, County Code, Site Num, Parameter Code, POC, Latitude, Longitude, Date GMT, Time GMT, Sample Measurement, Units of Measure, Parameter Name, State Name, County Name]
+    expected_raw_columns: [State Code, County Code, Site Num, Parameter Code, POC, Latitude, Longitude, Datum, Parameter Name, Date Local, Time Local, Date GMT, Time GMT, Sample Measurement, Units of Measure, MDL, Uncertainty, Qualifier, Method Type, Method Code, Method Name, State Name, County Name, Date of Last Change]
     transform_fn: urban_platform.transform.transforms.transform_air_quality
     primary_key: [station_id, parameter_code, poc, observation_ts]
+    required_fields: [station_id, parameter_code, poc, observation_ts, pm25_ug_m3]
+    required_when_present: [aqi]
+    allowed_raw_additions: {aqi: string}
+    foreign_keys: []
     timestamp_cols: [observation_ts]
     numeric_rules:
       - {column: pm25_ug_m3, min: 0, max: 1000}
+      - {column: aqi, min: 0, max: 500}
     partition_by: [obs_year, obs_month]
     derive_partition_cols_from: observation_ts
 
@@ -65,6 +79,11 @@ datasets:
     expected_raw_columns: [VendorID, tpep_pickup_datetime, tpep_dropoff_datetime, passenger_count, trip_distance, RatecodeID, store_and_fwd_flag, PULocationID, DOLocationID, payment_type, fare_amount, extra, mta_tax, tip_amount, tolls_amount, improvement_surcharge, total_amount, congestion_surcharge, Airport_fee]
     transform_fn: urban_platform.transform.transforms.transform_taxi_trips
     primary_key: [trip_id]
+    required_fields: [trip_id, pickup_ts, dropoff_ts, pu_location_id, do_location_id, trip_distance, fare_amount]
+    allowed_raw_additions: {}
+    foreign_keys:
+      - {column: pu_location_id, dataset: taxi_zone_lookup, ref_column: location_id}
+      - {column: do_location_id, dataset: taxi_zone_lookup, ref_column: location_id}
     timestamp_cols: [pickup_ts, dropoff_ts]
     numeric_rules:
       - {column: trip_distance, min: 0, max: 500}

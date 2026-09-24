@@ -14,6 +14,7 @@ from pyspark.sql import functions as F
 from urban_platform.analytics.context import ROOT, QUERY_IDS, analytics_config, sql_text
 from urban_platform.analytics.products import PRODUCTS, product_path
 from urban_platform.analytics.verification import assert_same_results
+from urban_platform.monitoring.publication import latest_publication
 
 
 def save_json(path, value):
@@ -91,8 +92,11 @@ def run_pair(spark, name, before, after, before_options=None, after_options=None
 def run_experiments(spark, platform_cfg, suite="all"):
     records=[]
     source_path=str(Path(platform_cfg.gold_dir)/"integrated_taxi_trips")
-    source_version=int(DeltaTable.forPath(spark,source_path).history(1).first().version)
-    manifest={"source_delta_version":source_version,"analysis_config":analytics_config()["analysis"],
+    publication=latest_publication(spark,platform_cfg)
+    source_version=(publication["gold_version"] if publication else
+                    int(DeltaTable.forPath(spark,source_path).history(1).first().version))
+    effective_cfg=publication["analysis_config"] if publication else analytics_config()["analysis"]
+    manifest={"source_delta_version":source_version,"analysis_config":effective_cfg,
               "spark":spark.version,"master":spark.sparkContext.master,
               "measurement_scope":"Warm-process local execution; OS caches not flushed"}
     save_json(ROOT/"artifacts"/f"benchmark_{suite}_manifest.json",manifest)
@@ -118,12 +122,19 @@ def run_experiments(spark, platform_cfg, suite="all"):
     if suite in ("all","queries"):
         registry=spark.read.format("delta").load(str(ROOT/"data/lab2_metadata/product_registry"))
         for name in PRODUCTS:
-            latest=registry.filter(F.col("product_name")==name).orderBy(F.desc("refreshed_at_utc")).first()
-            if latest is None or latest.source_delta_version!=source_version:
-                raise ValueError(f"Rebuild stale or missing product before benchmarking: {name}")
-            if json.loads(latest.analysis_config_json)!=analytics_config()["analysis"]:
-                raise ValueError(f"Product uses a different analysis configuration: {name}")
-            spark.read.format("delta").load(str(product_path(name))).createOrReplaceTempView("product_"+name)
+            if publication:
+                product_version=publication["product_versions"][name]
+                product=(spark.read.format("delta").option("versionAsOf",product_version)
+                         .load(str(product_path(name))))
+            else:
+                latest=(registry.filter(F.col("product_name")==name)
+                        .orderBy(F.desc("refreshed_at_utc")).first())
+                if latest is None or latest.source_delta_version!=source_version:
+                    raise ValueError(f"Rebuild stale or missing product before benchmarking: {name}")
+                if json.loads(latest.analysis_config_json)!=effective_cfg:
+                    raise ValueError(f"Product uses a different analysis configuration: {name}")
+                product=spark.read.format("delta").load(str(product_path(name)))
+            product.createOrReplaceTempView("product_"+name)
         for query in QUERY_IDS:
             if query=="02_weather_distance":
                 after=sql_text(query)

@@ -44,6 +44,8 @@ def get_spark(app_name: str = "urban-data-platform", shuffle_partitions: int = 8
         os.environ["JAVA_HOME"] = local_java
     os.environ.setdefault("SPARK_LOCAL_IP", "127.0.0.1")
     os.environ.setdefault("PYSPARK_PYTHON", sys.executable)
+    spark_temp = os.path.join(PROJECT_ROOT, ".runtime", "spark-tmp")
+    os.makedirs(spark_temp, exist_ok=True)
 
     builder = (
         SparkSession.builder.appName(app_name)
@@ -51,9 +53,12 @@ def get_spark(app_name: str = "urban-data-platform", shuffle_partitions: int = 8
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
         .config("spark.sql.shuffle.partitions", str(shuffle_partitions))
+        .config("spark.databricks.delta.snapshotPartitions", str(shuffle_partitions))
+        .config("spark.databricks.delta.checkpoint.partSize", str(shuffle_partitions))
         .config("spark.sql.session.timeZone", "UTC")
         .config("spark.driver.memory", os.environ.get("LAB2_DRIVER_MEMORY", "4g"))
         .config("spark.jars.ivy", os.path.join(PROJECT_ROOT, ".runtime", "ivy"))
+        .config("spark.local.dir", spark_temp)
         .config("spark.ui.enabled", "false")
     )
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
