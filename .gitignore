@@ -19,6 +19,7 @@ data/monitoring/
 data/quarantine/
 data/staging/
 data/evaluation/
+data/ml/
 __pycache__/
 *.pyc
 *.log

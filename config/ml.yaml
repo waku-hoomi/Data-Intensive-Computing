@@ -1,0 +1,15 @@
+ml:
+  # Chronological split, fixed by calendar date rather than a random fraction.
+  # An hourly demand model is meant to be used forward in time, so training on
+  # later days and testing on earlier ones would leak seasonal/festival signals
+  # that a real deployment cannot know. Cutoffs are declared here (not computed
+  # from the data's own min/max) so a rerun on a longer Gold table produces a
+  # genuinely fresh test window instead of silently rescaling the split.
+  split_boundaries:
+    validation_start: '2024-03-01'
+    test_start: '2024-03-21'
+  label_col: trip_count
+  model:
+    max_iter: 40
+    max_depth: 6
+    seed: 2221

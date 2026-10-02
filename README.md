@@ -3,7 +3,8 @@
 This project combines NYC taxi trips, weather observations, air-quality measurements
 and taxi-zone references using PySpark and Delta Lake. Week 3 adds incremental
 updates, validation and quarantine, selective analytical refresh, and operational
-monitoring. The instructions below reproduce the Week 3 workflow on Windows.
+monitoring. Week 4 adds an hourly taxi-demand ML pipeline on top. The
+instructions below reproduce the Week 3/4 workflow on Windows.
 
 ## 1. Environment and input data
 
@@ -171,14 +172,14 @@ or regenerate them with the same seed.
 
 | Location | Contents |
 | --- | --- |
-| `src/urban_platform/` | Ingestion, integration, incremental refresh and monitoring |
-| `scripts/`, `config/` | Command-line entry points and dataset/analysis configuration |
-| `sql/` | Six analyses, four products, optimized queries and monitoring SQL |
-| `tests/` | Small-data correctness, validation and refresh tests |
-| `docs/Lab3_Design_Report.md` | Design, decisions and limitations |
-| `docs/Lab3_Evaluation_Report.md` | Measured results and interpretation |
+| `src/urban_platform/` | Ingestion, integration, incremental refresh, monitoring and ML (`ml/`) |
+| `scripts/`, `config/` | Command-line entry points and dataset/analysis/ML configuration |
+| `sql/` | Six analyses, four products, optimized queries, monitoring and ML dataset SQL |
+| `tests/` | Small-data correctness, validation, refresh and ML pipeline tests |
+| `docs/Lab3_Design_Report.md`, `docs/Week4_Design_Report.md` | Design, decisions and limitations |
+| `docs/Lab3_Evaluation_Report.md`, `docs/Week4_Evaluation_Report.md` | Measured results and interpretation |
 | `reports/` | Submission PDFs |
-| `artifacts/week3/` | Local run and evaluation evidence |
+| `artifacts/week3/`, `artifacts/week4/` | Local run and evaluation evidence |
 | `evidence/` | Historical Week 2 experiment snapshot |
 
 Week 3 extends the analysis window through the latest valid taxi day; the original
@@ -189,3 +190,39 @@ Air-quality correlations describe association rather than causation.
 
 Earlier setup and experiment notes are retained in `docs/Week2_Run_Guide.md` as a
 historical reference. Use the workflow above for Week 3.
+
+## 7. Machine learning pipeline (Week 4)
+
+Week 4 adds an hourly taxi-demand model on top of the Week 1-3 platform, under
+`src/urban_platform/ml/`. It reuses `register_analysis_views`/`read_integrated`
+rather than reading raw files again, so it only runs against an already
+bootstrapped platform (Section 3). It does not require a Week 3 update release
+to have been applied; running it against the strict bootstrap baseline is the
+configuration the measured results in `docs/Week4_Evaluation_Report.md` use.
+
+```powershell
+& .\.venv\Scripts\python.exe .\scripts\run_ml_dataset.py
+& .\.venv\Scripts\python.exe .\scripts\run_ml_train.py --run-id week4-main
+& .\.venv\Scripts\python.exe .\scripts\run_ml_compare.py
+& .\.venv\Scripts\python.exe .\scripts\build_week4_reports.py
+```
+
+`run_ml_dataset.py` builds the zone x hour demand grid (`sql/ml/zone_hour_demand.sql`)
+and writes it to `data/ml/training_dataset/`, partitioned by the chronological
+`train`/`validation`/`test` split declared in `config/ml.yaml`. `run_ml_train.py`
+fits the feature pipeline (`urban_platform/ml/features.py`) and a `GBTRegressor`
+as one `Pipeline`, saves the resulting `PipelineModel` to
+`data/ml/models/<run_id>/`, and writes metrics to `artifacts/week4/train_<run_id>.json`.
+`run_ml_compare.py` runs Task 4's Approach A (re-derived from the raw course
+files) vs. Approach B (the platform's dataset) through the identical feature
+pipeline and model, writing `artifacts/week4/comparison.json`. Retraining on
+newer data is calling `run_ml_train.py` again with a different `run_id` once
+the Gold table has advanced; no separate retraining code path exists.
+`build_week4_reports.py` renders `docs/Week4_Design_Report.md` and
+`docs/Week4_Evaluation_Report.md` to `reports/`.
+
+`pytest tests/test_ml_*.py -q` covers the dataset grid (including that
+zero-demand hours are retained, not dropped), the feature pipeline (categorical
+indexing, imputation, derived temporal columns) and the saved model's
+reload/retrain path, all against small synthetic fixtures rather than the full
+course dataset.
