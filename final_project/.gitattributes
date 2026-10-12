@@ -1,0 +1,4 @@
+*.pdf binary
+*.png binary
+# Preserve generated CSV bytes for the recorded SHA-256 provenance.
+*.csv -text

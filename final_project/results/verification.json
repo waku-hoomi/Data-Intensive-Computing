@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "raw_rows_checked": 1067371,
+  "baskets_checked": 12346,
+  "discovery_rules_checked": 52,
+  "evaluation_rows_checked": 208,
+  "basket_semantic_sha256": "e75ffceff5766294f3e738ce50f78f154043e220552c3406f5b8eecc3103b794",
+  "rules_csv_sha256": "f4a6927d7e1a1db9cf10c095c2b9894f936a961e3092e088669f79e03df2dd3a",
+  "metrics_csv_sha256": "19300041bca793f62f4ccd3b78a4f2b6ce3735eee1df149ffb8c6ca2e6e2d948",
+  "method": "Independent Python raw-line cleaning and full basket/rule census, matched to Spark HDFS outputs"
+}

@@ -1,0 +1,22 @@
+{
+  "source_url": "https://archive.ics.uci.edu/static/public/502/online+retail+ii.zip",
+  "zip_sha256": "572e36277c2390fbfde10664750731e0a86f55e33470d91919085f0408e67bfb",
+  "workbook_sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+  "python": "3.12.14",
+  "sheets": [
+    {
+      "sheet": "Year 2009-2010",
+      "rows": 525461,
+      "min_date": "2009-12-01 07:45:00",
+      "max_date": "2010-12-09 20:01:00",
+      "parquet_sha256": "1d605ace8602dadbd83d91e3644ac50d6f9e0dbdb026d9e25fcb5b44d87e9db6"
+    },
+    {
+      "sheet": "Year 2010-2011",
+      "rows": 541910,
+      "min_date": "2010-12-01 08:26:00",
+      "max_date": "2011-12-09 12:50:00",
+      "parquet_sha256": "044ec07be92ed9b06a86e39b7688544bc9aa1b787095c446edeb65215c59ea53"
+    }
+  ]
+}

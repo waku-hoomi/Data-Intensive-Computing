@@ -1,0 +1,164 @@
+{
+  "raw_rows": 1067371,
+  "study_window_rows": 343228,
+  "excluded_nonproduct_entries": [
+    {
+      "stock_code": "POST",
+      "description": "POSTAGE",
+      "count": 708
+    },
+    {
+      "stock_code": "DOT",
+      "description": "DOTCOM POSTAGE",
+      "count": 574
+    },
+    {
+      "stock_code": "M",
+      "description": "Manual",
+      "count": 221
+    },
+    {
+      "stock_code": "C2",
+      "description": "CARRIAGE",
+      "count": 87
+    },
+    {
+      "stock_code": "BANK CHARGES",
+      "description": "Bank Charges",
+      "count": 5
+    },
+    {
+      "stock_code": "AMAZONFEE",
+      "description": "AMAZON FEE",
+      "count": 3
+    },
+    {
+      "stock_code": "B",
+      "description": "Adjust bad debt",
+      "count": 1
+    },
+    {
+      "stock_code": "S",
+      "description": "SAMPLES",
+      "count": 1
+    },
+    {
+      "stock_code": "m",
+      "description": "Manual",
+      "count": 1
+    }
+  ],
+  "conflicting_invoices": 37,
+  "stages": [
+    {
+      "stage": "cancellations",
+      "removed_rows": 6176,
+      "remaining_rows": 337052
+    },
+    {
+      "stage": "invalid_sales",
+      "removed_rows": 1977,
+      "remaining_rows": 335075
+    },
+    {
+      "stage": "nonproduct_entries",
+      "removed_rows": 1601,
+      "remaining_rows": 333474
+    },
+    {
+      "stage": "exact_duplicate_lines",
+      "removed_rows": 24388,
+      "remaining_rows": 309086
+    },
+    {
+      "stage": "conflicting_invoices",
+      "removed_rows": 2395,
+      "remaining_rows": 306691
+    }
+  ],
+  "clean_rows": 306691,
+  "clean_rows_missing_customer": 84649,
+  "clean_rows_missing_description": 0,
+  "baskets": 12346,
+  "basket_summary": [
+    {
+      "period": "discovery",
+      "month": "2010-12",
+      "baskets": 1549,
+      "singletons": 164,
+      "mean_size": 26.035506778566816,
+      "max_size": 673
+    },
+    {
+      "period": "discovery",
+      "month": "2011-01",
+      "baskets": 1074,
+      "singletons": 82,
+      "mean_size": 30.955307262569832,
+      "max_size": 501
+    },
+    {
+      "period": "discovery",
+      "month": "2011-02",
+      "baskets": 1085,
+      "singletons": 79,
+      "mean_size": 23.929953917050693,
+      "max_size": 230
+    },
+    {
+      "period": "discovery",
+      "month": "2011-03",
+      "baskets": 1434,
+      "singletons": 97,
+      "mean_size": 24.086471408647142,
+      "max_size": 297
+    },
+    {
+      "period": "discovery",
+      "month": "2011-04",
+      "baskets": 1229,
+      "singletons": 97,
+      "mean_size": 22.98779495524817,
+      "max_size": 331
+    },
+    {
+      "period": "discovery",
+      "month": "2011-05",
+      "baskets": 1663,
+      "singletons": 145,
+      "mean_size": 21.173782321106433,
+      "max_size": 282
+    },
+    {
+      "period": "evaluation",
+      "month": "2011-06",
+      "baskets": 1524,
+      "singletons": 131,
+      "mean_size": 23.135170603674542,
+      "max_size": 703
+    },
+    {
+      "period": "evaluation",
+      "month": "2011-07",
+      "baskets": 1451,
+      "singletons": 103,
+      "mean_size": 26.04410751206065,
+      "max_size": 486
+    },
+    {
+      "period": "evaluation",
+      "month": "2011-08",
+      "baskets": 1337,
+      "singletons": 109,
+      "mean_size": 25.289454001495887,
+      "max_size": 352
+    }
+  ],
+  "basket_size_quantiles": [
+    15.0,
+    49.0,
+    193.0,
+    703.0
+  ],
+  "distinct_products": 3619
+}

@@ -1,0 +1,7 @@
+{
+  "stage": "evaluate",
+  "seconds": 8.584586000069976,
+  "storage": "hdfs://127.0.0.1:19000/retail_project",
+  "python": "3.12.14",
+  "platform": "macOS-26.6.2-arm64-arm-64bit"
+}

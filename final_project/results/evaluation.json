@@ -1,0 +1,64 @@
+{
+  "summary": [
+    {
+      "period": "2011-06",
+      "status": "insufficient",
+      "count": 1
+    },
+    {
+      "period": "2011-06",
+      "status": "retained",
+      "count": 42
+    },
+    {
+      "period": "2011-06",
+      "status": "weakened",
+      "count": 9
+    },
+    {
+      "period": "2011-07",
+      "status": "insufficient",
+      "count": 3
+    },
+    {
+      "period": "2011-07",
+      "status": "retained",
+      "count": 48
+    },
+    {
+      "period": "2011-07",
+      "status": "weakened",
+      "count": 1
+    },
+    {
+      "period": "2011-08",
+      "status": "insufficient",
+      "count": 3
+    },
+    {
+      "period": "2011-08",
+      "status": "retained",
+      "count": 47
+    },
+    {
+      "period": "2011-08",
+      "status": "weakened",
+      "count": 2
+    },
+    {
+      "period": "evaluation",
+      "status": "retained",
+      "count": 50
+    },
+    {
+      "period": "evaluation",
+      "status": "weakened",
+      "count": 2
+    }
+  ],
+  "rules_retained_all_three_months": 39,
+  "rules": 52,
+  "evaluation_baskets": 4312,
+  "classification": "Descriptive: at least 30 antecedent and 30 consequent baskets; lift > 1 and confidence >= 80% of discovery.",
+  "rules_csv_sha256": "f4a6927d7e1a1db9cf10c095c2b9894f936a961e3092e088669f79e03df2dd3a"
+}

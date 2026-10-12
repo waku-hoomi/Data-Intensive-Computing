@@ -1,0 +1,52 @@
+{
+  "baskets": 8034,
+  "pilots": [
+    {
+      "min_support": 0.03,
+      "frequent_itemsets": 142,
+      "selected_pair_rules": 14,
+      "seconds": 1.8601989999879152
+    },
+    {
+      "min_support": 0.02,
+      "frequent_itemsets": 398,
+      "selected_pair_rules": 52,
+      "seconds": 2.2151728339958936
+    }
+  ],
+  "selected_rules": 52,
+  "config": {
+    "discovery_start": "2010-12-01",
+    "discovery_end": "2011-06-01",
+    "evaluation_end": "2011-09-01",
+    "pilot_supports": [
+      0.03,
+      0.02
+    ],
+    "min_support": 0.02,
+    "min_confidence": 0.5,
+    "min_lift": 2.0,
+    "min_pair_count": 30,
+    "min_antecedent_count": 50,
+    "evaluation_min_antecedent_count": 30,
+    "evaluation_min_consequent_count": 30,
+    "confidence_retention": 0.8,
+    "shuffle_partitions": 8,
+    "excluded_codes": [
+      "POST",
+      "DOT",
+      "M",
+      "BANK CHARGES",
+      "ADJUST",
+      "D",
+      "AMAZONFEE",
+      "CRUK",
+      "C2",
+      "S",
+      "B"
+    ]
+  },
+  "rules_csv_sha256": "f4a6927d7e1a1db9cf10c095c2b9894f936a961e3092e088669f79e03df2dd3a",
+  "source_zip_sha256": "572e36277c2390fbfde10664750731e0a86f55e33470d91919085f0408e67bfb",
+  "quality_sha256": "94f2d1b404641fad116ce9262c184ee0e7a5625834d7d426fd0bd152e09bade0"
+}
