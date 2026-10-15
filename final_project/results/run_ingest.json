@@ -1,6 +1,6 @@
 {
   "stage": "ingest",
-  "seconds": 14.100505750044249,
+  "seconds": 15.38677912496496,
   "storage": "/Users/felixchen/Documents/ChatGPT/data-intensive computing/retail-project-repo/final_project/data/processed",
   "python": "3.12.14",
   "platform": "macOS-26.6.2-arm64-arm-64bit"

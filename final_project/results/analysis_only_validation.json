@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "report_unchanged_by_pipeline": true,
+  "report_sha256": "d20afcd25bc11035b065f53cf35941a76d64c3ec92dd98860f5c57cba29ad869",
+  "tables_match_previous_version": true,
+  "figures_match_previous_version": true,
+  "automated_tests": 6,
+  "pipeline_outputs": [
+    "CSV and JSON analytical results",
+    "PNG visualizations",
+    "verification and test records"
+  ],
+  "report_generation_in_pipeline": false
+}

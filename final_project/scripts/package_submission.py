@@ -27,7 +27,7 @@ def main():
             raise ValueError(f"Uncommitted content: {name}")
         files[name] = data
     files["SOURCE_VERSION.txt"] = f"Repository: https://github.com/waku-hoomi/Data-Intensive-Computing\nBranch: codex/retail-final-project\nCommit: {commit}\n".encode()
-    files["SUBMISSION_README.txt"] = b"ID2221 Final Project - Group 6\n\nThe two-page report is final_project/reports/Final_Project_Report.pdf.\nComplete code, pinned dependencies, configuration, tests, results and instructions\nare in final_project/. See final_project/README.md.\n\nFrom final_project/: bash scripts/setup.sh, then bash scripts/run_all.sh.\nOriginal data and runtimes are downloaded by setup and are not bundled.\nThe approved proposal is included under final_project/docs/.\n"
+    files["SUBMISSION_README.txt"] = b"ID2221 Final Project - Group 6\n\nThe two-page report is final_project/reports/Final_Project_Report.pdf.\nComplete code, pinned dependencies, configuration, tests, results and instructions\nare in final_project/. See final_project/README.md.\n\nFrom final_project/: bash scripts/setup.sh, then bash scripts/run_all.sh.\nThe pipeline produces analytical tables and charts; the report is a separate\ndeliverable and is not generated or overwritten by running the analysis.\nOriginal data and runtimes are downloaded by setup and are not bundled.\nThe approved proposal is included under final_project/docs/.\n"
     manifest = {name: hashlib.sha256(data).hexdigest() for name, data in sorted(files.items())}
     files["MANIFEST_SHA256.json"] = (json.dumps(manifest, indent=2) + "\n").encode()
     args.output.parent.mkdir(parents=True, exist_ok=True)

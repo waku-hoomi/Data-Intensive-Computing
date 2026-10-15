@@ -17,7 +17,7 @@ Prerequisites: macOS or Linux, Python 3.12 or later, Bash, `curl`, `tar`, intern
 
 Setup creates `.venv/`, installs pinned dependencies (including constraints from `results/environment_lock.txt`), downloads Java 17 if `JAVA_HOME` and a project-local Java installation are unavailable, downloads verified Apache Hadoop 3.4.2, and obtains the official UCI dataset. Supply `JAVA_HOME` pointing to a Java 17 JDK to use your own installation. The project retains its own Java runtime and does not depend on a Lab1/Lab4 directory.
 
-`run_all.sh` starts a dedicated HDFS NameNode and DataNode, converts the original workbook, runs Spark cleaning/mining/evaluation, independently verifies all results, runs tests, records HDFS evidence, generates the two-page report, and stops the daemons on exit. It runs each Spark stage in a separate driver process. Logs are in `.runtime/logs/`; a failed stage prints its recent log and stops the pipeline.
+`run_all.sh` starts a dedicated HDFS NameNode and DataNode, converts the original workbook, runs Spark cleaning/mining/evaluation, independently verifies all results, runs tests, records HDFS evidence, saves the analysis charts, and stops the daemons on exit. It runs each Spark stage in a separate driver process. Logs are in `.runtime/logs/`; a failed stage prints its recent log and stops the pipeline.
 
 No SSH server, Docker, YARN or system-wide Hadoop installation is needed. HDFS RPC uses `127.0.0.1:19000`; its NameNode interface uses `127.0.0.1:19870`, and DataNode ports are 19864/19866/19867. These ports must be available. Metadata and blocks stay in `.runtime/hdfs/`. The HDFS launcher makes temporary symlinks to support project directory names containing spaces. This is a single-machine HDFS demonstration with replication 1 and Spark `local[4]`, not a multi-node scalability benchmark.
 
@@ -85,7 +85,7 @@ These are practical descriptive thresholds, not hypothesis tests or uncertainty 
 
 | Output | Purpose |
 |---|---|
-| `reports/Final_Project_Report.pdf` | Exactly two pages: problem, data, methods, results, limitations and run instructions |
+| `reports/Final_Project_Report.pdf` | Separately prepared two-page report; running the analysis does not create or overwrite it |
 | `results/source_manifest.json` | Official source and file hashes |
 | `results/quality.json` | Cleaning exclusions and basket summaries |
 | `results/discovery.json` | Discovery-only pilots and frozen parameters/provenance |
@@ -116,7 +116,7 @@ Keep HDFS running in the same terminal while running stages:
 .venv/bin/python scripts/verify_results.py --storage hdfs://127.0.0.1:19000/retail_project
 .venv/bin/python -m pytest -q tests
 .venv/bin/python scripts/hdfs.py snapshot
-.venv/bin/python scripts/build_report.py
+.venv/bin/python scripts/visualize_results.py
 .venv/bin/python scripts/hdfs.py stop
 ```
 
@@ -134,7 +134,13 @@ bash scripts/run_all.sh
 
 This checks all basket memberships/timestamps and the complete rule/metric CSV hashes, excluding durations and physical HDFS block identifiers. The delivered `results/reproducibility.json` records two matching full HDFS runs.
 
-For report visual QA, run `pdftoppm -png reports/Final_Project_Report.pdf /tmp/retail-report-page` if Poppler is installed. Report generation asserts exactly two pages. The delivered PDF was rendered and visually reviewed.
+## Separate two-page report
+
+The analytical code produces data tables, visualizations and verification evidence. It contains no PDF-report generator. `bash scripts/run_all.sh` leaves everything under `reports/` unchanged. To regenerate only the charts after a successful verified analysis, run `.venv/bin/python scripts/visualize_results.py`.
+
+The separately prepared report in `reports/Final_Project_Report.pdf` is submitted alongside the code. It explains the research problem, dataset and cleaning, FP-Growth and temporal evaluation method, measured results and limitations, and instructions to run the code, within exactly two pages. Its content refers to the recorded configuration and results in `results/`. If these change in a new experiment, revise the report separately using the new tables and figures.
+
+The pipeline requires no ReportLab or pypdf dependencies. The report included with this submission was checked for two pages and visually reviewed.
 
 ## References
 

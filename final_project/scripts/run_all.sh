@@ -23,5 +23,5 @@ run evaluate "$PY" scripts/project.py evaluate --storage "$STORAGE"
 run verify "$PY" scripts/verify_results.py --storage "$STORAGE"
 run tests "$PY" -m pytest -q tests --junitxml=results/tests.xml
 if [[ "$STORAGE" == hdfs:* ]]; then run hdfs_snapshot "$PY" scripts/hdfs.py snapshot; fi
-run report "$PY" scripts/build_report.py
-echo 'Complete: reports/Final_Project_Report.pdf and results/'
+run visualize "$PY" scripts/visualize_results.py
+echo 'Complete: analysis tables in results/; charts in results/figures/'

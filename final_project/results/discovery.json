@@ -5,13 +5,13 @@
       "min_support": 0.03,
       "frequent_itemsets": 142,
       "selected_pair_rules": 14,
-      "seconds": 1.8601989999879152
+      "seconds": 2.452207208960317
     },
     {
       "min_support": 0.02,
       "frequent_itemsets": 398,
       "selected_pair_rules": 52,
-      "seconds": 2.2151728339958936
+      "seconds": 2.5758846249664202
     }
   ],
   "selected_rules": 52,
