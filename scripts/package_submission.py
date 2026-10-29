@@ -72,7 +72,7 @@ def main() -> None:
     environment = ROOT / "artifacts/environment.json"
     if environment.is_file():
         pairs.append((environment, Path("evidence/week3/environment.json")))
-    for name in ("README.md", "requirements.txt", "requirements-lab2.txt", ".gitignore"):
+    for name in ("README.md", "README.zh-CN.md", "requirements.txt", "requirements-lab2.txt", ".gitignore"):
         pairs.append((ROOT / name, Path(name)))
 
     # Gate on the latest complete regression, not accumulated historical runs.

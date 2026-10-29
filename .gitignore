@@ -1,26 +1,31 @@
-hadoop/
+# Local runtimes and Spark working files
 .venv/
 .runtime/
-.pytest_cache/
-.DS_Store
-artifacts/
-data/products/
-data/lab2_metadata/
+hadoop/
 spark-warehouse/
+metastore_db/
 derby.log
+
+# Source inputs and generated tables, models, evaluation workspaces
 dataset/
-data/bronze/
-data/gold/
-data/_metadata/
-data/raw/
-data/silver/
-data/updates/
-data/monitoring/
-data/quarantine/
-data/staging/
-data/evaluation/
-data/ml/
+data/
+
+# New run output stays local; already tracked evidence remains versioned
+artifacts/
+
+# Python and editor caches
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+~$*
 *.log
+
+# Submission bundles and local assignment handouts
+*.zip
 Assignment*.docx

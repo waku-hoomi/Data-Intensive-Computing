@@ -1,5 +1,8 @@
 # ID2221 Urban Data Platform: Weeks 1-3
 
+> Historical run guide. Use [RUNBOOK.md](RUNBOOK.md) for the current workflow and
+> [the documentation index](README.md) for assignment reports and evidence.
+
 The repository now includes the Week 3 production extension: deterministic
 incremental releases, strict configurable validation, idempotent Bronze MERGE,
 partial Gold/product refresh, publication manifests, Delta monitoring and a

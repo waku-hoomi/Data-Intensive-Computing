@@ -1,228 +1,151 @@
-# ID2221 Urban Data Platform
+<div align="center">
 
-This project combines NYC taxi trips, weather observations, air-quality measurements
-and taxi-zone references using PySpark and Delta Lake. Week 3 adds incremental
-updates, validation and quarantine, selective analytical refresh, and operational
-monitoring. Week 4 adds an hourly taxi-demand ML pipeline on top. The
-instructions below reproduce the Week 3/4 workflow on Windows.
+# Urban Data Platform
 
-## 1. Environment and input data
+**English** | [简体中文](README.zh-CN.md)
 
-Run all commands from the project root in PowerShell. The tested environment is
-Python 3.12, Java 17, PySpark 4.0.4 and Delta Lake 4.0.1. The setup script installs
-the project dependencies, a local JDK and the Windows Hadoop binaries. Downloads
-require network access. Replace the two example paths with paths on your machine.
+### From raw city data to trusted analytics and machine learning
+
+**9.55M taxi trips · 4 source domains · 4 assignments · One end-to-end data platform**
+
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![Apache Spark](https://img.shields.io/badge/Apache_Spark-4.0.4-E25A1C?logo=apachespark&logoColor=white)
+![Delta Lake](https://img.shields.io/badge/Delta_Lake-4.0.1-00ADD8)
+![Spark ML](https://img.shields.io/badge/Spark_ML-GBT_Regressor-E97627)
+![SQL](https://img.shields.io/badge/Spark_SQL-Analytics_%26_Optimization-6B46C1)
+
+[Assignments](#assignments) · [Architecture](docs/ARCHITECTURE.md) · [Runbook](docs/RUNBOOK.md) · [Reports & Evidence](docs/README.md)
+
+</div>
+
+A city data platform built for **ID2221 Data-Intensive Computing**. It brings NYC taxi trips, weather observations, air-quality measurements and taxi-zone references into **PySpark + Delta Lake**, then builds quality controls, optimized SQL analytics, incremental maintenance, failure recovery and hourly taxi-demand modelling on the same foundation.
+
+The engineering extends beyond a successful pipeline run: optimizations are checked for result equivalence, publications record table versions, and machine learning reuses the platform's validated data.
+
+## Tech stack at a glance
+
+| Layer | Technologies | What they do here |
+| --- | --- | --- |
+| Distributed processing engine | Python 3.12, PySpark 4.0.4, Java 17 | Multi-source reads, cleaning, joins, aggregation and batch processing |
+| Lake storage | Delta Lake 4.0.1, Parquet | Partitioned tables, transactional commits, `MERGE`, versioned reads and Change Data Feed |
+| Analytics & optimization | Spark SQL, Cache, Partition Pruning, Broadcast Join, AQE | Six analyses, materialized data products and execution-plan comparisons |
+| Incremental reliability | Delta CDF, publication manifests, quarantine tables | Idempotent replay, affected-group refresh and recovery after failures |
+| Machine learning | Spark ML `Pipeline`, `GBTRegressor` | Feature preparation, chronological splits, training, evaluation and model persistence |
+| Configuration & verification | YAML, JSON, SHA-256, pytest | Declarative quality rules, input checks, regression coverage and real Delta fault tests |
+
+<a id="assignments"></a>
+
+## Four assignments, one evolving platform
+
+| Assignment | Core question | Implementation & deliverables |
+| --- | --- | --- |
+| **Week 1 · Data Foundation** | How do heterogeneous city files become consistent data assets? | Configuration-driven ingestion; normalized types, names and UTC timestamps; quality checks; Bronze / Gold layers; storage-partitioning experiments. [Design](docs/DESIGN_REPORT.md) · [Benchmark](docs/BENCHMARK_REPORT.md) |
+| **Week 2 · Analytics & Performance** | How can millions of trips support reusable, efficient analysis? | Six Spark SQL analyses and four Delta data products; isolated cache, pruning, broadcast and AQE experiments; retained SQL, plans and complete results. [Design](docs/Lab2_Design_Report.md) · [Evaluation](docs/Lab2_Benchmark_Report.md) |
+| **Week 3 · Incremental & Reliable** | How do changing data and interrupted runs reach a correct published state? | Deterministic update generation; idempotent `MERGE`; CDF-driven Gold and product refresh; additive schema evolution, quarantine, version publication and four monitoring queries. [Design](docs/Lab3_Design_Report.md) · [Evaluation](docs/Lab3_Evaluation_Report.md) |
+| **Week 4 · ML on Trusted Data** | What does the data-engineering layer contribute to modelling? | A zone × hour demand grid retaining zero-trip hours; persisted features and GBT model; chronological evaluation; raw-file versus platform-data comparison. [Design](docs/Week4_Design_Report.md) · [Evaluation](docs/Week4_Evaluation_Report.md) |
+
+### Week 1 — Ingest the files, align their meaning
+
+The inputs include **9,554,778 taxi trips**, hourly weather, air-quality observations and a zone reference table. A shared ingestion framework reconciles formats, types, timezones and missing values before enriching trips with location and environmental context.
+
+Source-specific differences live in configuration and transformation functions; the common pipeline handles reading, validation, writes and metadata. Explore the [data catalog](docs/DATA_CATALOG.md) and [ingestion module](src/urban_platform/ingestion/).
+
+### Week 2 — Turn repeated queries into reusable data products
+
+Six analyses cover monthly demand by zone, weather and trip distance, air quality and demand, demand variation across weather conditions, peak hours and monthly trends. Four materialized products summarize daily mobility, taxi zones, weather impact and air-quality impact.
+
+Optimization checks cover **results, schemas and execution plans**, with warm-ups, three measured runs and retained outputs. Explore the [SQL](sql/) and [individual experiment records](evidence/benchmarks/).
+
+### Week 3 — Give updates, retries and publication explicit semantics
+
+The update release contains **716,608 new trips** and **143,322 exact duplicate trips**, alongside new environmental hours, historical corrections and additive fields. The platform distinguishes inserts, corrections, duplicates and rejected rows, writing invalid records to quarantine.
+
+Publication manifests identify readable table versions; CDF recovers pending changes since the last successful publication. Tests inject failures after Gold or product commits and compare retries and cross-batch recovery against full recomputation. Explore the [incremental runner](src/urban_platform/incremental/) and [recovery tests](tests/test_week3_recovery.py).
+
+### Week 4 — Let models inherit the platform's quality controls
+
+A published Gold snapshot produces **571,613 zone-hour samples**, with **58.7% zero-demand hours**. Categorical indexing, median imputation, temporal features, vector assembly and scaling are saved together with the GBT regressor as one `PipelineModel`.
+
+Training, validation and testing follow chronological order. The raw-versus-platform comparison also demonstrates a practical risk: a model can train successfully even when its demand labels have bypassed quality checks. Explore the [ML module](src/urban_platform/ml/) and [dataset SQL](sql/ml/zone_hour_demand.sql).
+
+## Results with evidence
+
+| Result | Value | Evidence & conditions |
+| --- | ---: | --- |
+| Q4 weather-variation query speedup | **18.96×** | 1.7122 s → 0.0903 s; Week 2 local experiment, median of three measured runs, using a prebuilt data product. [Raw measurements](evidence/benchmarks/query_04_weather_variation/measurements.json) |
+| Broadcast zone-join speedup | **3.18×** | 0.9799 s → 0.3082 s; isolated technique comparison. [Raw measurements](evidence/benchmarks/technique_broadcast/measurements.json) |
+| Incremental/full result equivalence | **2 paired trials** | Gold fingerprints, all four products and all six queries compared; monitoring-on/off controls also retained. [Evaluation](docs/Lab3_Evaluation_Report.md) |
+| Chronologically held-out test performance | **RMSE 33.58 · R² 0.580** | GBT on the strict bootstrap baseline; test window 2024-03-21 through 03-31. [Evaluation](docs/Week4_Evaluation_Report.md) |
+
+Query speedups exclude product construction and refresh costs. These local results do not establish cluster-scale gains. Week 3 also found that broad zone corrections expanded the incremental workload and made the measured incremental path slower than a full rebuild; the report retains that result and the observed timing variation to explain the trade-off.
+
+## Platform architecture
+
+```mermaid
+flowchart LR
+    A["Source files<br/>Taxi · Weather · Air quality · Zones"] --> B["PySpark ingestion<br/>Schema · Types · Quality rules"]
+    C["YAML configuration"] -.-> B
+    B --> Q["Invalid rows<br/>Delta quarantine"]
+    B --> D["Bronze Delta tables<br/>Validated source data"]
+    D --> E["Gold Delta table<br/>Integrated taxi trips"]
+    U["Incremental releases"] --> B
+    D -. "Change Data Feed" .-> R["Affected keys and groups<br/>Incremental refresh"]
+    R --> E
+    E --> F["4 data products<br/>6 SQL analyses"]
+    E --> G["Zone-hour dataset<br/>Spark ML Pipeline + GBT"]
+    R --> F
+    M["Run monitoring + publication manifests"] -. "Versioned reads" .-> F
+    M -. "Versioned reads" .-> G
+```
+
+The [architecture guide](docs/ARCHITECTURE.md) explains storage layers, publication and recovery boundaries. The project uses **Bronze / Gold** layers; original files remain in a read-only input directory.
+
+## Quick start
+
+Run these commands from the repository root in **Windows PowerShell**. You need Python 3.12, network access and the course-provided source files; raw data is not included in Git. The setup script prepares local Java 17, Windows Hadoop compatibility files and Python dependencies.
 
 ```powershell
+git clone https://github.com/waku-hoomi/Data-Intensive-Computing.git
+cd Data-Intensive-Computing
+
 Set-ExecutionPolicy -Scope Process Bypass
-.\scripts\setup_windows.ps1 -PythonExe "D:\path\to\python.exe"
+.\scripts\setup_windows.ps1 -PythonExe "C:\path\to\python.exe"
 & .\.venv\Scripts\python.exe .\scripts\prepare_local_data.py "D:\path\to\course-files"
 & .\.venv\Scripts\python.exe .\scripts\check_environment.py
 ```
 
-The course-files directory must contain the three January-March 2024 taxi Parquet
-files, `weather.csv`, `taxi_zone_lookup.csv`, and either `air_quality.zip` or its
-extracted `air_quality/hourly_88101_2024.csv`. Preparation verifies the available
-inputs against `config/input_manifest.json` and writes provenance information.
-When only the extracted CSV is available, the ZIP checksum remains unverified.
-
-The default Spark master is `local[4]`, with 4 GB of driver memory and eight shuffle
-partitions. `LAB2_SPARK_MASTER` and `LAB2_DRIVER_MEMORY` override these settings.
-Record overrides when comparing timings. Keep sufficient disk space for the raw
-inputs, Delta history and evaluation workspaces; the raw air-quality CSV alone is
-about 2.37 GB.
-
-## 2. Generate the update release
+In a fresh environment, create the strictly validated historical baseline before building the demand model:
 
 ```powershell
-& .\.venv\Scripts\python.exe .\scripts\generate_week3_updates.py --source .\dataset --output .\data\updates --seed 2221
-```
-
-The command writes four update files and `data/updates/manifest.json`. The manifest
-records counts, time ranges, schema additions and SHA-256 checksums. For the course
-inputs, the release contains:
-
-| Dataset | New rows | Modified rows | Exact duplicates | Schema addition |
-| --- | ---: | ---: | ---: | --- |
-| Taxi trips | 716,608 | 0 | 143,322 | None |
-| Weather | 168 | 6 | 0 | `humidity` |
-| Air quality | 504 | 3 | 0 | `aqi` |
-| Taxi zones | 0 | 3 | 0 | None |
-
-The taxi counts correspond to 7.5% new trips and 1.5% copied trips, using the
-original 9,554,778 rows as the denominator. New timestamps follow each source's
-own latest timestamp. The source datasets end on different dates; a few historical
-corrections make the effect of environmental and zone changes observable in the
-existing trip period. Invalid examples are kept in tests rather than the release.
-
-## 3. Create a baseline and process updates
-
-For a fresh project, initialise the strictly validated baseline once:
-
-```powershell
-& .\.venv\Scripts\python.exe .\scripts\run_week3_pipeline.py --bootstrap --run-id week3-baseline
-& .\.venv\Scripts\python.exe .\scripts\run_week3_evaluation.py --capture-baseline
-```
-
-Bootstrap rebuilds the historical Bronze, Gold and product tables. Baseline capture
-saves the state needed for controlled evaluation, so it must happen before applying
-the update release. An existing evaluation baseline is protected against accidental
-replacement; use `--replace-baseline` only when intentionally changing the experiment.
-
-Apply the release to an existing baseline:
-
-```powershell
-& .\.venv\Scripts\python.exe .\scripts\run_week3_pipeline.py --updates-dir .\data\updates --run-id week3-release-1
-```
-
-Use a distinct run ID for each attempt. A successful run writes an execution summary
-under `artifacts/week3/` and a version manifest in the Delta table
-`data/monitoring/published_snapshots`. Readers use the latest successful manifest.
-Bronze MERGE inserts new keys, ignores exact duplicates and updates corrections
-for weather, air quality and zones. Taxi IDs are full-row hashes; a modified taxi
-payload cannot be identified reliably as a correction without a source trip ID.
-
-The same release can be submitted again with a new run ID to check idempotence.
-Inspect the summary: inserts and updates should be zero, and unchanged analytical
-tables should keep their versions. Change Data Feed (CDF) recovers all Bronze and
-Gold changes since the last successful publication, including pending changes
-when a new batch arrives. Products are recomputed for every affected intermediate
-group, so an interrupted product refresh can be replayed. Retain the source files
-and Delta/CDF history until recovery completes. This local runner assumes one writer.
-
-## 4. Schema changes and validation
-
-Rules are declared in `config/datasets.yaml`: required fields, numeric ranges,
-timestamps, foreign keys, primary keys and permitted additive source columns.
-Weather accepts `humidity`, transformed to `humidity_pct_v2`; the original
-`relative_humidity_pct` remains available. Air quality accepts `aqi`, exposed in
-Gold as `aqi_max`. CSV source columns are read as strings and converted to numeric
-types before value validation.
-
-To allow a new field, add its raw type to `allowed_raw_additions`, update the dataset
-transform and add any necessary validation rules. Update affected product definitions
-and tests when the field changes their meaning. Renames, removals, incompatible types
-and new business rules need an explicit migration. The platform does not infer one.
-
-Invalid rows are stored in per-run Delta quarantine tables with rejection reasons;
-the run summary gives `quarantine_path` and `validation_failures`. Valid rows can
-continue through row-level validation. An unsupported schema fails that dataset and
-blocks the new analytical publication. Duplicate counts and rejected-invalid-row
-counts are separate; one invalid row may also violate several rules.
-
-## 5. Monitor and validate the published state
-
-```powershell
-& .\.venv\Scripts\python.exe .\scripts\run_week3_monitoring.py
-& .\.venv\Scripts\python.exe .\scripts\validate_week3_platform.py
-& .\.venv\Scripts\python.exe -m pytest tests -q --junitxml=artifacts/week3/pytest-all.xml
-```
-
-Monitoring reads `data/monitoring/pipeline_runs` and runs the four queries in
-`sql/monitoring/`. Results appear in `artifacts/week3/monitoring/`: validation
-frequency, slowest datasets, rejected records per execution and processing-time
-trends. Exact duplicates count as validation events, so interpret the failure-frequency
-report together with rejection counts and run status.
-
-The platform validator writes `artifacts/week3/final_validation.json`. It checks
-update-file hashes, the published Gold/taxi row counts, access to all four products,
-execution of the six Week 2 queries and incomplete-month handling. It is a final
-consistency check; full-result comparison is performed by the evaluation below.
-
-## 6. Reproduce the evaluation
-
-```powershell
-& .\.venv\Scripts\python.exe .\scripts\run_week3_evaluation.py --trials 2
-```
-
-Each trial starts three workspaces from the same saved baseline: incremental refresh,
-full analytical rebuild, and incremental refresh with event monitoring disabled.
-All three run the same ingestion, orchestration and publication code. Variant order
-reverses between trials. Gold fingerprints, all four products and all six queries
-are compared for both the refresh and monitoring pairs. The production command
-always keeps monitoring enabled.
-
-Validation uses paired controls over the same fully materialised transformed rows.
-Both arms consume every original column and row; the enabled arm additionally
-checks schema and values, then recombines accepted and rejected rows for the same
-checksum sink. Preparation is timed separately. Storage inventories count every
-file under each trial's `data/`, separating active analytical data, retained files,
-CDF, logs, quarantine, staging and metadata. No VACUUM runs during measurement;
-hard links count as logical file bytes, not additional physical disk allocation.
-
-Results go to `artifacts/week3/evaluation.json`. After an interruption, `--resume`
-reuses completed trials only if the code, configuration and update manifest still
-match their saved signature. Raw paired differences, including negative values
-caused by timing noise, are retained. Two local trials remain a limited sample.
-
-## 7. Reports and submission
-
-```powershell
-& .\.venv\Scripts\python.exe .\scripts\build_week3_reports.py
-& .\.venv\Scripts\python.exe .\scripts\package_submission.py
-```
-
-Report generation uses the saved evaluation, baseline and release records. It writes
-the evaluation Markdown and both PDFs; the design Markdown is maintained by hand.
-Review the PDF pages after changing content. Packaging writes
-`../output/Week3_Submission.zip` and verifies the archive checksums. Original course
-inputs and local runtimes are excluded. The archive places generated update files in
-`updates/`; copy them to `data/updates/` after extraction to use the commands above,
-or regenerate them with the same seed.
-
-| Location | Contents |
-| --- | --- |
-| `src/urban_platform/` | Ingestion, integration, incremental refresh, monitoring and ML (`ml/`) |
-| `scripts/`, `config/` | Command-line entry points and dataset/analysis/ML configuration |
-| `sql/` | Six analyses, four products, optimized queries, monitoring and ML dataset SQL |
-| `tests/` | Small-data correctness, validation, refresh and ML pipeline tests |
-| `docs/Lab3_Design_Report.md`, `docs/Week4_Design_Report.md` | Design, decisions and limitations |
-| `docs/Lab3_Evaluation_Report.md`, `docs/Week4_Evaluation_Report.md` | Measured results and interpretation |
-| `reports/` | Submission PDFs |
-| `artifacts/week3/`, `artifacts/week4/` | Local run and evaluation evidence |
-| `evidence/` | Historical Week 2 experiment snapshot |
-
-Week 3 extends the analysis window through the latest valid taxi day; the original
-Week 2 end date remains separately recorded. Storage uses UTC and reporting uses
-New York time. The weather source does not state its timezone, so treating it as
-UTC remains an assumption that may shift associations by four or five hours.
-Air-quality correlations describe association rather than causation.
-
-Earlier setup and experiment notes are retained in `docs/Week2_Run_Guide.md` as a
-historical reference. Use the workflow above for Week 3.
-
-## 7. Machine learning pipeline (Week 4)
-
-Week 4 adds an hourly taxi-demand model on top of the Week 1-3 platform, under
-`src/urban_platform/ml/`. It reuses `register_analysis_views`/`read_integrated`
-rather than reading raw files again, so it only runs against an already
-bootstrapped platform (Section 3). It does not require a Week 3 update release
-to have been applied; running it against the strict bootstrap baseline is the
-configuration the measured results in `docs/Week4_Evaluation_Report.md` use.
-
-```powershell
+# Bootstrap rebuilds historical tables; use only for initialization or an intentional rebuild.
+& .\.venv\Scripts\python.exe .\scripts\run_week3_pipeline.py --bootstrap --run-id demo-baseline
 & .\.venv\Scripts\python.exe .\scripts\run_ml_dataset.py
-& .\.venv\Scripts\python.exe .\scripts\run_ml_train.py --run-id week4-main
-& .\.venv\Scripts\python.exe .\scripts\run_ml_compare.py
-& .\.venv\Scripts\python.exe .\scripts\build_week4_reports.py
+& .\.venv\Scripts\python.exe .\scripts\run_ml_train.py --run-id demo-ml
 ```
 
-`run_ml_dataset.py` builds the zone x hour demand grid (`sql/ml/zone_hour_demand.sql`)
-and writes it to `data/ml/training_dataset/`, partitioned by the chronological
-`train`/`validation`/`test` split declared in `config/ml.yaml`. `run_ml_train.py`
-fits the feature pipeline (`urban_platform/ml/features.py`) and a `GBTRegressor`
-as one `Pipeline`, saves the resulting `PipelineModel` to
-`data/ml/models/<run_id>/`, and writes metrics to `artifacts/week4/train_<run_id>.json`.
-`run_ml_compare.py` runs Task 4's Approach A (re-derived from the raw course
-files) vs. Approach B (the platform's dataset) through the identical feature
-pipeline and model, writing `artifacts/week4/comparison.json`. Retraining on
-newer data is calling `run_ml_train.py` again with a different `run_id` once
-the Gold table has advanced; no separate retraining code path exists.
-`build_week4_reports.py` renders `docs/Week4_Design_Report.md` and
-`docs/Week4_Evaluation_Report.md` to `reports/`.
+Defaults are `local[4]`, 4 GB driver memory and eight shuffle partitions. See the [full runbook](docs/RUNBOOK.md) for input requirements, incremental releases, controlled evaluation, reports and packaging. To reproduce the Week 4 report, use a bootstrap baseline before applying an incremental release.
 
-`pytest tests/test_ml_*.py -q` covers the dataset grid (including that
-zero-demand hours are retained, not dropped), the feature pipeline (categorical
-indexing, imputation, derived temporal columns) and the saved model's
-reload/retrain path, all against small synthetic fixtures rather than the full
-course dataset.
+```powershell
+# Small synthetic fixtures and real local Delta tables; no full course inputs required.
+& .\.venv\Scripts\python.exe -m pytest tests -q
+```
+
+## Repository map
+
+```text
+config/                 Dataset contracts, quality rules, analytics and ML settings
+src/urban_platform/     Ingestion, integration, analytics, incremental, monitoring, simulation, ML
+sql/                    Analyses, optimized queries, data products, monitoring and ML SQL
+scripts/                Run, validate, evaluate, generate reports and package submissions
+tests/                  Correctness, quality, recovery and ML tests
+docs/                   Architecture, runbook, assignment designs and evaluations
+reports/                PDF / Word submission reports
+evidence/               Week 2 SQL, plans, outputs and measurement snapshots
+artifacts/week3/        Committed Week 3 evaluation and recovery evidence
+```
+
+Git ignores raw inputs in `dataset/`, generated `data/`, local runtimes, caches and new run outputs. Process notes live in [docs/archive/](docs/archive/); the [documentation index](docs/README.md) links reports and implementation details.
+
+## Scope
+
+This is a course engineering project using real city data, validated on local Spark. Recovery assumes a single writer and available Delta/CDF history. The weather source's timezone is unconfirmed and currently interpreted as UTC; environmental analyses describe association. The demand model uses environmental observations from the corresponding hour; online prediction would additionally need features available at prediction time and a deployment workflow.
